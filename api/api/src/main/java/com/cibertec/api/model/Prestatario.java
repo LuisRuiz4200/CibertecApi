@@ -26,13 +26,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Prestatario {
 	@Id
-    @Column(name = "idprestamista")
+    @Column(name = "idprestatario")
 	@JsonIgnore
     private int idPrestatario;
 	
 	@OneToOne(cascade = CascadeType.PERSIST)
 	@MapsId
-	@JoinColumn(name="idprestamista")
+	@JoinColumn(name="idprestatario")
 	private Persona prestatario ;
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecharegistro")
