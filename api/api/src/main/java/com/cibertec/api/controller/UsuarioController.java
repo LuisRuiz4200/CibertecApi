@@ -1,14 +1,12 @@
 package com.cibertec.api.controller;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -17,47 +15,50 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cibertec.api.model.Prestamista;
-import com.cibertec.api.service.PrestamistaService;
+import com.cibertec.api.model.Usuario;
+import com.cibertec.api.service.UsuarioService;
 
-import jakarta.websocket.server.PathParam;
+import jakarta.transaction.Transactional;
 
 @RestController
-@RequestMapping("/prestamista")
-public class PrestamistaController {
+@RequestMapping("/usuario")
+public class UsuarioController {
 
 	@Autowired
-	PrestamistaService prestamistaService ;
+	private UsuarioService usuarioService;
+	
 	
 	@GetMapping("/listar")
-	private ResponseEntity<List<Prestamista>> listar() {
-		List<Prestamista> response= prestamistaService.listar();
-		return ResponseEntity.ok(response);
+	private List<Usuario> listar (){
+		
+		return usuarioService.listar();
+		
 	}
 	
 	@PostMapping("/registrar")
-	private String registrar(@RequestBody Prestamista model) {
-		
+	private String registrar(@RequestBody Usuario model) {
 		String response = "";
 		
 		try {
-			model = prestamistaService.guardar(model);
-			response = "Se ha registrado el ID " + model.getIdPrestamista() + ".";
-		}catch(Exception ex){
+			model = usuarioService.guardar(model);
+			
+			response = "Se ha registrado el ID " + model.getIdUsuario();
+			
+		}catch(Exception ex) {
 			response = ex.getMessage();
 		}
 		
 		return response;
+		
 	}
-	
-	@PutMapping("/actualizar/{id}")
-	private Map<?, ?> actualizar(@RequestBody Prestamista model,@PathVariable int id) {
+	@PutMapping("/actualizar")
+	private Map<?, ?> actualizar(@RequestBody Usuario model) {
 		
 		Map<String, Object> response = new HashMap<String,Object>();
 		
 		try {
-			model = prestamistaService.buscarPorId(id);
-			model = prestamistaService.guardar(model);
-			response.put("mensaje", "Se ha actualizado el ID " + model.getIdPrestamista() + ".");
+			model = usuarioService.guardar(model);
+			response.put("mensaje", "Se ha actualizado el ID " + model.getIdUsuario() + ".");
 		}catch(Exception ex){
 			response.put("mensaje",ex.getMessage());
 		}

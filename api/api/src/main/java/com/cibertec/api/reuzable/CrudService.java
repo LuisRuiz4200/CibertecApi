@@ -8,6 +8,6 @@ public interface CrudService<T> {
 	public List<T> listar();
 	public T eliminar(int id);
 	public List<T> listarPorId();
-	public T buscarPorId();
+	public T buscarPorId(int id);
 	
 }

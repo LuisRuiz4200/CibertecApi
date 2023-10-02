@@ -3,6 +3,7 @@ package com.cibertec.api.serviceImpl;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.cibertec.api.model.Prestamista;
 import com.cibertec.api.repository.PrestamistaRepository;
@@ -19,7 +20,7 @@ public class PrestamistaServiceImpl implements PrestamistaService {
 	
 	@Override
 	public Prestamista guardar(Prestamista model) {
-		// TODO Auto-generated method stub
+
 		return prestamistaRepository.save(model);
 	}
 
@@ -30,6 +31,7 @@ public class PrestamistaServiceImpl implements PrestamistaService {
 	}
 
 	@Override
+	@Transactional
 	public Prestamista eliminar(int id) {
 		// TODO Auto-generated method stub
 		return null;
@@ -42,9 +44,8 @@ public class PrestamistaServiceImpl implements PrestamistaService {
 	}
 
 	@Override
-	public Prestamista buscarPorId() {
-		// TODO Auto-generated method stub
-		return null;
+	public Prestamista buscarPorId(int id) {
+		return prestamistaRepository.findById(id).get();
 	}
 
 }
