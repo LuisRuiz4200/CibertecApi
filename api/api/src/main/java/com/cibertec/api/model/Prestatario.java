@@ -20,20 +20,20 @@ import lombok.NoArgsConstructor;
 
 
 @Entity
-@Table(name="tb_prestamista")
+@Table(name="tb_prestatario")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Prestamista {
+public class Prestatario {
 	@Id
     @Column(name = "idprestamista")
 	@JsonIgnore
-    private int idPrestamista;
+    private int idPrestatario;
 	
 	@OneToOne(cascade = CascadeType.PERSIST)
 	@MapsId
 	@JoinColumn(name="idprestamista")
-	private Persona prestamista ;
+	private Persona prestatario ;
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecharegistro")
 	private Date fechaRegistro;

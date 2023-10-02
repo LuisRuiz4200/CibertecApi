@@ -47,10 +47,4 @@ public class PrestamistaServiceImpl implements PrestamistaService {
 		return null;
 	}
 
-	@Override
-	public int registrarPrestamista(Prestamista model) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 }
