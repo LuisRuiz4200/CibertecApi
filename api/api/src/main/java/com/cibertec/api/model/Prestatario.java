@@ -30,7 +30,7 @@ public class Prestatario {
 	@JsonIgnore
     private int idPrestatario;
 	
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne(cascade = CascadeType.ALL)
 	@MapsId
 	@JoinColumn(name="idprestatario")
 	private Persona prestatario ;

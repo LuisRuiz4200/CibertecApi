@@ -49,15 +49,14 @@ public class PrestamistaController {
 		return response;
 	}
 	
-	@PutMapping("/actualizar/{id}")
-	private Map<?, ?> actualizar(@RequestBody Prestamista model,@PathVariable int id) {
+	@PutMapping("/actualizar")
+	private Map<?, ?> actualizar(@RequestBody Prestamista model) {
 		
 		Map<String, Object> response = new HashMap<String,Object>();
 		
 		try {
-			model = prestamistaService.buscarPorId(id);
 			model = prestamistaService.guardar(model);
-			response.put("mensaje", "Se ha actualizado el ID " + model.getIdPrestamista() + ".");
+			response.put("mensaje", "Se ha actualizado el ID " + model.getIdPrestamista() + " y el ID persona " + model.getPrestamista().getIdPersona() + " / " + model.getPrestamista().getNombres());
 		}catch(Exception ex){
 			response.put("mensaje",ex.getMessage());
 		}
