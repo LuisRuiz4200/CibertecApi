@@ -1,29 +1,30 @@
-package com.cibertec.api;
+package com.cibertec.api.reuzable;
 
 import java.sql.Date;
 import java.util.Objects;
 
 import javax.swing.JOptionPane;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import com.cibertec.api.model.Prestamista;
 import com.cibertec.api.service.PrestamistaService;
 import com.cibertec.api.serviceImpl.PrestamistaServiceImpl;
 
-@SpringBootTest
-class ApiApplicationTests extends PrestamistaServiceImpl {
+
+public class TEST {
 	
 	@Autowired
-	PrestamistaService prestamistaService;
+	PrestamistaService prestamistaService = new PrestamistaServiceImpl();
 
-	@Test
-	void contextLoads() {
-		agregar();
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		new TEST();
 	}
 	
+	public TEST() {
+		agregar();
+	}
 	
 	private void agregar () {
 		
@@ -37,7 +38,7 @@ class ApiApplicationTests extends PrestamistaServiceImpl {
 		model.setFechaEdicion(new Date(new java.util.Date().getTime()));
 		model.setActivo(true);
 		
-		model = this.guardar(model);
+		model = prestamistaService.guardar(model);
 		
 		if(Objects.isNull(model)) {
 			JOptionPane.showMessageDialog(null, "ERROR !!!");
@@ -47,4 +48,5 @@ class ApiApplicationTests extends PrestamistaServiceImpl {
 		
 		
 	}
+
 }

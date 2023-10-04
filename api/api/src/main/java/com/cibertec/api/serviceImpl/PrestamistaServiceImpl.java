@@ -2,6 +2,7 @@ package com.cibertec.api.serviceImpl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,13 +11,15 @@ import com.cibertec.api.repository.PrestamistaRepository;
 import com.cibertec.api.service.PrestamistaService;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 
 @Service
-@AllArgsConstructor
 public class PrestamistaServiceImpl implements PrestamistaService {
 
-	private PrestamistaRepository prestamistaRepository ;
+	
+	@Autowired
+	PrestamistaRepository prestamistaRepository ;
 	
 	@Override
 	public Prestamista guardar(Prestamista model) {

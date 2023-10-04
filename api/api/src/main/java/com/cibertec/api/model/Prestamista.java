@@ -1,5 +1,6 @@
 package com.cibertec.api.model;
 
+import java.io.Serializable;
 import java.sql.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -26,7 +27,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Prestamista {
+public class Prestamista implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
     @Column(name = "idprestamista")
     private int idPrestamista;
@@ -34,7 +40,7 @@ public class Prestamista {
 	@OneToOne(cascade = CascadeType.ALL)
 	@MapsId
 	@JoinColumn(name="idprestamista")
-	private Persona prestamista ;
+	private Persona prestamista = new Persona() ;
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecharegistro")
 	private Date fechaRegistro;
