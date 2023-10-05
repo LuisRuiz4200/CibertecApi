@@ -1,62 +1,32 @@
 package com.cibertec.api.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import org.apache.http.HttpRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.cibertec.api.model.Prestamista;
 import com.cibertec.api.service.PrestamistaService;
 
-@RestController
-@RequestMapping("/prestamista")
+@Controller
+@RequestMapping("/prestamistaWeb")
 public class PrestamistaController {
 
 	@Autowired
-	PrestamistaService prestamistaService ;
+	PrestamistaService prestamistaService;
 	
 	@GetMapping("/listar")
-	private ResponseEntity<List<Prestamista>> listar() {
-		List<Prestamista> response= prestamistaService.listar();
-		return ResponseEntity.ok(response);
-	}
-	
-	@PostMapping("/registrar")
-	private String registrar(@RequestBody Prestamista model) {
+	private String listar(Model model) {
 		
-		String response = "";
+		List<Prestamista> listaPrestamista = prestamistaService.listar();
 		
-		try {
-			model = prestamistaService.guardar(model);
-			response = "Se ha registrado el ID " + model.getIdPrestamista() + ".";
-		}catch(Exception ex){
-			response = ex.getMessage();
-		}
+		model.addAttribute("listaPrestamista", listaPrestamista);
 		
-		return response;
-	}
-	
-	@PutMapping("/actualizar")
-	private Map<?, ?> actualizar(@RequestBody Prestamista model) {
-		
-		Map<String, Object> response = new HashMap<String,Object>();
-		
-		try {
-			model = prestamistaService.guardar(model);
-			response.put("mensaje", "Se ha actualizado el ID " + model.getIdPrestamista() + " y el ID persona " + model.getPrestamista().getIdPersona() + " / " + model.getPrestamista().getNombres());
-		}catch(Exception ex){
-			response.put("mensaje",ex.getMessage());
-		}
-		
-		return response;
+		return "listaPrestamista";
 	}
 	
 }
