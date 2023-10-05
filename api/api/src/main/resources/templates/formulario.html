@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+	crossorigin="anonymous">
+</head>
+
+<body>
+
+	<!-- <header th:replace="layout/layout :: header"></header> -->
+	
+	<br>
+	
+	<div class="container">
+	   <div class="row">
+	      <div class="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
+	           <h1 class="text-center" th:text="${titulo}"></h1>
+	           <div class="card-body">
+	              <form th:action="@{/registrar}" th:object="${prestamista}" method="post">
+					  <!--OJO-->
+	                  <input type="text" th:field="*{prestamista.idPersona}" th:value="${prestamista.prestamista.idPersona}"/>
+	                  <!--<input type="text" th:field="*{prestamista.idPersona}" th:value="${prestamista.prestamista.idPersona}"/> -->
+	                 <!--OJO-->
+	                 <div class="form-group">
+	                    <label>Nombres : </label>
+	                    <input type="text" th:field="*{prestamista.nombres}" class="form-control" th:errorclass="'form-control alert-danger'"/>
+	                    <small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.nombres')}" th:errors="*{prestamista.nombres}"></small> 
+	                 </div>
+	                 <div class="form-group">
+	                    <label>Apellidos : </label>
+	                    <input type="text" th:field="*{prestamista.apellidos}" class="form-control" th:errorclass="'form-control alert-danger'"/>
+	                    <small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.apellidos')}" th:errors="*{prestamista.apellidos}"></small> 
+	                 </div>
+	                 <div class="form-group">
+	                    <label>Direccion : </label>
+	                    <input type="text" th:field="*{prestamista.direccion}" class="form-control" th:errorclass="'form-control alert-danger'"/>
+	                    <small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.direccion')}" th:errors="*{prestamista.direccion}"></small> 
+	                 </div>
+	                 <div class="form-group">
+	                    <label>Email : </label>
+		                    <input type="text" th:field="*{prestamista.email}" class="form-control" th:errorclass="'form-control alert-danger'"/>
+	                    <small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.email')}" th:errors="*{prestamista.email}"></small> 
+	                 </div>
+	                 <div class="form-group">
+	                    <label>DNI : </label>
+	                    <input type="number" th:field="*{prestamista.dni}" class="form-control" th:errorclass="'form-control alert-danger'"/>
+	                    <small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.dni')}" th:errors="*{prestamista.dni}"></small> 
+	                 </div>
+	                 <div class="form-group">
+	                    <label>RUC : </label>
+	                    <input  th:field="*{prestamista.ruc}" class="form-control" th:errorclass="'form-control alert-danger'"/>
+	                    <small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.ruc')}" th:errors="*{prestamista.ruc}"></small> 
+	                 </div>
+	                <!-- <div class="form-group">
+	                    <label>Sexo : </label>
+	                    <select class="form-control" th:field="*{sexo}">
+	                        <option th:value='M'>Masculino</option>
+	                        <option th:value='F'>Femenino</option>
+	                        <option th:value='Otro'>Otro</option>
+	                    </select>
+	                 </div>-->
+	                 <div class="box-footer"> 
+	                     <input type="submit" value="Guardar" class="btn btn-primary">
+	                 </div>
+	              </form>
+	           </div>
+	      </div>
+	   </div>
+	</div>
+	
+	<footer>
+</body>
+</html>
