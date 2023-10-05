@@ -15,9 +15,9 @@ import lombok.NoArgsConstructor;
 
 
 @Service
+@AllArgsConstructor
 public class PrestamistaServiceImpl implements PrestamistaService {
 
-	
 	@Autowired
 	PrestamistaRepository prestamistaRepository ;
 	
@@ -49,6 +49,10 @@ public class PrestamistaServiceImpl implements PrestamistaService {
 	@Override
 	public Prestamista buscarPorId(int id) {
 		return prestamistaRepository.findById(id).get();
+	}
+
+	public PrestamistaServiceImpl() {
+		// TODO Auto-generated constructor stub
 	}
 
 }
