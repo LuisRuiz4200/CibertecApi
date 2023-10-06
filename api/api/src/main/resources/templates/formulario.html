@@ -9,7 +9,7 @@
 </head>
 
 <body>
-
+	
 	<!-- <header th:replace="layout/layout :: header"></header> -->
 	
 	<br>
@@ -20,14 +20,17 @@
 	           <h1 class="text-center" th:text="${titulo}"></h1>
 	           <div class="card-body">
 	              <form th:action="@{/registrar}" th:object="${prestamista}" method="post">
-					  <!--OJO-->
-	                  <input type="text" th:field="*{prestamista.idPersona}" th:value="${prestamista.prestamista.idPersona}"/>
+					  <!--OJO Debe estar los 2 -->
+					  <input type="hidden" th:field="*{idPrestamista}" th:value="${prestamista.idPrestamista}"/>
+	                  <input type="hidden" th:field="*{prestamista.idPersona}" th:value="${prestamista.prestamista.idPersona}"/>
 	                  <!--<input type="text" th:field="*{prestamista.idPersona}" th:value="${prestamista.prestamista.idPersona}"/> -->
 	                 <!--OJO-->
 	                 <div class="form-group">
 	                    <label>Nombres : </label>
 	                    <input type="text" th:field="*{prestamista.nombres}" class="form-control" th:errorclass="'form-control alert-danger'"/>
-	                    <small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.nombres')}" th:errors="*{prestamista.nombres}"></small> 
+	                    <small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.nombres')}" th:errors="*{prestamista.nombres}"></small>
+	                    
+ 
 	                 </div>
 	                 <div class="form-group">
 	                    <label>Apellidos : </label>
@@ -72,5 +75,8 @@
 	</div>
 	
 	<footer>
+		
+		
+		
 </body>
 </html>

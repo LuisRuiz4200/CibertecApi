@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,11 +36,20 @@ public class PersonaM {
 	@GeneratedValue(strategy =GenerationType.IDENTITY)
 	@Column(name="idpersona")
 	private int idPersona;
+	//Anotacion para validar que no sea vacio @NotEmpty
+//@NotEmpty(message = "Debe ingresar el nombre de la persona")
 	private String nombres;
+//@NotEmpty(message = "Debe ingresar el apellido de la persona")
 	private String apellidos;
+//@NotEmpty(message = "Debe ingresar la dirección de la persona")
 	private String direccion;
+//formato @Email
+	//@NotEmpty(message = "Debe ingresar el email de la persona")
+	//@Email(message = "La dirección email no es válida")
 	private String email;
+	//@NotEmpty(message = "Debe ingresar el DNI de la persona")
 	private String dni;
+	//@NotEmpty(message = "Debe ingresar el RUC de la persona")
 	private String ruc;
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecharegistro")
