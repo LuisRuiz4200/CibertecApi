@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -29,15 +30,16 @@ public class GrupoPrestamista implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "idgrupo")
 	@JsonIgnore
-	private int idGrupo;
+	private int idGrupoprestamista;
 	@ManyToOne
-	@JoinColumn(name = "idgrupo", referencedColumnName = "idgrupo", insertable = false, updatable = false)
+	@JoinColumn(name = "idgrupo")
+	@MapsId
 	private Grupo grupo;
 	@ManyToOne
 	@JoinColumn(name = "idprestamista")
+	@MapsId
 	private Prestamista prestamista;
 	private boolean activo;
 	

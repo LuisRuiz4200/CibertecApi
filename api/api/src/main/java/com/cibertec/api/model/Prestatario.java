@@ -1,6 +1,7 @@
 package com.cibertec.api.model;
 
 import java.sql.Date;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -10,6 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
@@ -27,7 +29,6 @@ import lombok.NoArgsConstructor;
 public class Prestatario {
 	@Id
     @Column(name = "idprestatario")
-	@JsonIgnore
     private int idPrestatario;
 	
 	@OneToOne(cascade = CascadeType.ALL)
@@ -41,5 +42,9 @@ public class Prestatario {
 	@Column(name="fechaedicion")
 	private Date fechaEdicion;
 	private boolean activo;
+	
+	@OneToMany(mappedBy = "prestatario")
+	@JsonIgnore
+	private List<SolicitudPrestamo> listaSolicitudPrestamo;
 	
 }

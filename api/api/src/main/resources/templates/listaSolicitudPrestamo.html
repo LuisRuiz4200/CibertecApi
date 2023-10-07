@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymleaf.org">
+
+<head>
+	<div th:replace="static/head.html"></div>
+	<title>GRUPO 6</title>
+</head>
+
+<body>
+
+	<div th:replace="static/navbar.html"></div>
+
+	<div class="container">
+
+		<div class="mt-4">
+			<h2>LISTA DE SOLICITUDES DE PRESTAMOS</h2>
+			<hr>
+		</div>
+
+		<div class="mb-4">
+			<form th:action="@{/solicitudPrestamo/listar/}" method="get">
+				<div class="row row-cols-auto">
+					<div class="col-2">
+						<label>PRESTATARIO</label>
+						<select class="form-select" name="id">
+							<option th:each="prestatario : ${listaPrestatario}"
+								th:text="${prestatario.prestatario.nombres} + ' ' +  ${prestatario.prestatario.apellidos}"
+								th:value="${prestatario.idPrestatario}"></option>
+						</select>
+					</div>
+					<div class="mt-auto">
+						<div class="">
+							<button class="btn btn-success btn-sm" type="submit">MOSTRAR SOLICITUDES</button>
+							<a class="btn btn-primary btn-sm" th:href="@{/solicitudPrestamo/registrar}">NUEVA
+								SOLICITUD</a>
+						</div>
+					</div>
+				</div>
+			</form>
+		</div>
+
+		<div>
+			<div class="table-responsive">
+				<table class="table table-striped table-hover">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>PRESTATARIO</th>
+							<th>MONTO</th>
+							<th>MOTIVO</th>
+							<th>REGISTRO</th>
+							<th>ESTADO</th>
+							<th>ACCION</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each=" solicitud : ${listaSolicitudPrestamo}">
+
+							<td th:text="${solicitud.idSolicitudPrestamo}"></td>
+							<td th:text="${solicitud.prestatario.prestatario.nombres}"></td>
+							<td th:text="${solicitud.monto}"></td>
+							<td th:text="${solicitud.motivo}"></td>
+							<td th:text="${solicitud.fechaRegistro}"></td>
+							<td th:text="${solicitud.estado}"></td>
+							<td>
+								<div>
+									<div>
+										<a class="btn btn-warning btn-sm">EVALUAR</a>
+									</div>
+								</div>
+							</td>
+
+						</tr>
+
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+	</div>
+</body>
+
+</html>
