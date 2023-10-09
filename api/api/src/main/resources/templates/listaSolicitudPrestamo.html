@@ -18,11 +18,11 @@
 		</div>
 
 		<div class="mb-4">
-			<form th:action="@{/solicitudPrestamo/listar/}" method="get">
+			<form th:action="@{/solicitudPrestamo/listar/}" th:object="${prestatario}" method="get">
 				<div class="row row-cols-auto">
 					<div class="col-2">
 						<label>PRESTATARIO</label>
-						<select class="form-select" name="id">
+						<select class="form-select"  th:field="*{idPrestatario}">
 							<option th:each="prestatario : ${listaPrestatario}"
 								th:text="${prestatario.prestatario.nombres} + ' ' +  ${prestatario.prestatario.apellidos}"
 								th:value="${prestatario.idPrestatario}"></option>

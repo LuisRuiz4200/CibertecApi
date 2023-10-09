@@ -4,6 +4,8 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,20 +39,26 @@ public class SolicitudPrestamoController {
 		List<SolicitudPrestamo> listaSolicitudPrestamo = new ArrayList<SolicitudPrestamo>();
 		listaSolicitudPrestamo = solicitudPrestamoService.listar();
 		List<Prestatario> listaPrestatario = prestatarioService.listar();
+		Prestatario prestatario = new Prestatario();
+		
 		
 		model.addAttribute("listaSolicitudPrestamo",listaSolicitudPrestamo);
 		model.addAttribute("listaPrestatario",listaPrestatario);
+		model.addAttribute("prestatario",prestatario);
 		
 		return "listaSolicitudPrestamo";
 	}
 	
 	@GetMapping("/listar/")
-	private String listarPorPrestamista(@RequestParam("id")int idPrestatario , Model model) {
+	private String listarPorPrestamista(@RequestParam("idPrestatario")int idPrestatario , Model model) {
 		
 		List<SolicitudPrestamo> listaSolicitudPrestamo = new ArrayList<SolicitudPrestamo>();
 		listaSolicitudPrestamo = solicitudPrestamoService.listarPorPrestatario(idPrestatario);
 		List<Prestatario> listaPrestatario = prestatarioService.listar();
+		Prestatario prestatario = prestatarioService.buscarPorId(idPrestatario);
 		
+		
+		model.addAttribute("prestatario",prestatario);
 		model.addAttribute("listaSolicitudPrestamo",listaSolicitudPrestamo);
 		model.addAttribute("listaPrestatario",listaPrestatario);
 		
