@@ -3,7 +3,7 @@
 
 <head>
 	<div th:replace="static/head.html"></div>
-	<title>GRUPO 6</title>
+	<title>GRUPO 6/ Jean Pi</title>
 </head>
 
 <body>
@@ -22,75 +22,56 @@
 			<div>
 				<div>
 					<form th:action="@{guardar}" th:object="${solicitudPrestamo}" method="post">
-						<div class="row gap-4">
-							<div class="col-12">
-								<div class="row row-cols-3">
+						<div class="row">
+							<div class="row row-cols-3">
 
+								<div>
 									<div>
-										<div>
-											<label>PRESTAMISTA</label>
-											<select class="form-select" th:field="*{prestatario.idPrestatario}">
-												<option th:each="prestatario : ${listaPrestatario}"
-													th:value="${prestatario.idPrestatario}"
-													th:text="${prestatario.prestatario.nombres}"></option>
-											</select>
-										</div>
+										<label>PRESTAMISTA</label>
+										<select class="form-select" th:field="*{prestatario.idPrestatario}" >
+											<option th:each="prestatario : ${listaPrestatario}"
+												th:value="${prestatario.idPrestatario}"
+												th:text="${prestatario.prestatario.nombres}"></option>
+										</select>
 									</div>
-									<div>
-										<div>
-											<label>FECHA</label>
-											<input class="form-control" type="date" th:field="*{fechaRegistro}" />
-										</div>
-									</div>
-									<div>
-										<div>
-											<label>ESTADO</label>
-											<input class="form-control" type="text" th:field="*{estado}" />
-										</div>
-									</div>
-
 								</div>
-							</div>
-							<div class="col-12">
-
-								<div class="row g-3 ">
-									<div class="col-2">
-										<div>
-											<label>MONTO</label>
-											<input class="form-control" type="number" th:field="*{monto}" />
-										</div>
+								<div>
+									<div>
+										<label>FECHA</label>
+										<input class="form-control" type="date" th:field="*{fechaRegistro}" />
 									</div>
-									<div class="col">
-										<div>
-											<label>MOTIVO</label>
-											<textarea class="form-control" type="text" th:field="*{motivo}"
-												rows="6"></textarea>
-										</div>
+								</div>
+								<div>
+									<div>
+										<label>ESTADO</label>
+										<input class="form-control" type="text" th:field="*{estado}" />
+									</div>
+								</div>
+
+							</div>
+
+							<div class="row g-3 ">
+								<div class="col-2">
+									<div>
+										<label>MONTO</label>
+										<input class="form-control" type="number" th:field="*{monto}"/>
+									</div>
+								</div>
+								<div class="col">
+									<div>
+										<label>MOTIVO</label>
+										<textarea class="form-control" type="text" th:field="*{motivo}" rows="6"></textarea>
 									</div>
 								</div>
 							</div>
-<<<<<<< Updated upstream
 							
 							<div class="row g-3 row-cols-auto">
 								
 								<div>
 									<button class="btn btn-success btn-sm">GUARDAR</button>
-									<button class="btn btn-danger btn-sm">CANCELAR</button>
-=======
-							<div class="col-12">
-
-
-								<div class="row g-3 row-cols-auto">
-
-									<div>
-										<button class="btn btn-success btn-sm">GUARDAR</button>
-										<a class="btn btn-danger btn-sm" th:href="@{listar}">CANCELAR</a>
-									</div>
->>>>>>> Stashed changes
+									<a class="btn btn-danger btn-sm" th:href="@{listar}">CANCELAR</a>
 								</div>
 							</div>
-
-
 						</div>
 					</form>
 				</div>

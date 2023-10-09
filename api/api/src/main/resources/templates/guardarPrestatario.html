@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlsn:th="www.thymeleaf.org">
+<head>
+	<div th:replace="static/head.html"></div>
+    <title>GRUPO 6/ Jean Pi</title>
+	
+</head>
+
+<body>
+	<div>
+		<div th:replace="static/navbar.html"></div>
+	</div>
+	<div class="container">
+		
+		<div class="mt-4">
+			<div>
+				<h2>REGISTRAR PRESTATARIO</h2>
+				<hr>
+			</div>
+			
+			<div>
+				<form th:action="@{guardar}" th:object="${prestatario}" method="post">
+					<div class="now">
+						<div>
+							<div>
+								<label>FECHA REGISTRO</label>
+								<input class="form-control" type="date" th:field="*{fechaRegistro}">
+							</div>
+						</div>
+						
+						<div>
+							<div>
+								<label>NOMBRES</label>
+								<input class="form-control" type="text" th:field="*{prestatario.nombres}" >
+							</div>
+							
+							<div>
+								<label>APELLIDOS</label>
+								<input class="form-control" type="text" th:field="*{prestatario.apellidos}" >
+							</div>
+							
+							<div>
+								<label>DNI</label>
+								<input class="form-control" type="text" th:field="*{prestatario.dni}" >
+							</div>
+						</div>
+						
+						<div>
+							<div>
+								<button class="btn btn-sucess btn-sm">GUARDAR</button>
+								<a class="btn btn-danger btn-sm" th:href="@{listar}">CANCELAR</a>
+							</div>
+						</div>
+					
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+
+	
+</html>
