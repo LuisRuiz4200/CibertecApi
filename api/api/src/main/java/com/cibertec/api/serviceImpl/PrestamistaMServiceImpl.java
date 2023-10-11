@@ -1,6 +1,7 @@
 package com.cibertec.api.serviceImpl;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -78,6 +79,11 @@ public class PrestamistaMServiceImpl implements PrestamistaMService {
 	        prestamista.setActivo(true);
 	        repo.save(prestamista);
 	    }
+	}
+
+	@Override
+	public Optional<PrestamistaM> getPrestamistaById(int id) {
+		return repo.findById(id);
 	}
 	
 	

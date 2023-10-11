@@ -1,6 +1,7 @@
 package com.cibertec.api.model;
 
 import java.sql.Date;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -9,6 +10,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -48,4 +51,12 @@ public class PrestamistaM {
 	@Column(name="fechaedicion")
 	private Date fechaEdicion;
 	private boolean activo;
+
+	@ManyToMany
+	@JoinTable(
+		name = "tb_grupo_prestamista",
+		joinColumns = @JoinColumn(name = "idPrestamista"),
+		inverseJoinColumns = @JoinColumn(name = "idGrupo")
+	)
+	private List<Grupo> grupos;
 }//fin de PrestamistaM
