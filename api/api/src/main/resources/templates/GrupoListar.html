@@ -12,7 +12,7 @@
 			<div class="card-header"></div>
 			<div class="card-body">
 				<h4 class="card-title">
-					<a th:href="@{/registrarUsuario}" class="btn btn-primary">Agregar Usuario</a>
+					<a th:href="@{/grupo/form/0}" class="btn btn-primary">Crear nuevo grupo</a>
 				</h4>
 				<table class="table table-striped">
 					<thead>
@@ -34,13 +34,13 @@
 							<td th:text="${usuario.persona.apellidos}"></td>
 							<td th:text="${usuario.rol.descripcion}"></td> -->
 							
-							<!-- <td><a
+							<td><a
 								class="btn btn-warning btn-sm"
-								th:href="@{/actualizarUsuario/} + ${usuario.idUsuario}">Editar</a></td>
+								th:href="@{/grupo/form/} + ${item.idGrupo}">Editar</a></td>
 							<td><a
 								class="btn btn-danger btn-sm"
-								th:href="@{/eliminarUsuario/} + ${usuario.idUsuario}"
-								onclick="return confirm('¿Estás seguro de eliminar al Usuario?');">Eliminar</a></td> -->
+								th:href="@{/grupo/form/} + ${item.idGrupo}"
+								onclick="return confirm('¿Estás seguro de eliminar al Grupo?');">Eliminar</a></td>
 						</tr>
 					</tbody>
 				</table>

@@ -17,9 +17,9 @@
 	   <div class="row">
 	      <div class="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
 	           <!-- <h1 class="text-center" th:text="${titulo}"></h1> -->
-               <h1 class="text-center">Registrar Grupo</h1>
+               <h1 class="text-center" th:text="${title}"></h1>
 	           <div class="card-body">
-	              <form th:action="@{/grupo/registrar}" th:object="${grupo}" method="post">
+	              <form th:object="${grupo}" method="post" th:action="${formType == 'post' ? '/grupo/registrar' : '/grupo/actualizar'}">
                     <!--OJO  -->
                     <input type="hidden" th:field="*{idGrupo}" th:value="${grupo.idGrupo}"/>
                     
