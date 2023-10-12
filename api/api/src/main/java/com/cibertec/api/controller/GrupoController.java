@@ -33,13 +33,10 @@ public class GrupoController {
     @GetMapping({"/listar", "", "/"})
     public String listGrupo(Model model){
         PrestamistaM prestamistaM = prestamistaMService.getPrestamistaById(2).orElse(null);
-        List<Grupo> listGrupo = new ArrayList<Grupo>();
-        if(prestamistaM != null){
-            List<Grupo> listItems = prestamistaM.getGrupos();
-            for (Grupo grupo : listItems) {
-                listGrupo.add(grupo);
-            }
-        }
+
+        List<Grupo> listGrupo = (prestamistaM != null) 
+            ? prestamistaM.getGrupos() 
+            : new ArrayList<>();
 
         model.addAttribute("list", listGrupo);
         return "GrupoListar";
@@ -47,16 +44,13 @@ public class GrupoController {
 
     @GetMapping("form/{id}")
     public String addGrupo(@PathVariable(name="id") int id, Model model){
-        Grupo grupo = null;
-        if(id == 0){
-            grupo = new Grupo();
-            model.addAttribute("formType", "post");
-            model.addAttribute("title", "Registrar Grupo");
-        }else{
-            grupo = grupoService.getGrupoById(id).orElse(null);
-            model.addAttribute("formType", "put");
-            model.addAttribute("title", "Actualizar Grupo");
-        }
+        Grupo grupo = (id == 0) ? new Grupo() : grupoService.getGrupoById(id).orElse(null);
+
+        String formType = (id == 0) ? "post" : "put";
+        String title = (id == 0) ? "Registrar Grupo" : "Actualizar Grupo";
+        
+        model.addAttribute("formType", formType);
+        model.addAttribute("title", title);
         model.addAttribute("grupo", grupo);
         return "GrupoForm";
     }
@@ -71,10 +65,12 @@ public class GrupoController {
         Grupo newGrupo = grupoService.saveGrupo(grupo);
         // Buscar al prestamista en sesion, obtener todos sus grupos y asignar el nuevo grupo. Por ultimo guardar los cambios.
         PrestamistaM prestamistaM = prestamistaMService.getPrestamistaById(2).orElse(null);
-        List<Grupo> grupos = prestamistaM.getGrupos();
-        grupos.add(newGrupo);
-        prestamistaM.setGrupos(grupos);
-        prestamistaMService.guardarPrestamista(prestamistaM);
+        if(prestamistaM != null){
+            List<Grupo> grupos = prestamistaM.getGrupos();
+            grupos.add(newGrupo);
+            prestamistaM.setGrupos(grupos);
+            prestamistaMService.guardarPrestamista(prestamistaM);
+        }
 
         status.setComplete();
         return "redirect:/grupo";

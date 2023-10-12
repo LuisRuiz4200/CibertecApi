@@ -9,27 +9,28 @@
 <body>
     <div class="py-4 ml-5 mr-5">
 		<div class="card bg-light">
-			<div class="card-header"></div>
+			<div class="card-header">
+				<h1 class="text-center">Lista de grupos asignados</h1>
+			</div>
 			<div class="card-body">
 				<h4 class="card-title">
 					<a th:href="@{/grupo/form/0}" class="btn btn-primary">Crear nuevo grupo</a>
 				</h4>
 				<table class="table table-striped">
-					<thead>
+					<thead class="text-center">
 						<tr>
 							<th>ID</th>
-							<th>Nombre Usuario</th>
-							<th>Nombres de Persona</th>
-							<th>Apellidos de Persona</th>
-							<th>Rol Asignado</th>
-							<th>Editar</th>
-							<th>Eliminar</th>
+							<th>Nombre de Grupo</th>
+							<th>Cantidad de miembros</th>
+							<th>Editar Grupo</th>
+							<th>Eliminar Grupo</th>
 						</tr>
 					</thead>
-					<tbody>
-						<tr th:each="item : ${list}">
-							<td th:text="${item.idGrupo}"></td>
-							<td th:text="${item.descripcion}"></td>
+					<tbody class="text-center">
+						<tr th:each="item : ${list}" >
+							<td th:text="${item.idGrupo}" ></td>
+							<td th:text="${item.descripcion}" ></td>
+							<td>🌝</td>
 							<!-- <td th:text="${usuario.persona.nombres}"></td>
 							<td th:text="${usuario.persona.apellidos}"></td>
 							<td th:text="${usuario.rol.descripcion}"></td> -->
