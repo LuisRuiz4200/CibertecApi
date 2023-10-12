@@ -8,4 +8,5 @@ public interface GrupoPrestamistaService {
     List<GrupoPrestamista> getGrupoPrestamistaList();
     List<GrupoPrestamista> getGrupoPrestamistaByPrestamista(int idPrestamista);
     GrupoPrestamista saveGrupoPrestamista(GrupoPrestamista grupoPrestamista);
+    GrupoPrestamista getGrupoPrestamistaByGrupoAndPrestamista(int grupoId, int prestamistaId);
 }

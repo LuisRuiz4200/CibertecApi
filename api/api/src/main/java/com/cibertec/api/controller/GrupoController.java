@@ -15,6 +15,7 @@ import org.springframework.web.bind.support.SessionStatus;
 
 import com.cibertec.api.model.Grupo;
 import com.cibertec.api.model.GrupoPrestamista;
+import com.cibertec.api.model.GrupoPrestamistaId;
 import com.cibertec.api.model.PrestamistaM;
 import com.cibertec.api.service.GrupoPrestamistaService;
 import com.cibertec.api.service.GrupoService;
@@ -70,6 +71,15 @@ public class GrupoController {
             grupos.add(newGrupo);
             prestamistaM.setGrupos(grupos);
             prestamistaMService.guardarPrestamista(prestamistaM);
+
+            // Registrar campo activo de GrupoPrestamista
+            GrupoPrestamistaId grupoPrestamistaId = new GrupoPrestamistaId(newGrupo.getIdGrupo(), prestamistaM.getIdPrestamista());
+
+            GrupoPrestamista newGrupoPrestamista = new GrupoPrestamista();
+            newGrupoPrestamista.setId(grupoPrestamistaId);
+            newGrupoPrestamista.setActivo(true);
+            
+            grupoPrestamistaService.saveGrupoPrestamista(newGrupoPrestamista);
         }
 
         status.setComplete();
@@ -89,5 +99,28 @@ public class GrupoController {
 
         return "redirect:/grupo";
     }
+
+    @GetMapping("eliminar/{id}")
+    public String deleteGrupo(@PathVariable(name="id") int id, Model model){
+        if(id <= 0)
+            return "GrupoListar";
+
+        Grupo grupo = grupoService.getGrupoById(id).orElse(null);
+        if(grupo == null)
+            return "GrupoListar";
+        
+        PrestamistaM prestamistaM = new PrestamistaM();
+        prestamistaM.setIdPrestamista(2);
+
+        GrupoPrestamista grupoPrestamista = grupoPrestamistaService.getGrupoPrestamistaByGrupoAndPrestamista(id, prestamistaM.getIdPrestamista());
+
+        if(grupoPrestamista == null)
+            return "GrupoListar";
+
+        grupoPrestamista.setActivo(false);
+        grupoPrestamistaService.saveGrupoPrestamista(grupoPrestamista);
+        return "redirect:/grupo";
+    }
+    
 
 }

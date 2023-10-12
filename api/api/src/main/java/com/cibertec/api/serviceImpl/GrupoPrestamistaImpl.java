@@ -32,5 +32,10 @@ public class GrupoPrestamistaImpl implements GrupoPrestamistaService{
     public GrupoPrestamista saveGrupoPrestamista(GrupoPrestamista grupoPrestamista) {
         return repository.save(grupoPrestamista);
     }
+
+    @Override
+    public GrupoPrestamista getGrupoPrestamistaByGrupoAndPrestamista(int grupoId, int prestamistaId) {
+        return repository.findById_IdGrupoAndId_IdPrestamista(grupoId, prestamistaId);
+    }
     
 }
