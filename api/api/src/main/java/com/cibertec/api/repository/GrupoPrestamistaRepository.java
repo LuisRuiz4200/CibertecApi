@@ -1,9 +1,6 @@
 package com.cibertec.api.repository;
 
-import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -18,6 +15,6 @@ public interface GrupoPrestamistaRepository extends JpaRepository<GrupoPrestamis
     // public List<GrupoPrestamista> findByPrestamistaIdPrestamista(int idPrestamista);
 
     // GrupoPrestamista findByGrupoIdGrupoAndPrestamistaIdPrestamista(Long grupoId, Long prestamistaId);
-    GrupoPrestamista findById_IdGrupoAndId_IdPrestamista(@Param("idGrupo") int idGrupo,  @Param("idPrestamista")int idPrestamista);
+    GrupoPrestamista findById_IdGrupoAndId_IdPrestamista(@Param("idGrupo") int idGrupo, @Param("idPrestamista")int idPrestamista);
 }
 

@@ -18,9 +18,6 @@ import lombok.ToString;
 @ToString
 public class GrupoPrestamista{
     
-	// @Id
-	// @GeneratedValue(strategy = GenerationType.IDENTITY)
-	// private Long id;
 	@EmbeddedId
     private GrupoPrestamistaId id;
 
