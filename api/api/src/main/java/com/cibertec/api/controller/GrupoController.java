@@ -16,10 +16,13 @@ import org.springframework.web.bind.support.SessionStatus;
 import com.cibertec.api.model.Grupo;
 import com.cibertec.api.model.GrupoPrestamista;
 import com.cibertec.api.model.GrupoPrestamistaId;
+import com.cibertec.api.model.PersonaM;
 import com.cibertec.api.model.PrestamistaM;
+import com.cibertec.api.model.modelDto.GrupoPersonaDto;
 import com.cibertec.api.service.GrupoPrestamistaService;
 import com.cibertec.api.service.GrupoService;
 import com.cibertec.api.service.PrestamistaMService;
+import com.cibertec.api.service.personaService;
 
 import lombok.AllArgsConstructor;
 
@@ -30,6 +33,7 @@ public class GrupoController {
     private GrupoService grupoService;
     private GrupoPrestamistaService grupoPrestamistaService;
     private PrestamistaMService prestamistaMService;
+    private personaService personaService;
     
     @GetMapping({"/listar", "", "/"})
     public String listGrupo(Model model){
@@ -122,5 +126,51 @@ public class GrupoController {
         return "redirect:/grupo";
     }
     
+    @GetMapping("{id}/newMember")
+    public String newMember(@PathVariable(name="id") int id, Model model){
+        if(id <= 0)
+            return "GrupoListar";
+        Grupo grupo = grupoService.getGrupoById(id).orElse(null);
+        if(grupo == null)
+            return "GrupoListar";
 
+        GrupoPersonaDto grupoPersonaDto = new GrupoPersonaDto();
+        grupoPersonaDto.setIdGrupo(grupo.getIdGrupo());
+        grupoPersonaDto.setDescripcion(grupo.getDescripcion());
+
+        List<PersonaM> personaList = personaService.listarPersona();
+
+        model.addAttribute("formType", "new");
+        model.addAttribute("title", "Agregar miembro");
+        model.addAttribute("grupoPersonaDto", grupoPersonaDto);
+        model.addAttribute("cboPersonas", personaList);
+
+        return "GrupoForm";
+    }
+
+    @PostMapping("newMember")
+    public String newMember(@ModelAttribute("grupoPersonaDto") GrupoPersonaDto dtoModel, BindingResult result, Model model, SessionStatus status){
+        if(result.hasErrors()){
+            model.addAttribute("error", dtoModel);
+            return "GrupoForm";
+        }
+
+        PrestamistaM prestamistaM = prestamistaMService.getPrestamistaById(dtoModel.getIdPersona()).orElse(null);
+        Grupo newGrupo = grupoService.getGrupoById(dtoModel.getIdGrupo()).orElse(null);
+
+        if(prestamistaM == null || newGrupo == null)
+            return "GrupoForm";
+        
+        List<Grupo> listGrupo = (prestamistaM.getGrupos() != null) 
+            ? prestamistaM.getGrupos() 
+            : new ArrayList<>();
+
+        
+        listGrupo.add(newGrupo);
+
+        prestamistaM.setGrupos(listGrupo);
+        prestamistaMService.guardarPrestamista(prestamistaM);
+        status.setComplete();
+        return "redirect:/grupo";
+    }
 }

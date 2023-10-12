@@ -22,6 +22,7 @@
 							<th>ID</th>
 							<th>Nombre de Grupo</th>
 							<th>Cantidad de miembros</th>
+							<th>Agregar de miembro</th>
 							<th>Editar Grupo</th>
 							<th>Eliminar Grupo</th>
 						</tr>
@@ -34,14 +35,28 @@
 							<!-- <td th:text="${usuario.persona.nombres}"></td>
 							<td th:text="${usuario.persona.apellidos}"></td>
 							<td th:text="${usuario.rol.descripcion}"></td> -->
-							
-							<td><a
-								class="btn btn-warning btn-sm"
-								th:href="@{/grupo/form/} + ${item.idGrupo}">Editar</a></td>
-							<td><a
-								class="btn btn-danger btn-sm"
-								th:href="@{/grupo/eliminar/} + ${item.idGrupo}"
-								onclick="return confirm('¿Estás seguro de eliminar al Grupo?');">Eliminar</a></td>
+							<td>
+								<a
+									class="btn btn-primary btn-sm"
+									th:href="@{/grupo/} + ${item.idGrupo} + '/newMember'">
+									Nuevo miembro
+								</a>
+							</td>
+							<td>
+								<a
+									class="btn btn-warning btn-sm"
+									th:href="@{/grupo/form/} + ${item.idGrupo}">
+									Editar
+								</a>
+							</td>
+							<td>
+								<a
+									class="btn btn-danger btn-sm"
+									th:href="@{/grupo/eliminar/} + ${item.idGrupo}"
+									onclick="return confirm('¿Estás seguro de eliminar al Grupo?');">
+									Eliminar
+								</a>
+							</td>
 						</tr>
 					</tbody>
 				</table>
