@@ -20,4 +20,8 @@ public class Rol {
 	@OneToMany(mappedBy="rol")
 	private List<Usuario> listaUsuarios;
 	
+	
+	@JsonIgnore
+	@OneToMany(mappedBy="rol")
+	private List<RolMenu> listaRolMenu;
 }

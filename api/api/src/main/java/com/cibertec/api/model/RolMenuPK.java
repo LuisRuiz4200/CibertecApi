@@ -1,11 +1,12 @@
 package com.cibertec.api.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import jakarta.persistence.Embeddable;
 
 @Embeddable
-public class RolMenuPK {
+public class RolMenuPK implements Serializable{
 	private int idRol;
 	private int idMenu;
 	
