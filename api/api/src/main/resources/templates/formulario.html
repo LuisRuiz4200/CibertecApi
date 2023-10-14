@@ -9,7 +9,7 @@
 </head>
 
 <body>
-
+	
 	<!-- <header th:replace="layout/layout :: header"></header> -->
 	
 	<br>
@@ -29,7 +29,9 @@
 	                 <div class="form-group">
 	                    <label>Nombres : </label>
 	                    <input type="text" th:field="*{prestamista.nombres}" class="form-control" th:errorclass="'form-control alert-danger'"/>
-	                    <small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.nombres')}" th:errors="*{prestamista.nombres}"></small> 
+	                    <small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.nombres')}" th:errors="*{prestamista.nombres}"></small>
+	                    
+ 
 	                 </div>
 	                 <div class="form-group">
 	                    <label>Apellidos : </label>
@@ -74,5 +76,8 @@
 	</div>
 	
 	<footer>
+		
+		
+		
 </body>
 </html>
