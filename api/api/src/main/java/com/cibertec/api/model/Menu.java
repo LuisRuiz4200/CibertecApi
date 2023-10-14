@@ -4,62 +4,61 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name="tb_rol")
-public class Rol {
+@Table(name="tb_menu")
+public class Menu {
 	@Id
-	private int idRol;
+	private int idMenu;
+
 	private String descripcion;
+	private String ruta;
+	private int activo;
 	
 	@JsonIgnore
-	@OneToMany(mappedBy="rol")
-	private List<Usuario> listaUsuarios;
-	
-	
-	@JsonIgnore
-	@OneToMany(mappedBy="rol")
+	@OneToMany(mappedBy = "menu")
 	private List<RolMenu> listaRolMenu;
 
-
-	public int getIdRol() {
-		return idRol;
+	public int getIdMenu() {
+		return idMenu;
 	}
 
-
-	public void setIdRol(int idRol) {
-		this.idRol = idRol;
+	public void setIdMenu(int idMenu) {
+		this.idMenu = idMenu;
 	}
-
 
 	public String getDescripcion() {
 		return descripcion;
 	}
 
-
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
 
-
-	public List<Usuario> getListaUsuarios() {
-		return listaUsuarios;
+	public String getRuta() {
+		return ruta;
 	}
 
-
-	public void setListaUsuarios(List<Usuario> listaUsuarios) {
-		this.listaUsuarios = listaUsuarios;
+	public void setRuta(String ruta) {
+		this.ruta = ruta;
 	}
 
+	public int getActivo() {
+		return activo;
+	}
+
+	public void setActivo(int activo) {
+		this.activo = activo;
+	}
 
 	public List<RolMenu> getListaRolMenu() {
 		return listaRolMenu;
 	}
-
 
 	public void setListaRolMenu(List<RolMenu> listaRolMenu) {
 		this.listaRolMenu = listaRolMenu;

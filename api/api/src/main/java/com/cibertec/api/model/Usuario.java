@@ -1,48 +1,101 @@
 package com.cibertec.api.model;
 
-import java.sql.Date;
+import java.util.Date;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
-import lombok.Data;
-
 
 @Entity
 @Table(name="tb_usuario")
-@Data
 public class Usuario {
-	
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="idUsuario")
 	private int idUsuario;
-	@OneToOne(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "idpersona")
-	private Persona persona;
-	@Column(name ="nombreusuario")
-	private String nombreUsuario;
-	@Column(name ="claveusuario")
-	private String claveUsuario;
-	@ManyToOne
-	@JoinColumn(name = "idrol")
-	private Rol rol;
-	@Column(name ="fecharegistro")
-	@Temporal(TemporalType.DATE)
-	private Date fechaRegistro;
-	
-	@Column(name ="fechaedicion")
-	@Temporal(TemporalType.DATE)
-	private Date fechaEdicion;
-	private boolean activo;
-	
 
+	private String nombreUsuario;
+	private String claveUsuario;
+	
+	@ManyToOne
+	@JoinColumn(name="idRol")
+	private Rol rol;
+	
+	@ManyToOne
+	@JoinColumn(name="idPersona")
+	private PersonaM idPersona;
+	
+	private Date fechaRegistro;
+	private Date fechaEdicion;
+	
+	private int activo;
+
+	public int getIdUsuario() {
+		return idUsuario;
+	}
+
+	public void setIdUsuario(int idUsuario) {
+		this.idUsuario = idUsuario;
+	}
+
+	public PersonaM getIdPersona() {
+		return idPersona;
+	}
+
+	public void setIdPersona(PersonaM idPersona) {
+		this.idPersona = idPersona;
+	}
+
+	public String getNombreUsuario() {
+		return nombreUsuario;
+	}
+
+	public void setNombreUsuario(String nombreUsuario) {
+		this.nombreUsuario = nombreUsuario;
+	}
+
+	public String getClaveUsuario() {
+		return claveUsuario;
+	}
+
+	public void setClaveUsuario(String claveUsuario) {
+		this.claveUsuario = claveUsuario;
+	}
+
+	public Rol getRol() {
+		return rol;
+	}
+
+	public void setRol(Rol rol) {
+		this.rol = rol;
+	}
+
+	public Date getFechaRegistro() {
+		return fechaRegistro;
+	}
+
+	public void setFechaRegistro(Date fechaRegistro) {
+		this.fechaRegistro = fechaRegistro;
+	}
+
+	public Date getFechaEdicion() {
+		return fechaEdicion;
+	}
+
+	public void setFechaEdicion(Date fechaEdicion) {
+		this.fechaEdicion = fechaEdicion;
+	}
+
+	public int getActivo() {
+		return activo;
+	}
+
+	public void setActivo(int activo) {
+		this.activo = activo;
+	}
+	
+	
+	
 }

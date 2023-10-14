@@ -8,6 +8,9 @@ import javax.swing.JOptionPane;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import com.cibertec.api.model.Prestamista;
 import com.cibertec.api.service.PrestamistaService;
@@ -21,30 +24,14 @@ class ApiApplicationTests extends PrestamistaServiceImpl {
 
 	@Test
 	void contextLoads() {
-		agregar();
+		
+		//creamos variable encoder de tipo BCryptPass...
+		BCryptPasswordEncoder encoder=new BCryptPasswordEncoder();
+		//Imprimo en consola por medio de encoder.encode y pasamos dentro de "el password" ya encriptado la contraseña
+		System.out.println(encoder.encode("123"));
+		
 	}
 	
 	
-	private void agregar () {
-		
-		Prestamista model = new Prestamista();
-		model.getPrestamista().setNombres("Luis");
-		model.getPrestamista().setApellidos("Ruiz");
-		model.getPrestamista().setEmail("test@gmail");
-		model.getPrestamista().setFechaRegistro(new Date(new java.util.Date().getTime()));
-		model.getPrestamista().setFechaEdicion(new Date(new java.util.Date().getTime()));
-		model.setFechaRegistro(new Date(new java.util.Date().getTime()));
-		model.setFechaEdicion(new Date(new java.util.Date().getTime()));
-		model.setActivo(true);
-		
-		model = this.guardar(model);
-		
-		if(Objects.isNull(model)) {
-			JOptionPane.showMessageDialog(null, "ERROR !!!");
-		}else {
-			JOptionPane.showMessageDialog(null, "REGISTRADO OK");	
-		}
-		
-		
-	}
+
 }
