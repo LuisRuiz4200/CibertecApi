@@ -1,4 +1,4 @@
-package com.cibertec.api.service;
+package com.cibertec.api.security;
 
 import java.util.HashSet;
 import java.util.Set;

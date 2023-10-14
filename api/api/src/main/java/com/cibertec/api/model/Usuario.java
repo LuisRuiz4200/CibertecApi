@@ -15,15 +15,17 @@ public class Usuario {
 	@Id
 	@Column(name="idUsuario")
 	private int idUsuario;
-	
-	private int idPersona;
-	
+
 	private String nombreUsuario;
 	private String claveUsuario;
 	
 	@ManyToOne
 	@JoinColumn(name="idRol")
 	private Rol rol;
+	
+	@ManyToOne
+	@JoinColumn(name="idPersona")
+	private PersonaM idPersona;
 	
 	private Date fechaRegistro;
 	private Date fechaEdicion;
@@ -38,11 +40,11 @@ public class Usuario {
 		this.idUsuario = idUsuario;
 	}
 
-	public int getIdPersona() {
+	public PersonaM getIdPersona() {
 		return idPersona;
 	}
 
-	public void setIdPersona(int idPersona) {
+	public void setIdPersona(PersonaM idPersona) {
 		this.idPersona = idPersona;
 	}
 
