@@ -13,33 +13,33 @@
 				<h1 class="text-center">Lista de grupos asignados</h1>
 			</div>
 			<div class="card-body">
+
 				<h4 class="card-title">
 					<a th:href="@{/grupo/form/0}" class="btn btn-primary">Crear nuevo grupo</a>
 				</h4>
+
 				<table class="table table-striped">
 					<thead class="text-center">
 						<tr>
 							<th>ID</th>
 							<th>Nombre de Grupo</th>
 							<th>Cantidad de miembros</th>
-							<th>Agregar de miembro</th>
+							<th>Detalle de miembros</th>
 							<th>Editar Grupo</th>
 							<th>Eliminar Grupo</th>
 						</tr>
 					</thead>
+
 					<tbody class="text-center">
 						<tr th:each="item : ${list}" >
 							<td th:text="${item.idGrupo}" ></td>
 							<td th:text="${item.descripcion}" ></td>
-							<td>🌝</td>
-							<!-- <td th:text="${usuario.persona.nombres}"></td>
-							<td th:text="${usuario.persona.apellidos}"></td>
-							<td th:text="${usuario.rol.descripcion}"></td> -->
+							<td th:text="${item.count}"></td>
 							<td>
 								<a
 									class="btn btn-primary btn-sm"
 									th:href="@{/grupo/} + ${item.idGrupo} + '/newMember'">
-									Nuevo miembro
+									Detalle
 								</a>
 							</td>
 							<td>
@@ -60,6 +60,7 @@
 						</tr>
 					</tbody>
 				</table>
+
 			</div>
 		</div>
 	</div>

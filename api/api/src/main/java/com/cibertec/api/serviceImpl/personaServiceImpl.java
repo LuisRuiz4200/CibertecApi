@@ -1,6 +1,7 @@
 package com.cibertec.api.serviceImpl;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -22,6 +23,12 @@ public class personaServiceImpl implements personaService{
 		
 		return repo.findAll();
 	}
+
+	@Override
+	public Optional<PersonaM> getById(int id) {
+		return repo.findById(id);
+	}
+
 	//Listado de manera logica
 	/*
 	 * @Override public List<PersonaM> listarPersona() { return
@@ -29,5 +36,6 @@ public class personaServiceImpl implements personaService{
 	 * .collect(Collectors.toList()); }
 	 */
 	
+	 
 	
 }

@@ -37,5 +37,15 @@ public class GrupoPrestamistaImpl implements GrupoPrestamistaService{
     public GrupoPrestamista getGrupoPrestamistaByGrupoAndPrestamista(int grupoId, int prestamistaId) {
         return repository.findById_IdGrupoAndId_IdPrestamista(grupoId, prestamistaId);
     }
+
+    @Override
+    public List<GrupoPrestamista> getGrupoPrestamistaByGrupo(int idGrupo) {
+        return repository.findById_IdGrupo(idGrupo);
+    }
+
+    @Override
+    public List<GrupoPrestamista> getByGrupoAndState(int idGrupo, boolean activo) {
+        return repository.findById_IdGrupoAndActivo(idGrupo, activo);
+    }
     
 }
