@@ -16,11 +16,11 @@ public class RolMenu {
 	private RolMenuPK pk;
 	
 	@ManyToOne
-	@JoinColumn(name="idRol")
+	@JoinColumn(name="idRol", insertable=false, updatable=false)
 	private Rol rol;
 	
 	@ManyToOne
-	@JoinColumn(name="idMenu")
+	@JoinColumn(name="idMenu", insertable=false, updatable=false)
 	private Menu menu;
 	
 	

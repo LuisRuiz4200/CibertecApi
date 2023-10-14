@@ -9,4 +9,10 @@ public class UsuarioController {
 		//Si ponemos en la ruta localhost:9090/login nos redirecciona AQUI 
 		return "inicio";
 	}
+	
+	@RequestMapping("/intranet")
+	public String intranet(){
+		//Si ponemos en la ruta localhost:9090/login nos redirecciona AQUI 
+		return "listar";
+	}
 }

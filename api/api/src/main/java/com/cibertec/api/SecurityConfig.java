@@ -13,9 +13,16 @@ public class SecurityConfig {
 	// autenticacion al form login
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests((auth)-> auth.anyRequest().authenticated())
+		
+		/*http.authorizeHttpRequests((auth)-> auth.anyRequest().authenticated())
 		.formLogin(form-> form.loginPage("/login")
-		.permitAll().defaultSuccessUrl("/listar"));
+		.permitAll().defaultSuccessUrl("/listar"));*/
+		
+		http.csrf(csrf->csrf.disable())
+		.authorizeHttpRequests((auth)-> auth.anyRequest().authenticated())
+		.formLogin(form-> form.loginPage("/login")
+		.permitAll().defaultSuccessUrl("/intranet"));
+		
 		return http.build();
 		}
 }
