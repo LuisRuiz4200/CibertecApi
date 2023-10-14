@@ -9,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Controller;
 
-import com.cibertec.api.model.Prestamista;
-import com.cibertec.api.service.PrestamistaService;
-import com.cibertec.api.serviceImpl.PrestamistaServiceImpl;
+import com.cibertec.api.model.PrestamistaM;
+import com.cibertec.api.service.PrestamistaMService;
+import com.cibertec.api.serviceImpl.PrestamistaMServiceImpl;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mashape.unirest.http.HttpResponse;
@@ -19,21 +19,21 @@ import com.mashape.unirest.http.Unirest;
 
 public class TEST {
 	
-	@Autowired
-	PrestamistaService prestamistaService = new PrestamistaServiceImpl();
+	final PrestamistaMService prestamistaService = new PrestamistaMServiceImpl();
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		new TEST();
 	}
 	
-	public TEST() {
-		agregar(); 
+	public TEST(PrestamistaMService prestamistaService) {
+		agregar();
+        this.prestamistaService = prestamistaService; 
 	}
 	
 	private void agregar () {
 		
-		Prestamista model = new Prestamista();
+		PrestamistaM model = new PrestamistaM();
 		model.getPrestamista().setNombres("Luis");
 		model.getPrestamista().setApellidos("Ruiz");
 		model.getPrestamista().setEmail("test@gmail");

@@ -23,7 +23,7 @@ public class GrupoPrestamistaController {
 	
 	@GetMapping("/listar")
 	private ResponseEntity<List<GrupoPrestamista>> listar(){
-		List<GrupoPrestamista> response = grupoprestamistaService.listar();
+		List<GrupoPrestamista> response = grupoprestamistaService.getGrupoPrestamistaList();
 		return ResponseEntity.ok(response);
 		
 	}
@@ -32,7 +32,7 @@ public class GrupoPrestamistaController {
 	private String resgistrar(@RequestBody GrupoPrestamista model) {
 		String response = "";
 		try {
-			model = grupoprestamistaService.guardar(model);
+			model = grupoprestamistaService.saveGrupoPrestamista(model);
 		} catch (Exception ex) {
 			response = ex.getMessage();
 		}

@@ -9,7 +9,7 @@ import com.cibertec.api.model.PrestamistaM;
 import com.cibertec.api.model.tbusuario;
 
 import com.cibertec.api.repository.PrestamistaMRepository;
-import com.cibertec.api.repository.usuarioRepository;
+import com.cibertec.api.repository.UsuarioRepository;
 import com.cibertec.api.service.usuarioService;
 
 import lombok.AllArgsConstructor;
@@ -18,7 +18,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class usuarioServiceImpl implements usuarioService {
 	
-	private usuarioRepository repo;
+	private UsuarioRepository repo;
 	//Listado normal
 	//@Override
 	//public List<tbusuario> listarUsuario() {

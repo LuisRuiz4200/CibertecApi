@@ -25,7 +25,7 @@ public class UserService implements UserDetailsService{
 		
 		UserDetails obj=null;
 		
-		Usuario bean=repo.iniciarSesion(username);
+		Usuario bean=repo.iniciarSesion(username); //me salio error el iniciara secion 
 
 		Set<GrantedAuthority> rol=new HashSet<GrantedAuthority>();
 		rol.add(new SimpleGrantedAuthority(bean.getRol().getDescripcion()));

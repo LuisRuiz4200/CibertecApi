@@ -14,35 +14,29 @@ public class GrupoPrestamistaServiceImpl implements GrupoPrestamistaService {
 	
 	@Autowired
 	GrupoPrestamistaRepository grupoPrestamistaRepository;
-	
-	@Override
-	public GrupoPrestamista guardar(GrupoPrestamista model) {
-		
-		return grupoPrestamistaRepository.save(model);
-	}
-	
-	@Override
-	public List<GrupoPrestamista> listar(){
-		
-		return grupoPrestamistaRepository.findAll();
-	}
 
 	@Override
-	public GrupoPrestamista eliminar(int id) {
+	public List<GrupoPrestamista> getGrupoPrestamistaList() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public List<GrupoPrestamista> listarPorId() {
+	public List<GrupoPrestamista> getGrupoPrestamistaByPrestamista(int idPrestamista) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public GrupoPrestamista buscarPorId(int idGrupo) {
-		
-		return grupoPrestamistaRepository.findById(idGrupo).get();
+	public GrupoPrestamista saveGrupoPrestamista(GrupoPrestamista grupoPrestamista) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public GrupoPrestamista getGrupoPrestamistaByGrupoAndPrestamista(int grupoId, int prestamistaId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

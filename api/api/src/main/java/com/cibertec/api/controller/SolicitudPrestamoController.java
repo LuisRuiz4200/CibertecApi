@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.cibertec.api.model.Prestatario;
 import com.cibertec.api.model.SolicitudPrestamo;
-import com.cibertec.api.service.PrestamistaService;
+import com.cibertec.api.service.PrestamistaMService;
 import com.cibertec.api.service.PrestatarioService;
 import com.cibertec.api.service.SolicitudPrestamoService;
 
@@ -27,7 +27,7 @@ public class SolicitudPrestamoController {
 	@Autowired
 	SolicitudPrestamoService solicitudPrestamoService;
 	@Autowired
-	PrestamistaService prestamistaService;
+	PrestamistaMService prestamistaService;
 	@Autowired
 	PrestatarioService prestatarioService;
 	

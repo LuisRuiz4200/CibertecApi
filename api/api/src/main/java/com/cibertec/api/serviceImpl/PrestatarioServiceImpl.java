@@ -5,29 +5,29 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cibertec.api.model.Prestamista;
+import com.cibertec.api.model.PrestamistaM;
 import com.cibertec.api.model.Prestatario;
-import com.cibertec.api.repository.PrestamistaRepository;
+import com.cibertec.api.repository.PrestamistaMRepository;
 import com.cibertec.api.repository.PrestatarioRepository;
-import com.cibertec.api.service.PrestamistaService;
+import com.cibertec.api.service.PrestamistaMService;
 import com.cibertec.api.service.PrestatarioService;
 
 @Service
 public class PrestatarioServiceImpl implements PrestatarioService{
 
 	@Autowired
-	private PrestatarioRepository prestamistaRepository;
+	private PrestatarioRepository prestamistaMRepository;
 
 	@Override
 	public Prestatario guardar(Prestatario model) {
 		// TODO Auto-generated method stub
-		return prestamistaRepository.save(model);
+		return prestamistaMRepository.save(model);
 	}
 
 	@Override
 	public List<Prestatario> listar() {
 		// TODO Auto-generated method stub
-		return prestamistaRepository.findAll();
+		return prestamistaMRepository.findAll();
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class PrestatarioServiceImpl implements PrestatarioService{
 	@Override
 	public Prestatario buscarPorId(int id) {
 		// TODO Auto-generated method stub
-		return prestamistaRepository.findById(id).get();
+		return prestamistaMRepository.findById(id).get();
 	}
 
 }

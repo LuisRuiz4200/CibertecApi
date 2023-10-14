@@ -34,7 +34,7 @@ public class Prestatario {
 	@OneToOne(cascade = CascadeType.ALL)
 	@MapsId
 	@JoinColumn(name="idprestatario")
-	private Persona prestatario ;
+	private PersonaM prestatario ;
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecharegistro")
 	private Date fechaRegistro;

@@ -12,15 +12,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.cibertec.api.model.Prestamista;
-import com.cibertec.api.service.PrestamistaService;
-import com.cibertec.api.serviceImpl.PrestamistaServiceImpl;
+import com.cibertec.api.model.PrestamistaM;
+import com.cibertec.api.service.PrestamistaMService;
+import com.cibertec.api.serviceImpl.PrestamistaMServiceImpl;
 
 @SpringBootTest
-class ApiApplicationTests extends PrestamistaServiceImpl {
+class ApiApplicationTests extends PrestamistaMServiceImpl {
 	
 	@Autowired
-	PrestamistaService prestamistaService;
+	PrestamistaMService prestamistaService;
 
 	@Test
 	void contextLoads() {
