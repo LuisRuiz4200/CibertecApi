@@ -1,31 +1,30 @@
 package com.cibertec.api.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+import java.util.Objects;
+
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.ui.Model;
-import org.springframework.security.core.Authentication;
-import java.util.List;
-import java.util.Objects;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.cibertec.api.model.Menu;
 import com.cibertec.api.model.Persona;
 import com.cibertec.api.model.Rol;
 import com.cibertec.api.model.Usuario;
-import com.cibertec.api.service.UService;
-import com.cibertec.api.service.UsuarioService;
 import com.cibertec.api.service.PersonaService;
+import com.cibertec.api.service.UService;
 import com.cibertec.api.service.rolService;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import lombok.AllArgsConstructor;
+import com.cibertec.api.service.usuarioService;
 
-import com.cibertec.api.model.Persona;
+import lombok.AllArgsConstructor;
 
 //creamos atributo de tipo sesion con sessionatributes
 //donde ENLACES y USUARIO son atributo de tipo sesion

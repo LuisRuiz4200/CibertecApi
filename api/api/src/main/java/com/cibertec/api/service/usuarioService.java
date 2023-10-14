@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 //import com.clinica.project.entity.Usuario;
 
 
-public interface usuarioService {
+public interface UsuarioService {
 	
 	//Creamos metodos para CRUD	
 	

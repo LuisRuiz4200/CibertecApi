@@ -21,8 +21,9 @@ import com.cibertec.api.model.Prestamista;
 import com.cibertec.api.model.modelDto.GrupoPersonaDto;
 import com.cibertec.api.service.GrupoPrestamistaService;
 import com.cibertec.api.service.GrupoService;
+import com.cibertec.api.service.PersonaService;
 import com.cibertec.api.service.PrestamistaService;
-import com.cibertec.api.service.personaService;
+import com.cibertec.api.service.PersonaService;
 
 import lombok.AllArgsConstructor;
 
@@ -33,7 +34,7 @@ public class GrupoController {
     private GrupoService grupoService;
     private GrupoPrestamistaService grupoPrestamistaService;
     private PrestamistaService prestamistaMService;
-    private personaService personaService;
+    private PersonaService personaService;
     
     @GetMapping({"/listar", "", "/"})
     public String listGrupo(Model model){
