@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Listar Grupo</title>
+</head>
+<body>
+    <div class="py-4 ml-5 mr-5">
+		<div class="card bg-light">
+			<div class="card-header">
+				<h1 class="text-center">Lista de grupos asignados</h1>
+			</div>
+			<div class="card-body">
+				<h4 class="card-title">
+					<a th:href="@{/grupo/form/0}" class="btn btn-primary">Crear nuevo grupo</a>
+				</h4>
+				<table class="table table-striped">
+					<thead class="text-center">
+						<tr>
+							<th>ID</th>
+							<th>Nombre de Grupo</th>
+							<th>Cantidad de miembros</th>
+							<th>Agregar de miembro</th>
+							<th>Editar Grupo</th>
+							<th>Eliminar Grupo</th>
+						</tr>
+					</thead>
+					<tbody class="text-center">
+						<tr th:each="item : ${list}" >
+							<td th:text="${item.idGrupo}" ></td>
+							<td th:text="${item.descripcion}" ></td>
+							<td>🌝</td>
+							<!-- <td th:text="${usuario.persona.nombres}"></td>
+							<td th:text="${usuario.persona.apellidos}"></td>
+							<td th:text="${usuario.rol.descripcion}"></td> -->
+							<td>
+								<a
+									class="btn btn-primary btn-sm"
+									th:href="@{/grupo/} + ${item.idGrupo} + '/newMember'">
+									Nuevo miembro
+								</a>
+							</td>
+							<td>
+								<a
+									class="btn btn-warning btn-sm"
+									th:href="@{/grupo/form/} + ${item.idGrupo}">
+									Editar
+								</a>
+							</td>
+							<td>
+								<a
+									class="btn btn-danger btn-sm"
+									th:href="@{/grupo/eliminar/} + ${item.idGrupo}"
+									onclick="return confirm('¿Estás seguro de eliminar al Grupo?');">
+									Eliminar
+								</a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

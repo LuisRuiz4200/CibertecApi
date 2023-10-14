@@ -5,6 +5,9 @@ import com.cibertec.api.model.PersonaM;
 import com.cibertec.api.model.PrestamistaM;
 import com.cibertec.api.repository.PersonaMRepository;
 import com.cibertec.api.service.PrestamistaMService;
+
+//import jakarta.validation.Valid;
+
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,6 +54,7 @@ public class PrestamistaMController {
 	
 	
 	@PostMapping("/registrar") //localhost:9090/registrar
+	//public String guardarPrestamista(@Valid PrestamistaM prestamista,BindingResult result,
 	public String guardarPrestamista(PrestamistaM prestamista,BindingResult result,
 			Model model,RedirectAttributes flash,SessionStatus status) {
 		
@@ -60,14 +64,7 @@ public class PrestamistaMController {
 			
 			return "formulario";
 		}
-
-		
-		
-		
-		
-		
-		  String mensaje;
-		  
+		  String mensaje; 
 		  // if (prestamista.getIdPrestamista() != 0) 
 		  if(prestamista.getPrestamista().getIdPersona() != 0) mensaje =
 		  "El Prestamista se actualizó correctamente"; else mensaje =
@@ -118,11 +115,24 @@ public class PrestamistaMController {
 		return "formulario";
 	} //fin de editarEmpleado
 	
-	
-	
-	
-	
-	
-	
+	//Metodo para eliminar
+	//Mapea la petición GET a la URL "/eliminar/{id}"
+	//Extrae el id de la URL usando @PathVariable
+	@GetMapping("/eliminar/{id}")
+	public String eliminarPrestamista(@PathVariable(name="id") int id,
+			RedirectAttributes flash) {	
+		//Valida que el id sea mayor a 0
+		if(id>0) {
+			//Si es válido, llama al método eliminarPrestamista del servicio, pasándole el id
+			service.eliminarPrestamista(id);
+			//Agrega un mensaje "flash" de éxito indicando que se eliminó
+				flash.addFlashAttribute("success","El Prestamista ha sido eliminado");
+				//Retorna un redirect a la URL /listar para mostrar la lista con el atributo success que almacena
+				//el mensaje
+				return "redirect:/listar";
+				
+			} //fin de if
+		return "redirect:/listar";
+	} //fin de eliminarEmpleado
 	
 } //Fin de PrestamistaMController

@@ -1,12 +1,12 @@
 package com.cibertec.api.model;
 
-import java.util.List;
+import java.sql.Date;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,20 +15,20 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@Table(name = "tb_grupo")
-@Getter
-@Setter
-@NoArgsConstructor
+@Table(name="tb_rol")
 @AllArgsConstructor
-@ToString
-public class Grupo {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idGrupo;
-
-    private String descripcion;
-
-    @ManyToMany(mappedBy = "grupos")
-	private List<PrestamistaM> prestamistas;
-}
+@NoArgsConstructor
+  @Getter
+ @Setter
+  @ToString
+public class tbrol {
+	@Id
+	@GeneratedValue(strategy =GenerationType.IDENTITY)
+	@Column(name="idrol")
+	private int idRol;
+	private String descripcion;
+	
+	
+	
+	
+}//fin de tbrol

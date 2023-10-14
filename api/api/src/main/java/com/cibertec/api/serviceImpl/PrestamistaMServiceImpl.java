@@ -1,6 +1,9 @@
 package com.cibertec.api.serviceImpl;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Service;
 
 import com.cibertec.api.model.PrestamistaM;
@@ -17,11 +20,19 @@ public class PrestamistaMServiceImpl implements PrestamistaMService {
 	
 	private PrestamistaMRepository repo;
 	private PersonaMRepository personaRepo;
+	//Listado normal 
 	
-	@Override
-	public List<PrestamistaM> listarPrestamista() {
-		return repo.findAll();
-	}
+	  //@Override public List<PrestamistaM> listarPrestamista()
+	  //{ 
+		//  return repo.findAll();
+	 // }
+	 //Listado de manera logica
+	  @Override
+	  public List<PrestamistaM> listarPrestamista() {
+	      return repo.findAll().stream()
+	   .filter(prestamista -> !prestamista.isActivo() && !prestamista.getPrestamista().isActivo())
+	   .collect(Collectors.toList());
+	  }
 
 	@Override
 	public PrestamistaM listarPrestamistaPorId(int id) {
@@ -53,12 +64,29 @@ public class PrestamistaMServiceImpl implements PrestamistaMService {
 		//repo.save(prestamista);
 		
 	}
-
+	//Eliminacion fisica
+	/*
+	 * @Override public void eliminarPrestamista(int id) { //.deleteById(id);
+	 * //eliminamos por ID o COD usamos este repo.deleteById(id); }
+	 */
+	//----------------------Eliminacion Logica
 	@Override
 	public void eliminarPrestamista(int id) {
-		//.deleteById(id);	
-		//eliminamos por ID o COD usamos este
-		repo.deleteById(id);
+	    PrestamistaM prestamista = repo.findById(id).orElse(null);
+	    if (prestamista != null) {
+	        prestamista.getPrestamista().setActivo(true);
+	        //al  campo prestamista de tipo PrestamistaM lo cambia a true osea de eliminado
+	        prestamista.setActivo(true);
+	        repo.save(prestamista);
+	    }
 	}
 
+	@Override
+	public Optional<PrestamistaM> getPrestamistaById(int id) {
+		return repo.findById(id);
+	}
+	
+	
+	//----------------------
+   
 }
