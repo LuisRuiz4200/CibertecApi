@@ -15,6 +15,7 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -24,15 +25,12 @@ import lombok.ToString;
 @Table(name="tb_persona")
 @AllArgsConstructor
 @NoArgsConstructor
-
-
-  @Getter
-  
- @Setter
-  
-  @ToString
- 
-public class Persona {
+@Data
+public class Persona implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	@Id
 	@GeneratedValue(strategy =GenerationType.IDENTITY)
 	@Column(name="idpersona")

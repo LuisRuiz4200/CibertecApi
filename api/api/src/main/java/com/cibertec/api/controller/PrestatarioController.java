@@ -14,7 +14,7 @@ import com.cibertec.api.model.Prestatario;
 import com.cibertec.api.service.PrestatarioService;
 
 @Controller
-@RequestMapping("/prestatarioWeb")
+@RequestMapping("/prestatario")
 public class PrestatarioController {
 	
 	@Autowired

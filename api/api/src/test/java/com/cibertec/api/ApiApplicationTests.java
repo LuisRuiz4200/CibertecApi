@@ -3,11 +3,16 @@ package com.cibertec.api;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+
+import com.cibertec.api.service.PrestamistaService;
+import com.cibertec.api.serviceImpl.PrestamistaServiceImpl;
 
 @SpringBootTest
-class ApiApplicationTests {
+class ApiApplicationTests extends PrestamistaServiceImpl {
+
+
+	@Autowired
+	PrestamistaService prestamistaService;
 
 	@Test
 	void contextLoads() {

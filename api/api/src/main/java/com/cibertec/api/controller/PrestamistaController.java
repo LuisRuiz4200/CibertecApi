@@ -1,27 +1,24 @@
 package com.cibertec.api.controller;
+import java.util.List;
+import java.util.Objects;
+
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.cibertec.api.model.Persona;
 import com.cibertec.api.model.Prestamista;
-import com.cibertec.api.repository.PersonaRepository;
 import com.cibertec.api.service.PrestamistaService;
 
-//import jakarta.validation.Valid;
-
-import java.util.List;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.ui.Model;
-import java.util.Objects;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.bind.support.SessionStatus;
 @Controller
 @AllArgsConstructor
-public class PrestamistaMController {
+public class PrestamistaController {
 
 	//----
 	//service
@@ -42,7 +39,7 @@ public class PrestamistaMController {
 	public String mostrarFormularioRegistroPrestamista(Model model) {
 	
 		Prestamista prestamista=new Prestamista();
-		//crear un nuevo Persona para registrar al darle al boton registrar crea un nuevo objeto Persona
+		//crear un nuevo PersonaM para registrar al darle al boton registrar crea un nuevo objeto PersonaM
 		prestamista.setPrestamista(new Persona());
 		
 		model.addAttribute("prestamista",prestamista);
@@ -54,7 +51,6 @@ public class PrestamistaMController {
 	
 	
 	@PostMapping("/registrar") //localhost:9090/registrar
-	//public String guardarPrestamista(@Valid Prestamista prestamista,BindingResult result,
 	public String guardarPrestamista(Prestamista prestamista,BindingResult result,
 			Model model,RedirectAttributes flash,SessionStatus status) {
 		
@@ -64,7 +60,14 @@ public class PrestamistaMController {
 			
 			return "formulario";
 		}
-		  String mensaje; 
+
+		
+		
+		
+		
+		
+		  String mensaje;
+		  
 		  // if (prestamista.getIdPrestamista() != 0) 
 		  if(prestamista.getPrestamista().getIdPersona() != 0) mensaje =
 		  "El Prestamista se actualizó correctamente"; else mensaje =
@@ -115,24 +118,11 @@ public class PrestamistaMController {
 		return "formulario";
 	} //fin de editarEmpleado
 	
-	//Metodo para eliminar
-	//Mapea la petición GET a la URL "/eliminar/{id}"
-	//Extrae el id de la URL usando @PathVariable
-	@GetMapping("/eliminar/{id}")
-	public String eliminarPrestamista(@PathVariable(name="id") int id,
-			RedirectAttributes flash) {	
-		//Valida que el id sea mayor a 0
-		if(id>0) {
-			//Si es válido, llama al método eliminarPrestamista del servicio, pasándole el id
-			service.eliminarPrestamista(id);
-			//Agrega un mensaje "flash" de éxito indicando que se eliminó
-				flash.addFlashAttribute("success","El Prestamista ha sido eliminado");
-				//Retorna un redirect a la URL /listar para mostrar la lista con el atributo success que almacena
-				//el mensaje
-				return "redirect:/listar";
-				
-			} //fin de if
-		return "redirect:/listar";
-	} //fin de eliminarEmpleado
 	
-} //Fin de PrestamistaMController
+	
+	
+	
+	
+	
+	
+} //Fin de PrestamistaController

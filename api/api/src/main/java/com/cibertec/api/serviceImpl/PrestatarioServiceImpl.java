@@ -5,11 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cibertec.api.model.Prestamista;
+//import com.cibertec.api.model.Prestamista;
 import com.cibertec.api.model.Prestatario;
-import com.cibertec.api.repository.PrestamistaRepository;
+//import com.cibertec.api.repository.PrestamistaRepository;
 import com.cibertec.api.repository.PrestatarioRepository;
-import com.cibertec.api.service.PrestamistaService;
 import com.cibertec.api.service.PrestatarioService;
 
 @Service
