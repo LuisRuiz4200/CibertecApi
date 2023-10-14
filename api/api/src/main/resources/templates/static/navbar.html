@@ -1,26 +1,35 @@
-<div class="position-sticky top-0 z-2">
-	<nav class="navbar navbar-expand text-bg-success" data-bs-theme="dark">
-		<div class="container-fluid">
-			<div>
-				<img src="http://www.cruce.com.uy/imgs/projects/066/2019_12_26_11_36_06066.jpg" width="80px"
-					height="80px">
+<div th:fragment="cabecera">
+	<div class="pos-f-t">
+		<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+			<div class="navbar-header">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="#">SERPRODAT</a>
+				</div>
 			</div>
-
-			<div class="me-auto" >
+			<div class="collapse navbar-collapse">
+				<!--Dentro de la etiqueta ul , en los li, llamamos con etiqueta de thymeleaf un bucle each
+			  donde con variable bean es cualquier variable, pero es un objeto de tipo de la entidad Enlace
+			  donde podemos acceder a sus campos private Integer codigo;
+				private String descripcion;
+				private String ruta;
+			   accedemos con session al atributo sesion llamado ENLACES
+			  de UsuarioController  -->
 				<ul class="navbar-nav">
-					<li class="nav-item">
-						<a class="nav-link" th:href="@{/}">PRESTAMISTA</a>
+					<li class="nav-item" th:each="bean:${session.ENLACES}">
+						<!--y con la etiqueta thymeleaf th text accedemos con bean(objeto de tipo Enlace) a la descripcion
+						de la entidad Enlace y con href accedemos a la ruta osea es el valor de la descripcion
+						del enlace que aparece tambien accediendo con bean objeto de tipo Enlace-->
+						<a class="nav-link" th:text="${bean.descripcion}" th:href="${bean.ruta}"></a>
 					</li>
 
-					<li class="nav-item">
-						<a class="nav-link" th:href="@{/prestatarioWeb/listar}">PRESTATARIO</a>
-					</li>
-
-					<li class="nav-item">
-						<a class="nav-link" th:href="@{/solicitudPrestamo/listar}">SOLICITUDES</a>
-					</li>
 				</ul>
+				<div class="navbar-nav ml-auto">
+					<span class="nav-item nav-link"></span>
+					<form method="post">
+						<input type="submit" class="btn btn-success" value="Cerrar sesion">
+					</form>
+				</div>
 			</div>
-		</div>
-	</nav>
+		</nav>
+	</div>
 </div>

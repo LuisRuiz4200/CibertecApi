@@ -1,35 +1,38 @@
 package com.cibertec.api.serviceImpl;
 
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cibertec.api.model.PrestamistaM;
-import com.cibertec.api.repository.PersonaMRepository;
-import com.cibertec.api.repository.PrestamistaMRepository;
-import com.cibertec.api.service.PrestamistaMService;
-import com.cibertec.api.model.PersonaM;
+import com.cibertec.api.model.Prestamista;
+import com.cibertec.api.repository.PrestamistaRepository;
+import com.cibertec.api.service.PrestamistaService;
 
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Service
 @AllArgsConstructor
-public class PrestamistaMServiceImpl implements PrestamistaMService {
+@NoArgsConstructor
+public class PrestamistaServiceImpl implements PrestamistaService {
 	
-	private PrestamistaMRepository repo;
-	private PersonaMRepository personaRepo;
+	@Autowired
+	private PrestamistaRepository repo;
+	//private PersonaRepository personaRepo;
 	
 	@Override
-	public List<PrestamistaM> listarPrestamista() {
+	public List<Prestamista> listarPrestamista() {
 		return repo.findAll();
 	}
 
 	@Override
-	public PrestamistaM listarPrestamistaPorId(int id) {
+	public Prestamista listarPrestamistaPorId(int id) {
 		return repo.findById(id).orElse(null);
 	}
 
 	@Override
-	public void guardarPrestamista(PrestamistaM prestamista) {
+	public Prestamista guardarPrestamista(Prestamista prestamista) {
 		// Obtener el objeto PersonaM del prestamista
 		/*
 		 * PersonaM persona = prestamista.getPrestamista();
@@ -45,7 +48,7 @@ public class PrestamistaMServiceImpl implements PrestamistaMService {
 		 * repo.existsById(prestamista.getIdPrestamista())) { throw new
 		 * RuntimeException("El prestamista ya existe en la base de datos"); }
 		 */
-				repo.save(prestamista);
+		return repo.save(prestamista);
 		
 		//esto con la finalidad para poder actualizar da error de esto
 				//detached entity passed to persist: com.cibertec.api.model.PersonaM

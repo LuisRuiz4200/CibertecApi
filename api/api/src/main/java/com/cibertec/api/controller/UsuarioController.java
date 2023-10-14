@@ -13,12 +13,12 @@ import java.util.List;
 import java.util.Objects;
 
 import com.cibertec.api.model.Menu;
-import com.cibertec.api.model.PersonaM;
+import com.cibertec.api.model.Persona;
 import com.cibertec.api.model.Rol;
 import com.cibertec.api.model.Usuario;
 import com.cibertec.api.service.UService;
 import com.cibertec.api.service.UsuarioService;
-import com.cibertec.api.service.personaService;
+import com.cibertec.api.service.PersonaService;
 import com.cibertec.api.service.rolService;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.support.SessionStatus;
@@ -63,7 +63,7 @@ public class UsuarioController {
 		//para llamar al list de rol para combo
 		private rolService serviceRol;
 		//para llamar al list de persona para combo
-		private personaService servicePersona; 
+		private PersonaService servicePersona; 
 		
 		@GetMapping("/listarUsuario") //localhost:9090 /
 		public String listarUsuario(Model model) {
@@ -84,7 +84,7 @@ public class UsuarioController {
 			//creamos listado para rol para combo
 			List<Rol> dataRol=serviceRol.listarRol();
 			//creamos listado para persona para combo
-			List<PersonaM> dataPersona=servicePersona.listarPersona();
+			List<Persona> dataPersona=servicePersona.listarPersona();
 			//crear un nuevo PersonaM para registrar al darle al boton registrar crea un nuevo objeto PersonaM
 			//usuario.setPrestamista  (new PersonaM());
 			
@@ -158,7 +158,7 @@ public class UsuarioController {
 				//creamos listado para rol para combo
 				List<Rol> dataRol=serviceRol.listarRol();
 				//creamos listado para persona para combo
-				List<PersonaM> dataPersona=servicePersona.listarPersona();
+				List<Persona> dataPersona=servicePersona.listarPersona();
 				//pasamos para  llenar los combobox
 				model.addAttribute("comboRol",dataRol);
 				model.addAttribute("comboPersona",dataPersona);

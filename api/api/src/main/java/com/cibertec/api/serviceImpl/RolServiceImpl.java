@@ -12,7 +12,7 @@ import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
-public class rolServiceImpl implements rolService {
+public class RolServiceImpl implements rolService {
 	
 	private rolRepository repo;
 	

@@ -5,20 +5,20 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.cibertec.api.model.PersonaM;
-import com.cibertec.api.repository.PersonaMRepository;
-import com.cibertec.api.service.personaService;
+import com.cibertec.api.model.Persona;
+import com.cibertec.api.repository.PersonaRepository;
+import com.cibertec.api.service.PersonaService;
 
 import lombok.AllArgsConstructor;
 
 @Service
 @AllArgsConstructor
-public class personaServiceImpl implements personaService{
+public class PersonaServiceImpl implements PersonaService{
 	
-	private PersonaMRepository repo;
+	private PersonaRepository repo;
 	//Listado normal
 	@Override
-	public List<PersonaM> listarPersona() {
+	public List<Persona> listarPersona() {
 		
 		return repo.findAll();
 	}
