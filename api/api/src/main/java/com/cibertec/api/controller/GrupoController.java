@@ -174,12 +174,20 @@ public class GrupoController {
                 listForView.add(dto);
         }
        
+        List<GrupoPrestamista> listPrestamistaWithGrupo = grupoPrestamistaService.getGrupoPrestamistaList();
+
         List<PersonaM> personaList = personaService.listarPersona();
+        
+        List<PersonaM> listaFiltrada = personaList.stream().filter(
+          persona -> listPrestamistaWithGrupo.stream().noneMatch(
+            personaWithGrupo -> personaWithGrupo.getId().getIdPrestamista() == persona.getIdPersona()
+          )
+        ).toList();
 
         model.addAttribute("formType", "new");
         model.addAttribute("title", "Agregar miembro");
         model.addAttribute("grupoPersonaDto", grupoPersonaDto);
-        model.addAttribute("cboPersonas", personaList);
+        model.addAttribute("cboPersonas", listaFiltrada);
         model.addAttribute("tblPersonas", listForView);
         return "GrupoForm";
     }
@@ -206,6 +214,15 @@ public class GrupoController {
 
         prestamistaM.setGrupos(listGrupo);
         prestamistaMService.guardarPrestamista(prestamistaM);
+
+        // Registrar campo activo de GrupoPrestamista
+        GrupoPrestamistaId grupoPrestamistaId = new GrupoPrestamistaId(dtoModel.getIdGrupo(), dtoModel.getIdPersona());
+
+        GrupoPrestamista updateGrupoPrestamista = new GrupoPrestamista();
+        updateGrupoPrestamista.setId(grupoPrestamistaId);
+        updateGrupoPrestamista.setActivo(true);
+        grupoPrestamistaService.saveGrupoPrestamista(updateGrupoPrestamista);
+
         status.setComplete();
         return "redirect:/grupo";
     }
@@ -214,7 +231,7 @@ public class GrupoController {
     public String deleteMember(@PathVariable(name="id") int id, @PathVariable(name = "grupo")int idGrupo, Model model){
         PrestamistaM prestamista = prestamistaMService.getPrestamistaById(id).orElse(null);
         Grupo thisGrupo = grupoService.getGrupoById(idGrupo).orElse(null);
-        
+
         /* Eliminación fisica 
         List<Grupo> newGrupoList = prestamista.getGrupos().stream().filter(item -> item != thisGrupo).collect(Collectors.toList());
         prestamista.setGrupos(newGrupoList);
