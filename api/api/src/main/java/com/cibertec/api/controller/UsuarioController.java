@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.cibertec.api.model.PersonaM;
+import com.cibertec.api.model.Persona;
 
 import com.cibertec.api.model.tbrol;
 import com.cibertec.api.model.tbusuario;
@@ -52,9 +52,9 @@ public class UsuarioController {
 		//creamos listado para rol para combo
 		List<tbrol> dataRol=serviceRol.listarRol();
 		//creamos listado para persona para combo
-		List<PersonaM> dataPersona=servicePersona.listarPersona();
-		//crear un nuevo PersonaM para registrar al darle al boton registrar crea un nuevo objeto PersonaM
-		//usuario.setPrestamista  (new PersonaM());
+		List<Persona> dataPersona=servicePersona.listarPersona();
+		//crear un nuevo Persona para registrar al darle al boton registrar crea un nuevo objeto Persona
+		//usuario.setPrestamista  (new Persona());
 		
 		model.addAttribute("usuario",usuario);
 		//pasamos para los combobox
@@ -126,7 +126,7 @@ public class UsuarioController {
 			//creamos listado para rol para combo
 			List<tbrol> dataRol=serviceRol.listarRol();
 			//creamos listado para persona para combo
-			List<PersonaM> dataPersona=servicePersona.listarPersona();
+			List<Persona> dataPersona=servicePersona.listarPersona();
 			//pasamos para  llenar los combobox
 			model.addAttribute("comboRol",dataRol);
 			model.addAttribute("comboPersona",dataPersona);

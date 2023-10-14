@@ -1,10 +1,10 @@
 package com.cibertec.api.controller;
 import org.springframework.stereotype.Controller;
 
-import com.cibertec.api.model.PersonaM;
-import com.cibertec.api.model.PrestamistaM;
-import com.cibertec.api.repository.PersonaMRepository;
-import com.cibertec.api.service.PrestamistaMService;
+import com.cibertec.api.model.Persona;
+import com.cibertec.api.model.Prestamista;
+import com.cibertec.api.repository.PersonaRepository;
+import com.cibertec.api.service.PrestamistaService;
 
 //import jakarta.validation.Valid;
 
@@ -25,11 +25,11 @@ public class PrestamistaMController {
 
 	//----
 	//service
-	private PrestamistaMService service;
+	private PrestamistaService service;
 	@GetMapping({"/listar", "/", ""}) //localhost:9090 /
 	public String listarPrestamista(Model model) {
 		
-		List<PrestamistaM> lista =service.listarPrestamista();
+		List<Prestamista> lista =service.listarPrestamista();
 	
 		model.addAttribute("lista",lista);
 	
@@ -41,9 +41,9 @@ public class PrestamistaMController {
 	@GetMapping("/registrar")
 	public String mostrarFormularioRegistroPrestamista(Model model) {
 	
-		PrestamistaM prestamista=new PrestamistaM();
-		//crear un nuevo PersonaM para registrar al darle al boton registrar crea un nuevo objeto PersonaM
-		prestamista.setPrestamista(new PersonaM());
+		Prestamista prestamista=new Prestamista();
+		//crear un nuevo Persona para registrar al darle al boton registrar crea un nuevo objeto Persona
+		prestamista.setPrestamista(new Persona());
 		
 		model.addAttribute("prestamista",prestamista);
 		
@@ -54,8 +54,8 @@ public class PrestamistaMController {
 	
 	
 	@PostMapping("/registrar") //localhost:9090/registrar
-	//public String guardarPrestamista(@Valid PrestamistaM prestamista,BindingResult result,
-	public String guardarPrestamista(PrestamistaM prestamista,BindingResult result,
+	//public String guardarPrestamista(@Valid Prestamista prestamista,BindingResult result,
+	public String guardarPrestamista(Prestamista prestamista,BindingResult result,
 			Model model,RedirectAttributes flash,SessionStatus status) {
 		
 		if(result.hasErrors()) {
@@ -84,7 +84,7 @@ public class PrestamistaMController {
 	public String editarPrestamista(@PathVariable(name="id") int id,Model model,
 			RedirectAttributes flash) {		
 		//creamos objeto presta inicializado en null
-		PrestamistaM presta=null;
+		Prestamista presta=null;
 		//Valida que el id sea mayor a 0
 		if(id>0) {
 			//Si es válido, busca el presta en el servicio por id

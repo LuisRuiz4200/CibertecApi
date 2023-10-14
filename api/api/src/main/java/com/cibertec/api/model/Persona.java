@@ -32,7 +32,7 @@ import lombok.ToString;
   
   @ToString
  
-public class PersonaM {
+public class Persona {
 	@Id
 	@GeneratedValue(strategy =GenerationType.IDENTITY)
 	@Column(name="idpersona")
@@ -61,4 +61,4 @@ public class PersonaM {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date fechaEdicion;
 	private boolean activo;
-} //fin de PersonaM
+} //fin de Persona

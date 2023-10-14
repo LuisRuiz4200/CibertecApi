@@ -16,12 +16,12 @@ import org.springframework.web.bind.support.SessionStatus;
 import com.cibertec.api.model.Grupo;
 import com.cibertec.api.model.GrupoPrestamista;
 import com.cibertec.api.model.GrupoPrestamistaId;
-import com.cibertec.api.model.PersonaM;
-import com.cibertec.api.model.PrestamistaM;
+import com.cibertec.api.model.Persona;
+import com.cibertec.api.model.Prestamista;
 import com.cibertec.api.model.modelDto.GrupoPersonaDto;
 import com.cibertec.api.service.GrupoPrestamistaService;
 import com.cibertec.api.service.GrupoService;
-import com.cibertec.api.service.PrestamistaMService;
+import com.cibertec.api.service.PrestamistaService;
 import com.cibertec.api.service.personaService;
 
 import lombok.AllArgsConstructor;
@@ -32,12 +32,12 @@ import lombok.AllArgsConstructor;
 public class GrupoController {
     private GrupoService grupoService;
     private GrupoPrestamistaService grupoPrestamistaService;
-    private PrestamistaMService prestamistaMService;
+    private PrestamistaService prestamistaMService;
     private personaService personaService;
     
     @GetMapping({"/listar", "", "/"})
     public String listGrupo(Model model){
-        PrestamistaM prestamistaM = prestamistaMService.getPrestamistaById(2).orElse(null);
+        Prestamista prestamistaM = prestamistaMService.getPrestamistaById(2).orElse(null);
 
         List<Grupo> listGrupo = (prestamistaM != null) 
             ? prestamistaM.getGrupos() 
@@ -69,7 +69,7 @@ public class GrupoController {
         // Guardar nuevo grupo.
         Grupo newGrupo = grupoService.saveGrupo(grupo);
         // Buscar al prestamista en sesion, obtener todos sus grupos y asignar el nuevo grupo. Por ultimo guardar los cambios.
-        PrestamistaM prestamistaM = prestamistaMService.getPrestamistaById(2).orElse(null);
+        Prestamista prestamistaM = prestamistaMService.getPrestamistaById(2).orElse(null);
         if(prestamistaM != null){
             List<Grupo> grupos = prestamistaM.getGrupos();
             grupos.add(newGrupo);
@@ -113,7 +113,7 @@ public class GrupoController {
         if(grupo == null)
             return "GrupoListar";
         
-        PrestamistaM prestamistaM = new PrestamistaM();
+        Prestamista prestamistaM = new Prestamista();
         prestamistaM.setIdPrestamista(2);
 
         GrupoPrestamista grupoPrestamista = grupoPrestamistaService.getGrupoPrestamistaByGrupoAndPrestamista(id, prestamistaM.getIdPrestamista());
@@ -138,7 +138,7 @@ public class GrupoController {
         grupoPersonaDto.setIdGrupo(grupo.getIdGrupo());
         grupoPersonaDto.setDescripcion(grupo.getDescripcion());
 
-        List<PersonaM> personaList = personaService.listarPersona();
+        List<Persona> personaList = personaService.listarPersona();
 
         model.addAttribute("formType", "new");
         model.addAttribute("title", "Agregar miembro");
@@ -155,7 +155,7 @@ public class GrupoController {
             return "GrupoForm";
         }
 
-        PrestamistaM prestamistaM = prestamistaMService.getPrestamistaById(dtoModel.getIdPersona()).orElse(null);
+        Prestamista prestamistaM = prestamistaMService.getPrestamistaById(dtoModel.getIdPersona()).orElse(null);
         Grupo newGrupo = grupoService.getGrupoById(dtoModel.getIdGrupo()).orElse(null);
 
         if(prestamistaM == null || newGrupo == null)

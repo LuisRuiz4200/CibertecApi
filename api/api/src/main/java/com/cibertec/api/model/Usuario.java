@@ -25,7 +25,7 @@ public class Usuario {
 	
 	@ManyToOne
 	@JoinColumn(name="idPersona")
-	private PersonaM idPersona;
+	private Persona idPersona;
 	
 	private Date fechaRegistro;
 	private Date fechaEdicion;
@@ -40,11 +40,11 @@ public class Usuario {
 		this.idUsuario = idUsuario;
 	}
 
-	public PersonaM getIdPersona() {
+	public Persona getIdPersona() {
 		return idPersona;
 	}
 
-	public void setIdPersona(PersonaM idPersona) {
+	public void setIdPersona(Persona idPersona) {
 		this.idPersona = idPersona;
 	}
 

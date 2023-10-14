@@ -5,8 +5,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.cibertec.api.model.PersonaM;
-import com.cibertec.api.repository.PersonaMRepository;
+import com.cibertec.api.model.Persona;
+import com.cibertec.api.repository.PersonaRepository;
 import com.cibertec.api.service.personaService;
 
 import lombok.AllArgsConstructor;
@@ -15,16 +15,16 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class personaServiceImpl implements personaService{
 	
-	private PersonaMRepository repo;
+	private PersonaRepository repo;
 	//Listado normal
 	@Override
-	public List<PersonaM> listarPersona() {
+	public List<Persona> listarPersona() {
 		
 		return repo.findAll();
 	}
 	//Listado de manera logica
 	/*
-	 * @Override public List<PersonaM> listarPersona() { return
+	 * @Override public List<Persona> listarPersona() { return
 	 * repo.findAll().stream() .filter(persona -> !persona.isActivo())
 	 * .collect(Collectors.toList()); }
 	 */

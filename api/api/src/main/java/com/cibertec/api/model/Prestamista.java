@@ -32,18 +32,18 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class PrestamistaM {
+public class Prestamista {
 	@Id
     @Column(name = "idprestamista")
     private int idPrestamista;
-	//entidad PrestamistaM 1 by 1 PersonaM
+	//entidad Prestamista 1 by 1 Persona
 	//@OneToOne(cascade = CascadeType.ALL) //Engloba a todos
 	@OneToOne(cascade = {CascadeType.ALL})
-	@MapsId //indica que el atributo idPrestamista de la entidad PrestamistaM
+	@MapsId //indica que el atributo idPrestamista de la entidad Prestamista
 	//es la clave primaria y foránea al mismo tiempo.
 	//columna de tabla tb_prestamista utiliza para unir las 2 tablas
 	@JoinColumn(name="idprestamista")
-	private PersonaM prestamista;
+	private Persona prestamista;
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Column(name="fecharegistro")
@@ -61,4 +61,4 @@ public class PrestamistaM {
 		inverseJoinColumns = @JoinColumn(name = "idGrupo")
 	)
 	private List<Grupo> grupos;
-}//fin de PrestamistaM
+}//fin de Prestamista

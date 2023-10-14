@@ -30,5 +30,5 @@ public class Grupo {
     private String descripcion;
 
     @ManyToMany(mappedBy = "grupos")
-	private List<PrestamistaM> prestamistas;
+	private List<Prestamista> prestamistas;
 }

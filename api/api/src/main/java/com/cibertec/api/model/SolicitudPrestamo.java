@@ -33,7 +33,7 @@ public class SolicitudPrestamo {
 	private Prestatario prestatario;
 	@ManyToOne
 	@JoinColumn(name="idprestamista")
-	private PrestamistaM prestamista;
+	private Prestamista prestamista;
 	private double monto;
 	private String motivo;
 	@Column(name="fecharegistro")
