@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<!-- xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">-->
+<!-- <head th:replace="layout/layout :: head">-->
+	<head>
+<meta charset="utf-8">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+	crossorigin="anonymous">
+</head>
+<body>
+
+	<!-- <header th:replace="layout/layout :: header"></header> -->
+
+	<div class="py-4 ml-5 mr-5">
+		<div class="card bg-light">
+			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-body">
+				<h4 class="card-title">
+					<a th:href="@{/registrar}" class="btn btn-primary">Agregar Prestamista</a>
+
+					<!-- <a sec:authorize="hasRole('ADMIN')" th:href="@{/exportarPdf}"
+						class="btn btn-secondary">Exportar a PDF</a> <a
+						sec:authorize="hasRole('ADMIN')" th:href="@{/exportarExcel}"
+						class="btn btn-success">Exportar a Excel</a> -->
+				</h4>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Nombres</th>
+							<th>Apellidos</th>
+							<th>Dirección</th>
+							<th>Email</th>
+							<th>DNI</th>
+							<th>RUC</th>
+						<!--	<th>Fecha</th>-->
+							<!-- <th>Detalles</th>-->
+							<!--<th sec:authorize="hasRole('ADMIN')">Editar</th>
+							<th sec:authorize="hasRole('ADMIN')">Eliminar</th>-->
+							<th>Editar</th>
+							<th>Eliminar</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="prestamista : ${lista}">
+							<!--<td th:text="${prestamista.idPrestamista}"></td>-->
+							<!--Datos de persona-->
+							<td th:text="${prestamista.prestamista.idPersona}"></td>
+							<td th:text="${prestamista.prestamista.nombres}"></td>
+							<td th:text="${prestamista.prestamista.apellidos}"></td>
+							<td th:text="${prestamista.prestamista.direccion}"></td>
+							<td th:text="${prestamista.prestamista.email}"></td>
+							<td th:text="${prestamista.prestamista.dni}"></td>
+							<td th:text="${prestamista.prestamista.ruc}"></td>
+							
+							<td><a
+								class="btn btn-warning btn-sm"
+								th:href="@{/actualizar/} + ${prestamista.prestamista.idPersona}">Editar</a></td>
+							<td><a
+								class="btn btn-danger btn-sm"
+								th:href="@{/eliminar/} + ${prestamista.prestamista.idPersona}"
+								onclick="return confirm('¿Estás seguro de eliminar al Prestamista?');">Eliminar</a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<footer></footer>
+</body>
+</html>

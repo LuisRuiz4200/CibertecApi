@@ -13,12 +13,13 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
-@Table(name = "tb_persona")
-@Data
+@Table(name="tb_persona")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Persona implements Serializable {
@@ -38,11 +39,11 @@ public class Persona implements Serializable {
 	private String ruc;
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecharegistro")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date fechaRegistro;
 	@Temporal(TemporalType.DATE)
 	@Column(name="fechaedicion")
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date fechaEdicion;
 	private boolean activo;
-	
-	
-}
+} //fin de PersonaM
