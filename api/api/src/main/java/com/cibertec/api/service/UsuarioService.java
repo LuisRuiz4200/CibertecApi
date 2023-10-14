@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.cibertec.api.model.Menu;
 import com.cibertec.api.model.Usuario;
 import com.cibertec.api.repository.UsuarioRepository;
+import java.util.stream.Collectors;
 //import com.clinica.project.entity.Enlace;
 //import com.clinica.project.entity.Usuario;
 
@@ -23,5 +24,6 @@ public class UsuarioService {
 	public List<Menu> enlacesDelUsuario(int rol){
 		return repo.traerMenusDelUsuario(rol);
 	}
-
+	//Creamos metodos para CRUD	
+	
 }

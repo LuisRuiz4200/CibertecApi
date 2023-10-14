@@ -5,15 +5,15 @@ import com.cibertec.api.model.PrestamistaM;
 
 public interface PrestamistaMService {
 	
-			//Creamos metodos para CRUD	
+	//Creamos metodos para CRUD	
 	
-			public List<PrestamistaM> listarPrestamista();
+	public List<PrestamistaM> listarPrestamista();
 			
-			public PrestamistaM listarPrestamistaPorId(int id);
+	public PrestamistaM listarPrestamistaPorId(int id);
 			
-			public void guardarPrestamista(PrestamistaM prestamista);
+	public void guardarPrestamista(PrestamistaM prestamista);
 	
-			public void eliminarPrestamista(int id);	
+	public void eliminarPrestamista(int id);	
 	
 	
 

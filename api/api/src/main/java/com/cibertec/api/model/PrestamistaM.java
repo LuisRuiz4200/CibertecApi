@@ -38,7 +38,7 @@ public class PrestamistaM {
 	//es la clave primaria y foránea al mismo tiempo.
 	//columna de tabla tb_prestamista utiliza para unir las 2 tablas
 	@JoinColumn(name="idprestamista")
-	private PersonaM prestamista;
+	private PersonaM prestamista = new PersonaM();
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Column(name="fecharegistro")

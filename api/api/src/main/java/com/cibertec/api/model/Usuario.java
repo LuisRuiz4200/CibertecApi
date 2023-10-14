@@ -4,6 +4,8 @@ import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -12,7 +14,9 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name="tb_usuario")
 public class Usuario {
+	
 	@Id
+	@GeneratedValue(strategy =GenerationType.IDENTITY)
 	@Column(name="idUsuario")
 	private int idUsuario;
 
@@ -25,12 +29,12 @@ public class Usuario {
 	
 	@ManyToOne
 	@JoinColumn(name="idPersona")
-	private PersonaM idPersona;
+	private PersonaM persona;
 	
 	private Date fechaRegistro;
 	private Date fechaEdicion;
 	
-	private int activo;
+	private boolean activo;
 
 	public int getIdUsuario() {
 		return idUsuario;
@@ -40,12 +44,12 @@ public class Usuario {
 		this.idUsuario = idUsuario;
 	}
 
-	public PersonaM getIdPersona() {
-		return idPersona;
+	public PersonaM getPersona() {
+		return persona;
 	}
 
-	public void setIdPersona(PersonaM idPersona) {
-		this.idPersona = idPersona;
+	public void setPersona(PersonaM idPersona) {
+		this.persona = idPersona;
 	}
 
 	public String getNombreUsuario() {
@@ -88,14 +92,13 @@ public class Usuario {
 		this.fechaEdicion = fechaEdicion;
 	}
 
-	public int getActivo() {
+	public boolean isActivo() {
 		return activo;
 	}
 
-	public void setActivo(int activo) {
+	public void setActivo(boolean activo) {
 		this.activo = activo;
 	}
-	
-	
+
 	
 }

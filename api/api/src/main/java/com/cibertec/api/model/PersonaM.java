@@ -23,13 +23,9 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 
-
-  @Getter
-  
+ @Getter
  @Setter
-  
-  @ToString
- 
+ @ToString
 public class PersonaM {
 	@Id
 	@GeneratedValue(strategy =GenerationType.IDENTITY)
