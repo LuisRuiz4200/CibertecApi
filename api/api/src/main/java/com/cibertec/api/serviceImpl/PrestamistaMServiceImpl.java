@@ -6,11 +6,11 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.cibertec.api.model.PrestamistaM;
+import com.cibertec.api.model.Prestamista;
 import com.cibertec.api.repository.PersonaMRepository;
 import com.cibertec.api.repository.PrestamistaMRepository;
 import com.cibertec.api.service.PrestamistaMService;
-import com.cibertec.api.model.PersonaM;
+import com.cibertec.api.model.Persona;
 
 import lombok.AllArgsConstructor;
 
@@ -28,19 +28,19 @@ public class PrestamistaMServiceImpl implements PrestamistaMService {
 	 // }
 	 //Listado de manera logica
 	  @Override
-	  public List<PrestamistaM> listarPrestamista() {
+	  public List<Prestamista> listarPrestamista() {
 	      return repo.findAll().stream()
 	   .filter(prestamista -> !prestamista.isActivo() && !prestamista.getPrestamista().isActivo())
 	   .collect(Collectors.toList());
 	  }
 
 	@Override
-	public PrestamistaM listarPrestamistaPorId(int id) {
+	public Prestamista listarPrestamistaPorId(int id) {
 		return repo.findById(id).orElse(null);
 	}
 
 	@Override
-	public void guardarPrestamista(PrestamistaM prestamista) {
+	public void guardarPrestamista(Prestamista prestamista) {
 		// Obtener el objeto PersonaM del prestamista
 		/*
 		 * PersonaM persona = prestamista.getPrestamista();
@@ -72,7 +72,7 @@ public class PrestamistaMServiceImpl implements PrestamistaMService {
 	//----------------------Eliminacion Logica
 	@Override
 	public void eliminarPrestamista(int id) {
-	    PrestamistaM prestamista = repo.findById(id).orElse(null);
+	    Prestamista prestamista = repo.findById(id).orElse(null);
 	    if (prestamista != null) {
 	        prestamista.getPrestamista().setActivo(true);
 	        //al  campo prestamista de tipo PrestamistaM lo cambia a true osea de eliminado
@@ -82,7 +82,7 @@ public class PrestamistaMServiceImpl implements PrestamistaMService {
 	}
 
 	@Override
-	public Optional<PrestamistaM> getPrestamistaById(int id) {
+	public Optional<Prestamista> getPrestamistaById(int id) {
 		return repo.findById(id);
 	}
 	

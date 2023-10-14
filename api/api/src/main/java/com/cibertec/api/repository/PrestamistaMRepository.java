@@ -2,10 +2,10 @@ package com.cibertec.api.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.cibertec.api.model.PrestamistaM;
+import com.cibertec.api.model.Prestamista;
 
 @Repository
-public interface PrestamistaMRepository extends JpaRepository<PrestamistaM,Integer> {
+public interface PrestamistaMRepository extends JpaRepository<Prestamista,Integer> {
 	
 	
 	

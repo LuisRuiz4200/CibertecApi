@@ -30,7 +30,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class PrestamistaM {
+public class Prestamista {
 	@Id
     @Column(name = "idprestamista")
     private int idPrestamista;
@@ -41,7 +41,7 @@ public class PrestamistaM {
 	//es la clave primaria y foránea al mismo tiempo.
 	//columna de tabla tb_prestamista utiliza para unir las 2 tablas
 	@JoinColumn(name="idprestamista")
-	private PersonaM prestamista;
+	private Persona prestamista;
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Column(name="fecharegistro")

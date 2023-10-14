@@ -31,7 +31,7 @@ import lombok.ToString;
   
   @ToString
  
-public class PersonaM {
+public class Persona {
 	@Id
 	@GeneratedValue(strategy =GenerationType.IDENTITY)
 	@Column(name="idpersona")

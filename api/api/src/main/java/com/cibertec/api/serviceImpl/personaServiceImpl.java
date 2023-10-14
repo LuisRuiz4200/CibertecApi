@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.cibertec.api.model.PersonaM;
+import com.cibertec.api.model.Persona;
 import com.cibertec.api.repository.PersonaMRepository;
 import com.cibertec.api.service.personaService;
 
@@ -19,13 +19,13 @@ public class personaServiceImpl implements personaService{
 	private PersonaMRepository repo;
 	//Listado normal
 	@Override
-	public List<PersonaM> listarPersona() {
+	public List<Persona> listarPersona() {
 		
 		return repo.findAll();
 	}
 
 	@Override
-	public Optional<PersonaM> getById(int id) {
+	public Optional<Persona> getById(int id) {
 		return repo.findById(id);
 	}
 

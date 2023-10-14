@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.cibertec.api.model.PrestamistaM;
+import com.cibertec.api.model.Prestamista;
 import com.cibertec.api.model.tbusuario;
 
 import com.cibertec.api.repository.PrestamistaMRepository;

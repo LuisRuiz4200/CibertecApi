@@ -48,7 +48,7 @@ public class tbusuario {
 	@ManyToOne
 	@JoinColumn(name = "idPersona")
 	//@Column(name="idpersona")
-	private PersonaM persona;
+	private Persona persona;
 	//
 	@Temporal(TemporalType.DATE)
 	//@Column(name="fecharegistro")
