@@ -9,10 +9,10 @@
 	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
 	crossorigin="anonymous">
 	<!--Para validacion 09-10-23 -->
-	<link rel="stylesheet" href="templates/static/css/toastr.min.css">
+    <link rel="stylesheet" href="/css/toastr.min.css">
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+	
 	<!--FIN para validacion -->
-
 </head>
 <body>
 
@@ -23,7 +23,7 @@
 			<div class="card-header" th:text="${titulo}"></div>
 			<div class="card-body">
 				<h4 class="card-title">
-					<a th:href="@{/registrar}" class="btn btn-primary">Agregar Prestamista</a>
+					<a th:href="@{/registrarUsuario}" class="btn btn-primary">Agregar Usuario</a>
 
 					<!-- <a sec:authorize="hasRole('ADMIN')" th:href="@{/exportarPdf}"
 						class="btn btn-secondary">Exportar a PDF</a> <a
@@ -34,12 +34,14 @@
 					<thead>
 						<tr>
 							<th>ID</th>
-							<th>Nombres</th>
-							<th>Apellidos</th>
-							<th>Dirección</th>
-							<th>Email</th>
+							<th>Nombre Usuario</th>
+							<!--<th>Clave Usuario</th>-->
+							<th>Nombres de Persona</th>
+							<th>Apellidos de Persona</th>
+							<th>Rol Asignado</th>
+							<!--<th>Email</th>
 							<th>DNI</th>
-							<th>RUC</th>
+							<th>RUC</th>-->
 						<!--	<th>Fecha</th>-->
 							<!-- <th>Detalles</th>-->
 							<!--<th sec:authorize="hasRole('ADMIN')">Editar</th>
@@ -49,25 +51,27 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="prestamista : ${lista}">
+						<tr th:each="usuario : ${lista}">
 							<!--<td th:text="${prestamista.idPrestamista}"></td>-->
-							<!--Datos de persona-->
-							<td th:text="${prestamista.prestamista.idPersona}"></td>
-							<td th:text="${prestamista.prestamista.nombres}"></td>
-							<td th:text="${prestamista.prestamista.apellidos}"></td>
-							<td th:text="${prestamista.prestamista.direccion}"></td>
-							<td th:text="${prestamista.prestamista.email}"></td>
+							<!--Datos de persona por medio de su objeto persona y rol accedemos
+							a los demas campos-->
+							<td th:text="${usuario.idUsuario}"></td>
+							<td th:text="${usuario.nombreUsuario}"></td>
+							<!--<td th:text="${usuario.claveUsuario}"></td>-->
+							<td th:text="${usuario.persona.nombres}"></td>
+							<td th:text="${usuario.persona.apellidos}"></td>
+							<td th:text="${usuario.rol.descripcion}"></td>
+							<!--<td th:text="${prestamista.prestamista.email}"></td>
 							<td th:text="${prestamista.prestamista.dni}"></td>
-							<td th:text="${prestamista.prestamista.ruc}"></td>
+							<td th:text="${prestamista.prestamista.ruc}"></td>-->
 							
 							<td><a
 								class="btn btn-warning btn-sm"
-								th:href="@{/actualizar/} + ${prestamista.prestamista.idPersona}">Editar</a></td>
-							<td>
-							  <a class="btn btn-danger btn-sm"
-							     th:href="@{/eliminar/} + ${prestamista.prestamista.idPersona}"
-							     onclick="confirmarEliminacion(event, this)">Eliminar</a>
-							</td>
+								th:href="@{/actualizarUsuario/} + ${usuario.idUsuario}">Editar</a></td>
+							<td><a
+								class="btn btn-danger btn-sm"
+								th:href="@{/eliminarUsuario/} + ${usuario.idUsuario}"
+								onclick="confirmarEliminacion(event, this)">Eliminar</a></td>
 						</tr>
 					</tbody>
 				</table>
@@ -77,20 +81,23 @@
 
 	<footer></footer>
 </body>
+
 <!--Para validacion 09-10-23   -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 <script src="/js/toastr.min.js"></script>
 <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 <!-- Fin para validacion -->
-<!--Para alerta de eliminacion-->
 
+<!--   VALIDANDO 09-10-23-->
+
+<!--Para alerta de eliminacion-->
 <script>
 	
 	function confirmarEliminacion(event, elemento) {
   event.preventDefault();
   Swal.fire({
-    title: '¿Estás seguro de eliminar al Prestamista?',
+    title: '¿Estás seguro de eliminar al Usuario?',
     text: 'Esta acción no se puede deshacer',
     icon: 'warning',
     showCancelButton: true,
@@ -107,5 +114,4 @@
 
 	
 </script>
-
 </html>

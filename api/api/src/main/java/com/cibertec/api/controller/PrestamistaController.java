@@ -1,32 +1,32 @@
 package com.cibertec.api.controller;
-import org.springframework.stereotype.Controller;
-
-import com.cibertec.api.model.PersonaM;
-import com.cibertec.api.model.PrestamistaM;
-import com.cibertec.api.repository.PersonaMRepository;
-import com.cibertec.api.service.PrestamistaMService;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.ui.Model;
 import java.util.Objects;
-import org.springframework.validation.annotation.Validated;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.cibertec.api.model.Persona;
+import com.cibertec.api.model.Prestamista;
+import com.cibertec.api.service.PrestamistaService;
+
+import lombok.AllArgsConstructor;
 @Controller
 @AllArgsConstructor
-public class PrestamistaMController {
+public class PrestamistaController {
 
 	//----
 	//service
-	private PrestamistaMService service;
+	private PrestamistaService service;
 	@GetMapping({"/listar", "/", ""}) //localhost:9090 /
 	public String listarPrestamista(Model model) {
 		
-		List<PrestamistaM> lista =service.listarPrestamista();
+		List<Prestamista> lista =service.listarPrestamista();
 	
 		model.addAttribute("lista",lista);
 	
@@ -38,9 +38,9 @@ public class PrestamistaMController {
 	@GetMapping("/registrar")
 	public String mostrarFormularioRegistroPrestamista(Model model) {
 	
-		PrestamistaM prestamista=new PrestamistaM();
+		Prestamista prestamista=new Prestamista();
 		//crear un nuevo PersonaM para registrar al darle al boton registrar crea un nuevo objeto PersonaM
-		prestamista.setPrestamista(new PersonaM());
+		prestamista.setPrestamista(new Persona());
 		
 		model.addAttribute("prestamista",prestamista);
 		
@@ -51,7 +51,7 @@ public class PrestamistaMController {
 	
 	
 	@PostMapping("/registrar") //localhost:9090/registrar
-	public String guardarPrestamista(PrestamistaM prestamista,BindingResult result,
+	public String guardarPrestamista(Prestamista prestamista,BindingResult result,
 			Model model,RedirectAttributes flash,SessionStatus status) {
 		
 		if(result.hasErrors()) {
@@ -87,7 +87,7 @@ public class PrestamistaMController {
 	public String editarPrestamista(@PathVariable(name="id") int id,Model model,
 			RedirectAttributes flash) {		
 		//creamos objeto presta inicializado en null
-		PrestamistaM presta=null;
+		Prestamista presta=null;
 		//Valida que el id sea mayor a 0
 		if(id>0) {
 			//Si es válido, busca el presta en el servicio por id
@@ -118,11 +118,29 @@ public class PrestamistaMController {
 		return "formulario";
 	} //fin de editarEmpleado
 	
+	//Metodo para eliminar
+	//Mapea la petición GET a la URL "/eliminar/{id}"
+	//Extrae el id de la URL usando @PathVariable
+	@GetMapping("/eliminar/{id}")
+	public String eliminarPrestamista(@PathVariable(name="id") int id,
+				RedirectAttributes flash) {	
+	//Valida que el id sea mayor a 0
+			if(id>0) {
+				//Si es válido, llama al método eliminarPrestamista del servicio, pasándole el id
+				service.eliminarPrestamista(id);
+				//Agrega un mensaje "flash" de éxito indicando que se eliminó
+					flash.addFlashAttribute("success","El Prestamista ha sido eliminado");
+					//Retorna un redirect a la URL /listar para mostrar la lista con el atributo success que almacena
+					//el mensaje
+					return "redirect:/listar";
+					
+				} //fin de if
+			return "redirect:/listar";
+		} //fin de eliminarEmpleado
 	
 	
 	
 	
 	
 	
-	
-} //Fin de PrestamistaMController
+} //Fin de PrestamistaController
