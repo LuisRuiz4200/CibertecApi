@@ -7,6 +7,6 @@ import com.cibertec.api.model.Rol;
 
 
 @Repository
-public interface rolRepository extends JpaRepository<Rol,Integer> {
+public interface RolRepository extends JpaRepository<Rol,Integer> {
 
 }

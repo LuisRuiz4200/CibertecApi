@@ -55,13 +55,13 @@ public class Prestamista {
 	@Column(name="fechaedicion")
 	private Date fechaEdicion;
 	private boolean activo;
-	@OneToMany(mappedBy = "prestamista")
-	@JsonIgnore
-	private List<GrupoPrestamista> listaGrupoPrestamista;
-	
-	@OneToMany(mappedBy = "prestamista")
-	@JsonIgnore
-	private List<SolicitudPrestamo> listaSolicitudPrestamo;
+//	@OneToMany(mappedBy = "prestamista")
+//	@JsonIgnore
+//	private List<GrupoPrestamista> listaGrupoPrestamista;
+//	
+//	@OneToMany(mappedBy = "prestamista")
+//	@JsonIgnore
+//	private List<SolicitudPrestamo> listaSolicitudPrestamo;
 
 
 	@ManyToMany
