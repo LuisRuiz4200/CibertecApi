@@ -18,6 +18,9 @@ import com.cibertec.api.model.Rol;
 import com.cibertec.api.model.Usuario;
 import com.cibertec.api.service.UService;
 import com.cibertec.api.service.UsuarioService;
+
+import jakarta.servlet.http.HttpSession;
+
 import com.cibertec.api.service.PersonaService;
 import com.cibertec.api.service.RolService;
 
@@ -44,13 +47,13 @@ public class UsuarioController {
 	}
 	
 	@RequestMapping("/intranet")
-	public String intranet(Authentication  auth,Model model){
+	public String intranet(Authentication  auth, Model model, HttpSession session){
 		String vLogin=auth.getName();
 		 Usuario u=servicio.loginUsuario(vLogin);
 		 List<Menu> lista=servicio.enlacesDelUsuario(u.getRol().getIdRol());
 		 
 	     model.addAttribute("ENLACES",lista);
-	     
+	    session.setAttribute("UserLogin", u);
 			//retornamos la pagina o vista intranet.html
 		return "intranet";		
 	}
@@ -198,7 +201,12 @@ public class UsuarioController {
 					} //fin de if
 				return "redirect:/listarUsuario";
 			} //fin de eliminarEmpleado
-			
+		
+	@PostMapping("/cerrarSession")
+	public String cerrarSession(HttpSession session) {
+		session.removeAttribute("UserLogin");
+		return "redirect:/login";
+	}
 
 }
 
