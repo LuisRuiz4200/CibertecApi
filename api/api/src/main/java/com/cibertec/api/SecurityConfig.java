@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
 @SuppressWarnings("deprecation")
 @EnableWebSecurity
@@ -32,7 +33,11 @@ public class SecurityConfig {
 	auth.anyRequest().authenticated();})
 	.formLogin(form-> form.loginPage("/login")
 	.permitAll().defaultSuccessUrl("/intranet"));
-		
+	
+	http.exceptionHandling(exceptions -> {
+	    exceptions.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"));
+	    exceptions.accessDeniedPage("/intranet");
+	});
 	return http.build();
 	}
 }
