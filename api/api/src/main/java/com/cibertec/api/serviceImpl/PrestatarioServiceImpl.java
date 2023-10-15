@@ -30,9 +30,8 @@ public class PrestatarioServiceImpl implements PrestatarioService{
 	}
 
 	@Override
-	public Prestatario eliminar(int id) {
+	public void eliminar(int id) {
 		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

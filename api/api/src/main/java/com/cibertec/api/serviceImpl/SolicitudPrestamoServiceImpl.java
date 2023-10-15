@@ -29,9 +29,8 @@ public class SolicitudPrestamoServiceImpl implements SolicitudPrestamoService {
 	}
 
 	@Override
-	public SolicitudPrestamo eliminar(int id) {
+	public void eliminar(int id) {
 		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
