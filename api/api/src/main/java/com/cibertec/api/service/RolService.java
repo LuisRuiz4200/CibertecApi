@@ -3,7 +3,7 @@ import java.util.List;
 
 import com.cibertec.api.model.Rol;
 
-public interface rolService {
+public interface RolService {
 
 	//Creamos metodos para CRUD	
 	

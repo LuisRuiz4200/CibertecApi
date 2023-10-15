@@ -21,8 +21,8 @@ import com.cibertec.api.model.Rol;
 import com.cibertec.api.model.Usuario;
 import com.cibertec.api.service.PersonaService;
 import com.cibertec.api.service.UService;
-import com.cibertec.api.service.rolService;
-import com.cibertec.api.service.usuarioService;
+import com.cibertec.api.service.RolService;
+import com.cibertec.api.service.UsuarioService;
 
 import lombok.AllArgsConstructor;
 

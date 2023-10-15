@@ -8,10 +8,10 @@ import org.springframework.stereotype.Repository;
 
 import com.cibertec.api.model.Menu;
 import com.cibertec.api.model.Usuario;
-import com.cibertec.api.model.tbusuario;
+
 
 @Repository
-public interface UsuarioRepository extends JpaRepository<tbusuario,Integer>{
+public interface UsuarioRepository extends JpaRepository<Usuario,Integer>{
 
 	
 	// select * from tb_usuario where nombreUsuario='Julian13' --> es admin
