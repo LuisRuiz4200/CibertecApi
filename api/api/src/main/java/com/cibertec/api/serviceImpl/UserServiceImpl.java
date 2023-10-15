@@ -1,6 +1,7 @@
 package com.cibertec.api.serviceImpl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -40,14 +41,39 @@ public class UserServiceImpl implements UService {
 	public void guardarUsuario(Usuario usuario) {
 		
 	//Creamos objeto usuario
-	Usuario usu = new Usuario();
+	/*Usuario usu = new Usuario();
 		usu.setNombreUsuario(usuario.getNombreUsuario());
 		//al campo clave de usuario con passwordEncoder encriptamos el getClave 
 		usu.setClaveUsuario(passwordEncoder.encode(usuario.getClaveUsuario()));
 		usu.setPersona(usuario.getPersona());
 		usu.setRol(usuario.getRol());
 			
-		repo.save(usu);
+		repo.save(usu);*/
+		// Buscamos el usuario existente en la base de datos
+	    Optional<Usuario> optionalUsu = repo.findById(usuario.getIdUsuario());
+	    
+	    if (optionalUsu.isPresent()) {
+	        // Si encontramos el usuario, actualizamos los campos necesarios
+	        Usuario usu = optionalUsu.get();
+	        usu.setNombreUsuario(usuario.getNombreUsuario());
+	        usu.setClaveUsuario(passwordEncoder.encode(usuario.getClaveUsuario()));
+	        usu.setPersona(usuario.getPersona());
+	        usu.setRol(usuario.getRol());
+	        
+	        // Guardamos los cambios
+	        repo.save(usu);
+	    } else {
+	        // Si no encontramos el usuario, creamos uno nuevo
+	        Usuario usu = new Usuario();
+	        usu.setNombreUsuario(usuario.getNombreUsuario());
+	        usu.setClaveUsuario(passwordEncoder.encode(usuario.getClaveUsuario()));
+	        usu.setPersona(usuario.getPersona());
+	        usu.setRol(usuario.getRol());
+	        
+	        // Guardamos el nuevo usuario
+	        repo.save(usu);
+	    }
+		
 	}
 	//Eliminacion fisica
 	//@Override

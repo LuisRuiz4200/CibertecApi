@@ -8,6 +8,11 @@
 	href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
 	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
 	crossorigin="anonymous">
+	<!--Para validacion 09-10-23 -->
+	<link rel="stylesheet" href="templates/static/css/toastr.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+	<!--FIN para validacion -->
+
 </head>
 <body>
 
@@ -58,10 +63,11 @@
 							<td><a
 								class="btn btn-warning btn-sm"
 								th:href="@{/actualizar/} + ${prestamista.prestamista.idPersona}">Editar</a></td>
-							<td><a
-								class="btn btn-danger btn-sm"
-								th:href="@{/eliminar/} + ${prestamista.prestamista.idPersona}"
-								onclick="return confirm('¿Estás seguro de eliminar al Prestamista?');">Eliminar</a></td>
+							<td>
+							  <a class="btn btn-danger btn-sm"
+							     th:href="@{/eliminar/} + ${prestamista.prestamista.idPersona}"
+							     onclick="confirmarEliminacion(event, this)">Eliminar</a>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -71,4 +77,35 @@
 
 	<footer></footer>
 </body>
+<!--Para validacion 09-10-23   -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="/js/toastr.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+<!-- Fin para validacion -->
+<!--Para alerta de eliminacion-->
+
+<script>
+	
+	function confirmarEliminacion(event, elemento) {
+  event.preventDefault();
+  Swal.fire({
+    title: '¿Estás seguro de eliminar al Prestamista?',
+    text: 'Esta acción no se puede deshacer',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = elemento.href;
+    }
+  });
+}
+
+	
+</script>
+
 </html>

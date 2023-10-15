@@ -2,6 +2,8 @@ package com.cibertec.api.serviceImpl;
 
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cibertec.api.model.Persona;
@@ -16,6 +18,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PersonaServiceImpl implements PersonaService{
 	
+	@Autowired
 	private PersonaRepository repo;
 	//Listado normal
 	@Override

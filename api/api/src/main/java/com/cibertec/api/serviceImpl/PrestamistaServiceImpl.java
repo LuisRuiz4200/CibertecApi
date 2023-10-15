@@ -7,13 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cibertec.api.model.Prestamista;
-import com.cibertec.api.repository.PersonaRepository;
 import com.cibertec.api.repository.PrestamistaRepository;
 import com.cibertec.api.service.PrestamistaService;
-import com.cibertec.api.model.Persona;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -26,7 +25,9 @@ public class PrestamistaServiceImpl implements PrestamistaService {
 	
 	@Override
 	public List<Prestamista> listarPrestamista() {
-		return repo.findAll();
+		return repo.findAll().stream()
+	    .filter(prestamista -> !prestamista.isActivo() && !prestamista.getPrestamista().isActivo())
+		.collect(Collectors.toList());
 	}
 
 	@Override

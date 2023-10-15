@@ -2,16 +2,20 @@ package com.cibertec.api.service;
 
 import java.util.List;
 
-import com.cibertec.api.model.Menu;
-import com.cibertec.api.model.Usuario;
-import com.cibertec.api.repository.UsuarioRepository;
-import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 //import com.clinica.project.entity.Enlace;
 //import com.clinica.project.entity.Usuario;
 
+import com.cibertec.api.model.Menu;
+import com.cibertec.api.model.Usuario;
+import com.cibertec.api.repository.UsuarioRepository;
 
-public interface UsuarioService {
+@Service
+public class UsuarioService {
 	
+	@Autowired
+	UsuarioRepository repo;
 	//Creamos metodos para CRUD	
 	
 	public Usuario loginUsuario(String vLogin) {

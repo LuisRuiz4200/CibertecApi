@@ -118,7 +118,25 @@ public class PrestamistaController {
 		return "formulario";
 	} //fin de editarEmpleado
 	
-	
+	//Metodo para eliminar
+	//Mapea la petición GET a la URL "/eliminar/{id}"
+	//Extrae el id de la URL usando @PathVariable
+	@GetMapping("/eliminar/{id}")
+	public String eliminarPrestamista(@PathVariable(name="id") int id,
+				RedirectAttributes flash) {	
+	//Valida que el id sea mayor a 0
+			if(id>0) {
+				//Si es válido, llama al método eliminarPrestamista del servicio, pasándole el id
+				service.eliminarPrestamista(id);
+				//Agrega un mensaje "flash" de éxito indicando que se eliminó
+					flash.addFlashAttribute("success","El Prestamista ha sido eliminado");
+					//Retorna un redirect a la URL /listar para mostrar la lista con el atributo success que almacena
+					//el mensaje
+					return "redirect:/listar";
+					
+				} //fin de if
+			return "redirect:/listar";
+		} //fin de eliminarEmpleado
 	
 	
 	
