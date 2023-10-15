@@ -7,14 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.cibertec.api.model.Prestatario;
 import com.cibertec.api.service.PrestatarioService;
 
 @Controller
-@RequestMapping("/prestatarioWeb")
+@RequestMapping("/prestatario")
 public class PrestatarioController {
 	
 	@Autowired

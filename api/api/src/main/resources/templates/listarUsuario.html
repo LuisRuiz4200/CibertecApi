@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<!-- xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">-->
+<!-- <head th:replace="layout/layout :: head">-->
+	<head>
+<meta charset="utf-8">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+	crossorigin="anonymous">
+	<!--Para validacion 09-10-23 -->
+    <link rel="stylesheet" href="/css/toastr.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+	
+	<!--FIN para validacion -->
+</head>
+<body>
+
+	<!-- <header th:replace="layout/layout :: header"></header> -->
+
+	<div class="py-4 ml-5 mr-5">
+		<div class="card bg-light">
+			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-body">
+				<h4 class="card-title">
+					<a th:href="@{/registrarUsuario}" class="btn btn-primary">Agregar Usuario</a>
+
+					<!-- <a sec:authorize="hasRole('ADMIN')" th:href="@{/exportarPdf}"
+						class="btn btn-secondary">Exportar a PDF</a> <a
+						sec:authorize="hasRole('ADMIN')" th:href="@{/exportarExcel}"
+						class="btn btn-success">Exportar a Excel</a> -->
+				</h4>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Nombre Usuario</th>
+							<!--<th>Clave Usuario</th>-->
+							<th>Nombres de Persona</th>
+							<th>Apellidos de Persona</th>
+							<th>Rol Asignado</th>
+							<!--<th>Email</th>
+							<th>DNI</th>
+							<th>RUC</th>-->
+						<!--	<th>Fecha</th>-->
+							<!-- <th>Detalles</th>-->
+							<!--<th sec:authorize="hasRole('ADMIN')">Editar</th>
+							<th sec:authorize="hasRole('ADMIN')">Eliminar</th>-->
+							<th>Editar</th>
+							<th>Eliminar</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="usuario : ${lista}">
+							<!--<td th:text="${prestamista.idPrestamista}"></td>-->
+							<!--Datos de persona por medio de su objeto persona y rol accedemos
+							a los demas campos-->
+							<td th:text="${usuario.idUsuario}"></td>
+							<td th:text="${usuario.nombreUsuario}"></td>
+							<!--<td th:text="${usuario.claveUsuario}"></td>-->
+							<td th:text="${usuario.persona.nombres}"></td>
+							<td th:text="${usuario.persona.apellidos}"></td>
+							<td th:text="${usuario.rol.descripcion}"></td>
+							<!--<td th:text="${prestamista.prestamista.email}"></td>
+							<td th:text="${prestamista.prestamista.dni}"></td>
+							<td th:text="${prestamista.prestamista.ruc}"></td>-->
+							
+							<td><a
+								class="btn btn-warning btn-sm"
+								th:href="@{/actualizarUsuario/} + ${usuario.idUsuario}">Editar</a></td>
+							<td><a
+								class="btn btn-danger btn-sm"
+								th:href="@{/eliminarUsuario/} + ${usuario.idUsuario}"
+								onclick="confirmarEliminacion(event, this)">Eliminar</a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<footer></footer>
+</body>
+
+<!--Para validacion 09-10-23   -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="/js/toastr.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+<!-- Fin para validacion -->
+
+<!--   VALIDANDO 09-10-23-->
+
+<!--Para alerta de eliminacion-->
+<script>
+	
+	function confirmarEliminacion(event, elemento) {
+  event.preventDefault();
+  Swal.fire({
+    title: '¿Estás seguro de eliminar al Usuario?',
+    text: 'Esta acción no se puede deshacer',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = elemento.href;
+    }
+  });
+}
+
+	
+</script>
+</html>

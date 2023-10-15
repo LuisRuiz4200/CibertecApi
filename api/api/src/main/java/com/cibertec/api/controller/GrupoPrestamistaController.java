@@ -5,11 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 
 import com.cibertec.api.model.GrupoPrestamista;
 import com.cibertec.api.service.GrupoPrestamistaService;
@@ -23,7 +21,7 @@ public class GrupoPrestamistaController {
 	
 	@GetMapping("/listar")
 	private ResponseEntity<List<GrupoPrestamista>> listar(){
-		List<GrupoPrestamista> response = grupoprestamistaService.listar();
+		List<GrupoPrestamista> response = grupoprestamistaService.getGrupoPrestamistaList();
 		return ResponseEntity.ok(response);
 		
 	}
@@ -32,7 +30,7 @@ public class GrupoPrestamistaController {
 	private String resgistrar(@RequestBody GrupoPrestamista model) {
 		String response = "";
 		try {
-			model = grupoprestamistaService.guardar(model);
+			model = grupoprestamistaService.saveGrupoPrestamista(model);
 		} catch (Exception ex) {
 			response = ex.getMessage();
 		}
