@@ -2,7 +2,6 @@ package com.cibertec.api.serviceImpl;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,12 +59,26 @@ public class PrestamistaServiceImpl implements PrestamistaService {
 		//repo.save(prestamista);
 		
 	}
-
+	//Eliminacion fisica
+	/*
+	 * @Override public void eliminarPrestamista(int id) { //.deleteById(id);
+	 * //eliminamos por ID o COD usamos este repo.deleteById(id); }
+	 */
+	//----------------------Eliminacion Logica
 	@Override
 	public void eliminarPrestamista(int id) {
-		//.deleteById(id);	
-		//eliminamos por ID o COD usamos este
-		repo.deleteById(id);
+	    Prestamista prestamista = repo.findById(id).orElse(null);
+	    if (prestamista != null) {
+	        prestamista.getPrestamista().setActivo(true);
+	        //al  campo prestamista de tipo PrestamistaM lo cambia a true osea de eliminado
+	        prestamista.setActivo(true);
+	        repo.save(prestamista);
+	    }
+	}
+
+	@Override
+	public Optional<Prestamista> getPrestamistaById(int id) {
+		return repo.findById(id);
 	}
 
 }

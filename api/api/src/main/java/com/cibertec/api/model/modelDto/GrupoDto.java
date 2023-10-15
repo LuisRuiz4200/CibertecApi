@@ -11,14 +11,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class GrupoPersonaDto {
-    private int id;
-
-    private int idPersona;
-    private String nombres;
-    private String apellidos;
-    private String email;
-
+public class GrupoDto {
     private int idGrupo;
     private String descripcion;
+    private int count;
 }

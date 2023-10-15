@@ -1,5 +1,6 @@
 package com.cibertec.api.service;
 import java.util.List;
+import java.util.Optional;
 
 import com.cibertec.api.model.Prestamista;
 
@@ -13,7 +14,9 @@ public interface PrestamistaService {
 			
 	public Prestamista guardarPrestamista(Prestamista prestamista);
 	
-	public void eliminarPrestamista(int id);	
+	public void eliminarPrestamista(int id);
+
+	Optional<Prestamista> getPrestamistaById(int id);	
 	
 	
 

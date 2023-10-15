@@ -18,10 +18,10 @@ import com.cibertec.api.model.GrupoPrestamista;
 import com.cibertec.api.model.GrupoPrestamistaId;
 import com.cibertec.api.model.Persona;
 import com.cibertec.api.model.Prestamista;
+import com.cibertec.api.model.modelDto.GrupoDto;
 import com.cibertec.api.model.modelDto.GrupoPersonaDto;
 import com.cibertec.api.service.GrupoPrestamistaService;
 import com.cibertec.api.service.GrupoService;
-import com.cibertec.api.service.PersonaService;
 import com.cibertec.api.service.PrestamistaService;
 import com.cibertec.api.service.PersonaService;
 
@@ -33,18 +33,24 @@ import lombok.AllArgsConstructor;
 public class GrupoController {
     private GrupoService grupoService;
     private GrupoPrestamistaService grupoPrestamistaService;
-    private PrestamistaService prestamistaMService;
+    private PrestamistaService prestamistaService;
     private PersonaService personaService;
     
     @GetMapping({"/listar", "", "/"})
     public String listGrupo(Model model){
-        Prestamista prestamistaM = prestamistaMService.getPrestamistaById(2).orElse(null);
+        Prestamista prestamista = prestamistaService.getPrestamistaById(2).orElse(null);
 
-        List<Grupo> listGrupo = (prestamistaM != null) 
-            ? prestamistaM.getGrupos() 
+        List<Grupo> listGrupo = (prestamista != null) 
+            ? prestamista.getGrupos() 
             : new ArrayList<>();
+        List<GrupoDto> grupoDtoList = new ArrayList<GrupoDto>();
+        for (Grupo item : listGrupo) {
+            int count = grupoPrestamistaService.getGrupoPrestamistaByGrupo(item.getIdGrupo()).size();
+            GrupoDto grupoDto = new GrupoDto(item.getIdGrupo(), item.getDescripcion(), (count - 1));
+            grupoDtoList.add(grupoDto);
+        }
 
-        model.addAttribute("list", listGrupo);
+        model.addAttribute("list", grupoDtoList);
         return "GrupoListar";
     }
 
@@ -70,15 +76,15 @@ public class GrupoController {
         // Guardar nuevo grupo.
         Grupo newGrupo = grupoService.saveGrupo(grupo);
         // Buscar al prestamista en sesion, obtener todos sus grupos y asignar el nuevo grupo. Por ultimo guardar los cambios.
-        Prestamista prestamistaM = prestamistaMService.getPrestamistaById(2).orElse(null);
-        if(prestamistaM != null){
-            List<Grupo> grupos = prestamistaM.getGrupos();
+        Prestamista prestamista = prestamistaService.getPrestamistaById(2).orElse(null);
+        if(prestamista != null){
+            List<Grupo> grupos = prestamista.getGrupos();
             grupos.add(newGrupo);
-            prestamistaM.setGrupos(grupos);
-            prestamistaMService.guardarPrestamista(prestamistaM);
+            prestamista.setGrupos(grupos);
+            prestamistaService.guardarPrestamista(prestamista);
 
             // Registrar campo activo de GrupoPrestamista
-            GrupoPrestamistaId grupoPrestamistaId = new GrupoPrestamistaId(newGrupo.getIdGrupo(), prestamistaM.getIdPrestamista());
+            GrupoPrestamistaId grupoPrestamistaId = new GrupoPrestamistaId(newGrupo.getIdGrupo(), prestamista.getIdPrestamista());
 
             GrupoPrestamista newGrupoPrestamista = new GrupoPrestamista();
             newGrupoPrestamista.setId(grupoPrestamistaId);
@@ -108,19 +114,19 @@ public class GrupoController {
     @GetMapping("eliminar/{id}")
     public String deleteGrupo(@PathVariable(name="id") int id, Model model){
         if(id <= 0)
-            return "GrupoListar";
+            return "redirect:/grupo";
 
         Grupo grupo = grupoService.getGrupoById(id).orElse(null);
         if(grupo == null)
-            return "GrupoListar";
+            return "redirect:/grupo";
         
-        Prestamista prestamistaM = new Prestamista();
-        prestamistaM.setIdPrestamista(2);
+        Prestamista prestamista = new Prestamista();
+        prestamista.setIdPrestamista(2);
 
-        GrupoPrestamista grupoPrestamista = grupoPrestamistaService.getGrupoPrestamistaByGrupoAndPrestamista(id, prestamistaM.getIdPrestamista());
+        GrupoPrestamista grupoPrestamista = grupoPrestamistaService.getGrupoPrestamistaByGrupoAndPrestamista(id, prestamista.getIdPrestamista());
 
         if(grupoPrestamista == null)
-            return "GrupoListar";
+            return "redirect:/grupo";
 
         grupoPrestamista.setActivo(false);
         grupoPrestamistaService.saveGrupoPrestamista(grupoPrestamista);
@@ -130,22 +136,59 @@ public class GrupoController {
     @GetMapping("{id}/newMember")
     public String newMember(@PathVariable(name="id") int id, Model model){
         if(id <= 0)
-            return "GrupoListar";
+            return "redirect:/grupo";
         Grupo grupo = grupoService.getGrupoById(id).orElse(null);
         if(grupo == null)
-            return "GrupoListar";
-
+            return "redirect:/grupo";
+        // Listado de personas para cboPersonas
         GrupoPersonaDto grupoPersonaDto = new GrupoPersonaDto();
         grupoPersonaDto.setIdGrupo(grupo.getIdGrupo());
         grupoPersonaDto.setDescripcion(grupo.getDescripcion());
 
+        // Asignar el Id del jefe de la Sesion
+        int idJefePrestamistaSesion = 2;
+
+        // Obtener la lista de grupos con "estado" diferentes a 0
+        List<GrupoPrestamista> gpActivos = grupoPrestamistaService.getByGrupoAndState(id, true);
+        
+        List<Persona> personaInThisGrupo = new ArrayList<Persona>();
+
+        for (GrupoPrestamista item : gpActivos) {
+            Persona persona = personaService.getById(item.getId().getIdPrestamista()).orElse(null);
+            personaInThisGrupo.add(persona);
+        }
+        
+        personaInThisGrupo = personaInThisGrupo.stream().filter(item -> item.getIdPersona() != idJefePrestamistaSesion).toList();
+        
+        // Quitar al Jefe Prestamista para la muestra en tabla
+        List<GrupoPersonaDto> listForView = new ArrayList<GrupoPersonaDto>();
+
+        for (Persona item : personaInThisGrupo) {
+            GrupoPersonaDto dto = new GrupoPersonaDto();
+                dto.setIdPersona(item.getIdPersona());
+                dto.setNombres(item.getNombres());
+                dto.setApellidos(item.getApellidos());
+                dto.setEmail(item.getEmail());
+                dto.setIdGrupo(grupo.getIdGrupo());
+                dto.setDescripcion(grupo.getDescripcion());
+                listForView.add(dto);
+        }
+       
+        List<GrupoPrestamista> listPrestamistaWithGrupo = grupoPrestamistaService.getGrupoPrestamistaList();
+
         List<Persona> personaList = personaService.listarPersona();
+        
+        List<Persona> listaFiltrada = personaList.stream().filter(
+          persona -> listPrestamistaWithGrupo.stream().noneMatch(
+            personaWithGrupo -> personaWithGrupo.getId().getIdPrestamista() == persona.getIdPersona()
+          )
+        ).toList();
 
         model.addAttribute("formType", "new");
         model.addAttribute("title", "Agregar miembro");
         model.addAttribute("grupoPersonaDto", grupoPersonaDto);
-        model.addAttribute("cboPersonas", personaList);
-
+        model.addAttribute("cboPersonas", listaFiltrada);
+        model.addAttribute("tblPersonas", listForView);
         return "GrupoForm";
     }
 
@@ -156,22 +199,48 @@ public class GrupoController {
             return "GrupoForm";
         }
 
-        Prestamista prestamistaM = prestamistaMService.getPrestamistaById(dtoModel.getIdPersona()).orElse(null);
+        Prestamista prestamista = prestamistaService.getPrestamistaById(dtoModel.getIdPersona()).orElse(null);
         Grupo newGrupo = grupoService.getGrupoById(dtoModel.getIdGrupo()).orElse(null);
 
-        if(prestamistaM == null || newGrupo == null)
+        if(prestamista == null || newGrupo == null)
             return "GrupoForm";
         
-        List<Grupo> listGrupo = (prestamistaM.getGrupos() != null) 
-            ? prestamistaM.getGrupos() 
+        List<Grupo> listGrupo = (prestamista.getGrupos() != null) 
+            ? prestamista.getGrupos() 
             : new ArrayList<>();
 
         
         listGrupo.add(newGrupo);
 
-        prestamistaM.setGrupos(listGrupo);
-        prestamistaMService.guardarPrestamista(prestamistaM);
+        prestamista.setGrupos(listGrupo);
+        prestamistaService.guardarPrestamista(prestamista);
+
+        // Registrar campo activo de GrupoPrestamista
+        GrupoPrestamistaId grupoPrestamistaId = new GrupoPrestamistaId(dtoModel.getIdGrupo(), dtoModel.getIdPersona());
+
+        GrupoPrestamista updateGrupoPrestamista = new GrupoPrestamista();
+        updateGrupoPrestamista.setId(grupoPrestamistaId);
+        updateGrupoPrestamista.setActivo(true);
+        grupoPrestamistaService.saveGrupoPrestamista(updateGrupoPrestamista);
+
         status.setComplete();
         return "redirect:/grupo";
+    }
+
+    @GetMapping("{grupo}/deleteMember/{id}")
+    public String deleteMember(@PathVariable(name="id") int id, @PathVariable(name = "grupo")int idGrupo, Model model){
+        Prestamista prestamista = prestamistaService.getPrestamistaById(id).orElse(null);
+        Grupo thisGrupo = grupoService.getGrupoById(idGrupo).orElse(null);
+
+        /* Eliminación fisica 
+        List<Grupo> newGrupoList = prestamista.getGrupos().stream().filter(item -> item != thisGrupo).collect(Collectors.toList());
+        prestamista.setGrupos(newGrupoList);
+        prestamistaMService.guardarPrestamista(prestamista);*/
+
+        /* Eliminacion logica */
+        GrupoPrestamista grupoPrestamista = grupoPrestamistaService.getGrupoPrestamistaByGrupoAndPrestamista(thisGrupo.getIdGrupo(), prestamista.getIdPrestamista());
+        grupoPrestamista.setActivo(false);
+        grupoPrestamistaService.saveGrupoPrestamista(grupoPrestamista);
+        return "redirect:/grupo/" + thisGrupo.getIdGrupo() + "/newMember";
     }
 }

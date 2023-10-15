@@ -23,7 +23,7 @@
                     th:object="${grupo}" 
                     method="post" 
                     th:action="${formType == 'post' ? '/grupo/registrar' : '/grupo/actualizar'}"
-                    th:if="${formType != 'new'}"
+                    th:if="${formType == 'post' || formType == 'put'}"
                     >
 
                     <!--OJO  -->
@@ -48,10 +48,10 @@
                     th:action="@{/grupo/newMember}"
                     th:if="${formType == 'new'}"
                     >
-                    <input type="text" th:field="*{idGrupo}">
-                    <div class="form-group">
-                        <label>Nombre de Grupo : </label>
-                        <input type="text" th:field="*{descripcion}" disabled/>
+                    <input type="hidden" th:field="*{idGrupo}">
+                    <div class="form-group d-flex flex-row align-items-baseline justify-content-center">
+                        <label>Nombre de Grupo: </label>
+                        <h4 class="px-2" th:text="*{descripcion}"></h4>
                     </div>
 
                     <div class="form-group">
@@ -75,6 +75,49 @@
 	           </div>
 	      </div>
 	   </div>
+
+       <div class="row">
+            <div class="card-body" th:if="${formType == 'new'}">
+                <h4 class="card-title d-flex flex-column align-items-end">
+                    <a th:href="@{/grupo/}" class="btn btn-warning">Regresar al listado de grupos</a>
+                </h4>
+
+                <table class="table table-striped">
+                    <thead class="text-center">
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombres</th>
+                            <th>Email</th>
+                            <th>Detalle de prestamista</th>
+                            <th>Eliminar Miembro</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="text-center">
+                        <tr th:each="item : ${tblPersonas}" >
+                            <td th:text="${item.idPersona}" ></td>
+                            <td th:text="${item.nombres + ' ' + item.apellidos}" ></td>
+                            <td th:text="${item.email}"></td>
+                            <td>
+                                <a
+                                    class="btn btn-primary btn-sm"
+                                    th:href="@{/grupo/} + ${item.nombres} + '/newMember'">
+                                    Detalles Holi
+                                </a>
+                            </td>
+                            <td>
+                                <a
+                                    class="btn btn-danger btn-sm"
+                                    th:href="@{/grupo/} + ${item.idGrupo} + '/deleteMember/' + ${item.idPersona}"
+                                    onclick="return confirm('¿Estás seguro de eliminar a este prestamista del grupo?');">
+                                    Eliminar
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+       </div>
 	</div>
 	
 	<footer>

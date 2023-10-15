@@ -1,49 +1,47 @@
 package com.cibertec.api.controller;
 
-import java.util.List;
-import java.util.Objects;
-
-import org.springframework.security.core.Authentication;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionStatus;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.ui.Model;
+import org.springframework.security.core.Authentication;
+import java.util.List;
+import java.util.Objects;
 
 import com.cibertec.api.model.Menu;
 import com.cibertec.api.model.Persona;
 import com.cibertec.api.model.Rol;
 import com.cibertec.api.model.Usuario;
-import com.cibertec.api.service.PersonaService;
 import com.cibertec.api.service.UService;
-import com.cibertec.api.service.RolService;
 import com.cibertec.api.service.UsuarioService;
+import com.cibertec.api.service.PersonaService;
+import com.cibertec.api.service.RolService;
 
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import lombok.AllArgsConstructor;
+
 
 //creamos atributo de tipo sesion con sessionatributes
 //donde ENLACES y USUARIO son atributo de tipo sesion
 @SessionAttributes({"ENLACES","USUARIO"})
 @AllArgsConstructor
 @Controller
-@AllArgsConstructor
 public class UsuarioController {
-//para crud de usuario
-	private usuarioService serviceUsuario;
-	//para llamar al list de rol para combo
-	private rolService serviceRol;
-	//para llamar al list de persona para combo
-	private personaService servicePersona; 
+
+	@Autowired
+	private UsuarioService servicio;
 	
-	@GetMapping("/listarUsuario") //localhost:9090 /
-	public String listarUsuario(Model model) {
-		
-		List<tbusuario> lista =serviceUsuario.listarUsuario();
+	@RequestMapping("/login")
+	public String login(){
+		//Si ponemos en la ruta localhost:9090/login nos redirecciona AQUI 
+		return "inicio";
+	}
 	
 	@RequestMapping("/intranet")
 	public String intranet(Authentication  auth,Model model){
@@ -64,7 +62,7 @@ public class UsuarioController {
 	//para crud de usuario
 		private UService serviceUsuario;
 		//para llamar al list de rol para combo
-		private rolService serviceRol;
+		private RolService serviceRol;
 		//para llamar al list de persona para combo
 		private PersonaService servicePersona; 
 		
