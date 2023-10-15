@@ -22,8 +22,8 @@ import com.cibertec.api.model.modelDto.GrupoDto;
 import com.cibertec.api.model.modelDto.GrupoPersonaDto;
 import com.cibertec.api.service.GrupoPrestamistaService;
 import com.cibertec.api.service.GrupoService;
-import com.cibertec.api.service.PrestamistaMService;
-import com.cibertec.api.service.personaService;
+import com.cibertec.api.service.PrestamistaService;
+import com.cibertec.api.service.PersonaService;
 
 import lombok.AllArgsConstructor;
 
@@ -33,12 +33,12 @@ import lombok.AllArgsConstructor;
 public class GrupoController {
     private GrupoService grupoService;
     private GrupoPrestamistaService grupoPrestamistaService;
-    private PrestamistaMService prestamistaMService;
-    private personaService personaService;
+    private PrestamistaService prestamistaService;
+    private PersonaService personaService;
     
     @GetMapping({"/listar", "", "/"})
     public String listGrupo(Model model){
-        Prestamista prestamista = prestamistaMService.getPrestamistaById(2).orElse(null);
+        Prestamista prestamista = prestamistaService.getPrestamistaById(2).orElse(null);
 
         List<Grupo> listGrupo = (prestamista != null) 
             ? prestamista.getGrupos() 
@@ -76,12 +76,12 @@ public class GrupoController {
         // Guardar nuevo grupo.
         Grupo newGrupo = grupoService.saveGrupo(grupo);
         // Buscar al prestamista en sesion, obtener todos sus grupos y asignar el nuevo grupo. Por ultimo guardar los cambios.
-        Prestamista prestamista = prestamistaMService.getPrestamistaById(2).orElse(null);
+        Prestamista prestamista = prestamistaService.getPrestamistaById(2).orElse(null);
         if(prestamista != null){
             List<Grupo> grupos = prestamista.getGrupos();
             grupos.add(newGrupo);
             prestamista.setGrupos(grupos);
-            prestamistaMService.guardarPrestamista(prestamista);
+            prestamistaService.guardarPrestamista(prestamista);
 
             // Registrar campo activo de GrupoPrestamista
             GrupoPrestamistaId grupoPrestamistaId = new GrupoPrestamistaId(newGrupo.getIdGrupo(), prestamista.getIdPrestamista());
@@ -199,7 +199,7 @@ public class GrupoController {
             return "GrupoForm";
         }
 
-        Prestamista prestamista = prestamistaMService.getPrestamistaById(dtoModel.getIdPersona()).orElse(null);
+        Prestamista prestamista = prestamistaService.getPrestamistaById(dtoModel.getIdPersona()).orElse(null);
         Grupo newGrupo = grupoService.getGrupoById(dtoModel.getIdGrupo()).orElse(null);
 
         if(prestamista == null || newGrupo == null)
@@ -213,7 +213,7 @@ public class GrupoController {
         listGrupo.add(newGrupo);
 
         prestamista.setGrupos(listGrupo);
-        prestamistaMService.guardarPrestamista(prestamista);
+        prestamistaService.guardarPrestamista(prestamista);
 
         // Registrar campo activo de GrupoPrestamista
         GrupoPrestamistaId grupoPrestamistaId = new GrupoPrestamistaId(dtoModel.getIdGrupo(), dtoModel.getIdPersona());
@@ -229,7 +229,7 @@ public class GrupoController {
 
     @GetMapping("{grupo}/deleteMember/{id}")
     public String deleteMember(@PathVariable(name="id") int id, @PathVariable(name = "grupo")int idGrupo, Model model){
-        Prestamista prestamista = prestamistaMService.getPrestamistaById(id).orElse(null);
+        Prestamista prestamista = prestamistaService.getPrestamistaById(id).orElse(null);
         Grupo thisGrupo = grupoService.getGrupoById(idGrupo).orElse(null);
 
         /* Eliminación fisica 

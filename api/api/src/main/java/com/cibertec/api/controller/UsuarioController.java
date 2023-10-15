@@ -19,7 +19,8 @@ import com.cibertec.api.model.Usuario;
 import com.cibertec.api.service.UService;
 import com.cibertec.api.service.UsuarioService;
 import com.cibertec.api.service.PersonaService;
-import com.cibertec.api.service.rolService;
+import com.cibertec.api.service.RolService;
+
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -61,7 +62,7 @@ public class UsuarioController {
 	//para crud de usuario
 		private UService serviceUsuario;
 		//para llamar al list de rol para combo
-		private rolService serviceRol;
+		private RolService serviceRol;
 		//para llamar al list de persona para combo
 		private PersonaService servicePersona; 
 		
