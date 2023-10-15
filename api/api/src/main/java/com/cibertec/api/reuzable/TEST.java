@@ -6,8 +6,6 @@ import java.util.Objects;
 import javax.swing.JOptionPane;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.stereotype.Controller;
 
 import com.cibertec.api.model.Prestamista;
 import com.cibertec.api.service.PrestamistaService;
