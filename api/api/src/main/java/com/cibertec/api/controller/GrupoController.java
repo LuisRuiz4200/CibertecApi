@@ -2,6 +2,7 @@ package com.cibertec.api.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,11 +19,15 @@ import com.cibertec.api.model.GrupoPrestamista;
 import com.cibertec.api.model.GrupoPrestamistaId;
 import com.cibertec.api.model.Persona;
 import com.cibertec.api.model.Prestamista;
+import com.cibertec.api.model.Usuario;
 import com.cibertec.api.model.modelDto.GrupoDto;
 import com.cibertec.api.model.modelDto.GrupoPersonaDto;
 import com.cibertec.api.service.GrupoPrestamistaService;
 import com.cibertec.api.service.GrupoService;
 import com.cibertec.api.service.PrestamistaService;
+
+import jakarta.servlet.http.HttpSession;
+
 import com.cibertec.api.service.PersonaService;
 
 import lombok.AllArgsConstructor;
@@ -37,15 +42,20 @@ public class GrupoController {
     private PersonaService personaService;
     
     @GetMapping({"/listar", "", "/"})
-    public String listGrupo(Model model){
-        Prestamista prestamista = prestamistaService.getPrestamistaById(2).orElse(null);
+    public String listGrupo(Model model, HttpSession session){
+        Usuario userLogeado = (Usuario) session.getAttribute("UserLogin");
+	    int idPrestamista = userLogeado.getPersona().getIdPersona();
+	    
+        Prestamista prestamista = prestamistaService.getPrestamistaById(idPrestamista).orElse(null);
 
         List<Grupo> listGrupo = (prestamista != null) 
             ? prestamista.getGrupos() 
             : new ArrayList<>();
         List<GrupoDto> grupoDtoList = new ArrayList<GrupoDto>();
         for (Grupo item : listGrupo) {
-            int count = grupoPrestamistaService.getGrupoPrestamistaByGrupo(item.getIdGrupo()).size();
+            int count = grupoPrestamistaService.getGrupoPrestamistaByGrupo(
+            		item.getIdGrupo()).stream().filter(
+            		prestamita -> prestamita.getActivo() == true).collect(Collectors.toList()).size();
             GrupoDto grupoDto = new GrupoDto(item.getIdGrupo(), item.getDescripcion(), (count - 1));
             grupoDtoList.add(grupoDto);
         }
@@ -68,7 +78,10 @@ public class GrupoController {
     }
 
     @PostMapping("registrar")
-    public String addGrupo(@ModelAttribute("grupo") Grupo grupo, BindingResult result, Model model, SessionStatus status){
+    public String addGrupo(@ModelAttribute("grupo") Grupo grupo, BindingResult result, Model model, SessionStatus status, HttpSession session){
+        Usuario userLogeado = (Usuario) session.getAttribute("UserLogin");
+	    int idPrestamista = userLogeado.getPersona().getIdPersona();
+	    
         if(result.hasErrors()){
             model.addAttribute("error", grupo);
             return "GrupoForm";
@@ -76,7 +89,7 @@ public class GrupoController {
         // Guardar nuevo grupo.
         Grupo newGrupo = grupoService.saveGrupo(grupo);
         // Buscar al prestamista en sesion, obtener todos sus grupos y asignar el nuevo grupo. Por ultimo guardar los cambios.
-        Prestamista prestamista = prestamistaService.getPrestamistaById(2).orElse(null);
+        Prestamista prestamista = prestamistaService.getPrestamistaById(idPrestamista).orElse(null);
         if(prestamista != null){
             List<Grupo> grupos = prestamista.getGrupos();
             grupos.add(newGrupo);
@@ -112,7 +125,7 @@ public class GrupoController {
     }
 
     @GetMapping("eliminar/{id}")
-    public String deleteGrupo(@PathVariable(name="id") int id, Model model){
+    public String deleteGrupo(@PathVariable(name="id") int id, Model model, HttpSession session){
         if(id <= 0)
             return "redirect:/grupo";
 
@@ -120,10 +133,10 @@ public class GrupoController {
         if(grupo == null)
             return "redirect:/grupo";
         
-        Prestamista prestamista = new Prestamista();
-        prestamista.setIdPrestamista(2);
+        Usuario userLogeado = (Usuario) session.getAttribute("UserLogin");
+	    int idPrestamista = userLogeado.getPersona().getIdPersona();
 
-        GrupoPrestamista grupoPrestamista = grupoPrestamistaService.getGrupoPrestamistaByGrupoAndPrestamista(id, prestamista.getIdPrestamista());
+        GrupoPrestamista grupoPrestamista = grupoPrestamistaService.getGrupoPrestamistaByGrupoAndPrestamista(id, idPrestamista);
 
         if(grupoPrestamista == null)
             return "redirect:/grupo";
@@ -134,7 +147,7 @@ public class GrupoController {
     }
     
     @GetMapping("{id}/newMember")
-    public String newMember(@PathVariable(name="id") int id, Model model){
+    public String newMember(@PathVariable(name="id") int id, Model model, HttpSession session){
         if(id <= 0)
             return "redirect:/grupo";
         Grupo grupo = grupoService.getGrupoById(id).orElse(null);
@@ -146,7 +159,8 @@ public class GrupoController {
         grupoPersonaDto.setDescripcion(grupo.getDescripcion());
 
         // Asignar el Id del jefe de la Sesion
-        int idJefePrestamistaSesion = 2;
+        Usuario userLogeado = (Usuario) session.getAttribute("UserLogin");
+	    int idPrestamista = userLogeado.getPersona().getIdPersona();
 
         // Obtener la lista de grupos con "estado" diferentes a 0
         List<GrupoPrestamista> gpActivos = grupoPrestamistaService.getByGrupoAndState(id, true);
@@ -158,7 +172,7 @@ public class GrupoController {
             personaInThisGrupo.add(persona);
         }
         
-        personaInThisGrupo = personaInThisGrupo.stream().filter(item -> item.getIdPersona() != idJefePrestamistaSesion).toList();
+        personaInThisGrupo = personaInThisGrupo.stream().filter(item -> item.getIdPersona() != idPrestamista).collect(Collectors.toList());
         
         // Quitar al Jefe Prestamista para la muestra en tabla
         List<GrupoPersonaDto> listForView = new ArrayList<GrupoPersonaDto>();
@@ -182,7 +196,7 @@ public class GrupoController {
           persona -> listPrestamistaWithGrupo.stream().noneMatch(
             personaWithGrupo -> personaWithGrupo.getId().getIdPrestamista() == persona.getIdPersona()
           )
-        ).toList();
+        ).collect(Collectors.toList());
 
         model.addAttribute("formType", "new");
         model.addAttribute("title", "Agregar miembro");
@@ -224,7 +238,7 @@ public class GrupoController {
         grupoPrestamistaService.saveGrupoPrestamista(updateGrupoPrestamista);
 
         status.setComplete();
-        return "redirect:/grupo";
+        return "redirect:/grupo/" + dtoModel.getIdGrupo() + "/newMember";
     }
 
     @GetMapping("{grupo}/deleteMember/{id}")
