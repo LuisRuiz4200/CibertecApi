@@ -54,9 +54,9 @@ public class Prestamista {
 //	@JsonIgnore
 //	private List<SolicitudPrestamo> listaSolicitudPrestamo;
 
-	@OneToMany
-	private List<GrupoPrestamista> idJefePrestamista;
+	@OneToMany(mappedBy = "jefePrestamista")
+	private List<GrupoPrestamista> jefePrestamista;
 
-	@OneToMany
-	private List<GrupoPrestamista> idAsesorPrestamista;
+	@OneToMany(mappedBy = "asesorPrestamista")
+	private List<GrupoPrestamista> asesorPrestamista;
 }//fin de PrestamistaM
