@@ -18,7 +18,7 @@
 		</div>
 
 		<div class="mb-4">
-			<form th:action="@{/solicitudPrestamo/listar/}" th:object="${prestatario}" method="get">
+			<form th:action="@{/web/solicitudPrestamo/listar/}" th:object="${prestatario}" method="get">
 				<div class="row row-cols-auto">
 					<div class="col-2">
 						<label>PRESTATARIO</label>
@@ -31,7 +31,7 @@
 					<div class="mt-auto">
 						<div class="">
 							<button class="btn btn-success btn-sm" type="submit">MOSTRAR SOLICITUDES</button>
-							<a class="btn btn-primary btn-sm" th:href="@{/solicitudPrestamo/registrar}">NUEVA
+							<a class="btn btn-primary btn-sm" th:href="@{/web/solicitudPrestamo/registrar}">NUEVA
 								SOLICITUD</a>
 						</div>
 					</div>
@@ -65,7 +65,7 @@
 							<td>
 								<div>
 									<div>
-										<a class="btn btn-warning btn-sm">EVALUAR</a>
+										<a th:href="@{actualizar/{id}(id=${solicitud.idSolicitudPrestamo})}" class="btn btn-warning btn-sm">EVALUAR</a>
 									</div>
 								</div>
 							</td>

@@ -4,13 +4,12 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,7 +21,7 @@ import com.cibertec.api.service.PrestatarioService;
 import com.cibertec.api.service.SolicitudPrestamoService;
 
 @Controller
-@RequestMapping("/solicitudPrestamo")
+@RequestMapping("/web/solicitudPrestamo")
 public class SolicitudPrestamoController {
 	
 	@Autowired
@@ -73,6 +72,19 @@ public class SolicitudPrestamoController {
 		
 		List<Prestatario> listaPrestatario = prestatarioService.listar();
 		
+		
+		model.addAttribute("solicitudPrestamo",solicitudPrestamo);
+		model.addAttribute("listaPrestatario",listaPrestatario);
+		
+		return "guardarSolicitudPrestamo";
+	}
+	@GetMapping("/actualizar/{id}")
+	private String actualizar(@PathVariable int id, Model model) {
+		
+		SolicitudPrestamo solicitudPrestamo = new SolicitudPrestamo();
+		solicitudPrestamo = solicitudPrestamoService.buscarPorId(id);
+		
+		List<Prestatario> listaPrestatario = prestatarioService.listar();
 		
 		model.addAttribute("solicitudPrestamo",solicitudPrestamo);
 		model.addAttribute("listaPrestatario",listaPrestatario);

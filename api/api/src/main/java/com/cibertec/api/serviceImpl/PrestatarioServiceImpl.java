@@ -35,7 +35,7 @@ public class PrestatarioServiceImpl implements PrestatarioService{
 	}
 
 	@Override
-	public List<Prestatario> listarPorId() {
+	public List<Prestatario> listarPorId(int id) {
 		// TODO Auto-generated method stub
 		return null;
 	}

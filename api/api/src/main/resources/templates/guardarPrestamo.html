@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlsn:th="www.thymeleaf.org">
+
+<head>
+	<div th:replace="static/head.html"></div>
+	<title>GRUPO 6</title>
+
+</head>
+
+<body>
+	<div>
+		<div th:replace="static/navbar.html"></div>
+	</div>
+	<div class="container">
+
+		<div class="mt-4">
+			<div>
+				<h2>PRESTAMO</h2>
+				<hr>
+			</div>
+
+			<div>
+				<form th:action="@{guardar}" th:object="${prestamo}" method="post">
+					<div class="row gap-4">
+						<div class="col-12">
+							<div class="row row-cols-auto g-auto">
+								<div>
+									<label>PRESTATARIO</label>
+									<input class="form-control" type="text"
+										th:value="*{solicitudPrestamo.prestatario.prestatario.nombres} + ' '  +  *{solicitudPrestamo.prestatario.prestatario.apellidos}">
+								</div>
+								<div>
+									<label>RUC</label>
+									<input class="form-control" type="text" th:field="*{solicitudPrestamo.prestatario.prestatario.ruc}">
+								</div>
+								<div>
+									<label>FECHA REGISTRO</label>
+									<input class="form-control" type="date" th:field="*{fechaRegistro}">
+								</div>
+							</div>
+						</div>
+
+						<div class="col-12">
+							<div class="row row-cols-auto g-auto">
+								<div>
+									<label>MONTO</label>
+									<input class="form-control" type="text" th:field="*{monto}">
+								</div>
+
+								<div>
+									<label>CUOTAS</label>
+									<input class="form-control" type="text" th:field="*{cuotas}">
+								</div>
+							</div>
+						</div>
+
+						<div class="col-12">
+							<div>
+								<button class="btn btn-success btn-sm">GUARDAR</button>
+								<a class="btn btn-danger btn-sm" th:href="@{listar}">CANCELAR</a>
+							</div>
+						</div>
+
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+
+
+</html>

@@ -34,7 +34,7 @@ public class SolicitudPrestamoServiceImpl implements SolicitudPrestamoService {
 	}
 
 	@Override
-	public List<SolicitudPrestamo> listarPorId() {
+	public List<SolicitudPrestamo> listarPorId(int id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
