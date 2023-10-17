@@ -1,5 +1,6 @@
 package com.cibertec.api.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -26,17 +27,47 @@ public class GrupoPrestamistaController {
 	@GetMapping({"/listar", "", "/"})
 	public String listGrupo(Model model, HttpSession session){
 		Usuario UserLogged = (Usuario) session.getAttribute("UserLogged");
-		System.out.println("\n\n======================");
-		System.out.println(UserLogged);
-		System.out.println("======================\n\n");
+
 		if(UserLogged == null)
 			return "redirect:/login";
+
 	    int idPrestamista = UserLogged.getPersona().getIdPersona();
 		Prestamista jefePrestamista = prestamistaService.getPrestamistaById(idPrestamista).orElse(null);
 
 		if(jefePrestamista == null)
 			return "intranet";
-		List<GrupoPrestamista> list = grupoPrestamistaService.listByJefe(jefePrestamista);
+		Prestamista newPrestamista = new Prestamista();
+		newPrestamista.setIdPrestamista(16);
+		print(insertGrupoPrestamista(jefePrestamista, newPrestamista, UserLogged));
 		return "intranet";
+	}
+
+	public List<GrupoPrestamista> listGrupoByJefePrestamista(Prestamista jefePrestamista){
+		List<GrupoPrestamista> list = grupoPrestamistaService.listByJefe(jefePrestamista);
+		return list;
+	}
+
+	public List<GrupoPrestamista> listGrupoByJefePrestamistaAndActivo(Prestamista jefePrestamista){
+		List<GrupoPrestamista> list = grupoPrestamistaService.listByJefeAndActivo(jefePrestamista, true);
+		return list;
+	}
+
+	public GrupoPrestamista insertGrupoPrestamista(Prestamista jefePrestamista, Prestamista newPrestamista, Usuario usuario){
+		GrupoPrestamista grupo = new GrupoPrestamista();
+		grupo.setJefePrestamista(jefePrestamista);
+		grupo.setAsesorPrestamista(newPrestamista);
+		grupo.setActivo(true);
+		grupo.setFechaRegistro(new Date());
+		grupo.setFechaActualizacion(new Date());
+		grupo.setUsuarioRegistro(usuario);
+		grupo.setUsuarioActualiza(usuario);
+		GrupoPrestamista response = grupoPrestamistaService.addOrUpdate(grupo);
+		return response;
+	}
+
+	private void print(Object object){
+		System.out.println("\n\n======================");
+		System.out.println(object);
+		System.out.println("======================\n\n");
 	}
 }
