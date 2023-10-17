@@ -35,17 +35,17 @@ public class GrupoPrestamistaServiceImpl implements GrupoPrestamistaService{
 
     @Override
     public GrupoPrestamista getGrupoPrestamistaByGrupoAndPrestamista(int grupoId, int prestamistaId) {
-        return repository.findById_IdGrupoAndId_IdPrestamista(grupoId, prestamistaId);
+        throw new UnsupportedOperationException("Unimplemented method 'getGrupoPrestamistaByGrupoAndPrestamista'");
     }
 
     @Override
     public List<GrupoPrestamista> getGrupoPrestamistaByGrupo(int idGrupo) {
-        return repository.findById_IdGrupo(idGrupo);
+        throw new UnsupportedOperationException("Unimplemented method 'getGrupoPrestamistaByGrupoAndPrestamista'");
     }
 
     @Override
     public List<GrupoPrestamista> getByGrupoAndState(int idGrupo, boolean activo) {
-        return repository.findById_IdGrupoAndActivo(idGrupo, activo);
+        throw new UnsupportedOperationException("Unimplemented method 'getGrupoPrestamistaByGrupoAndPrestamista'");
     }
     
 }
