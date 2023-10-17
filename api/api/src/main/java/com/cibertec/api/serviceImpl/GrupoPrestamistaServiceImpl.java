@@ -15,37 +15,23 @@ import lombok.AllArgsConstructor;
 @Service
 @AllArgsConstructor
 public class GrupoPrestamistaServiceImpl implements GrupoPrestamistaService{
+    
     @Autowired
     private GrupoPrestamistaRepository repository;
 
     @Override
-    public List<GrupoPrestamista> getGrupoPrestamistaList() {
-        return repository.findAll();
+    public List<GrupoPrestamista> listGrupoPrestamistaByJefe(int idJefePrestamista) {
+        return repository.findByIdJefePrestamista(idJefePrestamista);
     }
 
     @Override
-    public List<GrupoPrestamista> getGrupoPrestamistaByPrestamista(int idPrestamista) {
-        return new ArrayList<GrupoPrestamista>();
-    }
-
-    @Override
-    public GrupoPrestamista saveGrupoPrestamista(GrupoPrestamista grupoPrestamista) {
+    public GrupoPrestamista addOrUpdateGrupoPrestamista(GrupoPrestamista grupoPrestamista) {
         return repository.save(grupoPrestamista);
     }
 
     @Override
-    public GrupoPrestamista getGrupoPrestamistaByGrupoAndPrestamista(int grupoId, int prestamistaId) {
-        throw new UnsupportedOperationException("Unimplemented method 'getGrupoPrestamistaByGrupoAndPrestamista'");
-    }
-
-    @Override
-    public List<GrupoPrestamista> getGrupoPrestamistaByGrupo(int idGrupo) {
-        throw new UnsupportedOperationException("Unimplemented method 'getGrupoPrestamistaByGrupoAndPrestamista'");
-    }
-
-    @Override
-    public List<GrupoPrestamista> getByGrupoAndState(int idGrupo, boolean activo) {
-        throw new UnsupportedOperationException("Unimplemented method 'getGrupoPrestamistaByGrupoAndPrestamista'");
+    public GrupoPrestamista deleteGrupoPrestamista(GrupoPrestamista grupoPrestamista) {
+        return repository.save(grupoPrestamista);
     }
     
 }
