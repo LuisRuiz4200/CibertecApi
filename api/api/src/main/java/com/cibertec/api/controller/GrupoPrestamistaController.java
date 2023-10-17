@@ -2,6 +2,7 @@ package com.cibertec.api.controller;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,7 +13,6 @@ import com.cibertec.api.model.GrupoPrestamista;
 import com.cibertec.api.model.Prestamista;
 import com.cibertec.api.model.Usuario;
 import com.cibertec.api.service.GrupoPrestamistaService;
-import com.cibertec.api.service.PrestamistaService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
@@ -22,34 +22,24 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class GrupoPrestamistaController {
 	private GrupoPrestamistaService grupoPrestamistaService;
-	private PrestamistaService prestamistaService;
 
 	@GetMapping({"/listar", "", "/"})
 	public String listGrupo(Model model, HttpSession session){
-		Usuario UserLogged = (Usuario) session.getAttribute("UserLogged");
-
-		if(UserLogged == null)
-			return "redirect:/login";
-
-	    int idPrestamista = UserLogged.getPersona().getIdPersona();
-		Prestamista jefePrestamista = prestamistaService.getPrestamistaById(idPrestamista).orElse(null);
-
-		if(jefePrestamista == null)
-			return "intranet";
-		Prestamista newPrestamista = new Prestamista();
-		newPrestamista.setIdPrestamista(16);
-		print(insertGrupoPrestamista(jefePrestamista, newPrestamista, UserLogged));
 		return "intranet";
 	}
 
-	public List<GrupoPrestamista> listGrupoByJefePrestamista(Prestamista jefePrestamista){
+	public List<Prestamista> listGrupoByJefePrestamista(Prestamista jefePrestamista){
 		List<GrupoPrestamista> list = grupoPrestamistaService.listByJefe(jefePrestamista);
-		return list;
+
+		List<Prestamista> listPrestamistas = list.stream().map(GrupoPrestamista::getAsesorPrestamista).collect(Collectors.toList());
+		return listPrestamistas;
 	}
 
-	public List<GrupoPrestamista> listGrupoByJefePrestamistaAndActivo(Prestamista jefePrestamista){
+	public List<Prestamista> listGrupoByJefePrestamistaAndActivo(Prestamista jefePrestamista){
 		List<GrupoPrestamista> list = grupoPrestamistaService.listByJefeAndActivo(jefePrestamista, true);
-		return list;
+
+		List<Prestamista> listPrestamistas = list.stream().map(GrupoPrestamista::getAsesorPrestamista).collect(Collectors.toList());
+		return listPrestamistas;
 	}
 
 	public GrupoPrestamista insertGrupoPrestamista(Prestamista jefePrestamista, Prestamista newPrestamista, Usuario usuario){
