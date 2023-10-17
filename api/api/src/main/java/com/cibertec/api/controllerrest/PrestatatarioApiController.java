@@ -1,4 +1,4 @@
-package com.cibertec.api.controller;
+package com.cibertec.api.controllerrest;
 
 import java.util.HashMap;
 import java.util.List;
@@ -11,32 +11,34 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cibertec.api.model.Prestamista;
-import com.cibertec.api.service.PrestamistaService;
+import com.cibertec.api.model.Prestatario;
+import com.cibertec.api.service.PrestatarioService;
 
 @RestController
-@RequestMapping("/prestamista")
-public class PrestamistaApiController {
+@RequestMapping("/api/prestatario")
+public class PrestatatarioApiController {
 
 	@Autowired
-	PrestamistaService prestamistaService ;
+	PrestatarioService prestatarioService ;
 	
 	@GetMapping("/listar")
-	private ResponseEntity<List<Prestamista>> listar() {
-		List<Prestamista> response= prestamistaService.listarPrestamista();
+	private ResponseEntity<List<Prestatario>> listar() {
+		List<Prestatario> response= prestatarioService.listar();
 		return ResponseEntity.ok(response);
 	}
 	
 	@PostMapping("/registrar")
-	private String registrar(@RequestBody Prestamista model) {
+	@ResponseBody
+	private String registrar(@RequestBody Prestatario model) {
 		
 		String response = "";
 		
 		try {
-			model = prestamistaService.guardarPrestamista(model);
-			response = "Se ha registrado el ID " + model.getIdPrestamista() + ".";
+			model = prestatarioService.guardar(model);
+			response = "Se ha registrado el ID " + model.getIdPrestatario() + ".";
 		}catch(Exception ex){
 			response = ex.getMessage();
 		}
@@ -45,13 +47,14 @@ public class PrestamistaApiController {
 	}
 	
 	@PutMapping("/actualizar")
-	private Map<?, ?> actualizar(@RequestBody Prestamista model) {
+	@ResponseBody
+	private Map<?, ?> actualizar(@RequestBody Prestatario model) {
 		
 		Map<String, Object> response = new HashMap<String,Object>();
 		
 		try {
-			model = prestamistaService.guardarPrestamista(model);
-			response.put("mensaje", "Se ha actualizado el ID " + model.getIdPrestamista() + " y el ID persona " + model.getPrestamista().getIdPersona() + " / " + model.getPrestamista().getNombres());
+			model = prestatarioService.guardar(model);
+			response.put("mensaje", "Se ha actualizado el ID " + model.getIdPrestatario() + " y el ID persona " + model.getPrestatario().getIdPersona() + " / " + model.getPrestatario().getNombres());
 		}catch(Exception ex){
 			response.put("mensaje",ex.getMessage());
 		}

@@ -12,32 +12,36 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig {
-	//metodo para encriptar y el Bean es para poder usar en otro lado(clase) el metodo BCryptPasswordEncoder 
-	//con esto podremos encriptar el password
-	@Bean 
-	public BCryptPasswordEncoder passwordEncoder() { return new
-	BCryptPasswordEncoder(); 
+	// metodo para encriptar y el Bean es para poder usar en otro lado(clase) el
+	// metodo BCryptPasswordEncoder
+	// con esto podremos encriptar el password
+	@Bean
+	public BCryptPasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
 	}
 
 	// autenticacion al form login
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		
-		/*http.authorizeHttpRequests((auth)-> auth.anyRequest().authenticated())
-		.formLogin(form-> form.loginPage("/login")
-		.permitAll().defaultSuccessUrl("/listar"));*/
-		
-	http.csrf(csrf->csrf.disable())
-	//.authorizeHttpRequests((auth)-> {auth.antMatchers("/lista").hasRole("Administrador");
-	.authorizeHttpRequests((auth)-> {auth.requestMatchers("/lista").hasRole("Administrador"); 
-	auth.anyRequest().authenticated();})
-	.formLogin(form-> form.loginPage("/login")
-	.permitAll().defaultSuccessUrl("/intranet"));
-	
-	http.exceptionHandling(exceptions -> {
-	    exceptions.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"));
-	    exceptions.accessDeniedPage("/intranet");
-	});
-	return http.build();
+
+		/*
+		 * http.authorizeHttpRequests((auth)-> auth.anyRequest().authenticated())
+		 * .formLogin(form-> form.loginPage("/login")
+		 * .permitAll().defaultSuccessUrl("/listar"));
+		 */
+
+		http.csrf(csrf -> csrf.disable())
+				// .authorizeHttpRequests((auth)->
+				// {auth.antMatchers("/lista").hasRole("Administrador");
+				.authorizeHttpRequests((auth) -> {
+					auth.requestMatchers("/**").permitAll();
+					auth.anyRequest().authenticated();
+				}).formLogin(form -> form.loginPage("/login").permitAll().defaultSuccessUrl("/intranet"));
+
+		http.exceptionHandling(exceptions -> {
+			exceptions.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"));
+			exceptions.accessDeniedPage("/intranet");
+		});
+		return http.build();
 	}
 }
