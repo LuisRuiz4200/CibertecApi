@@ -1,6 +1,7 @@
 package com.cibertec.api.controller;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,8 +15,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.cibertec.api.model.GrupoPrestamista;
 import com.cibertec.api.model.Persona;
 import com.cibertec.api.model.Prestamista;
+import com.cibertec.api.model.Rol;
 import com.cibertec.api.model.Usuario;
 import com.cibertec.api.service.PrestamistaService;
+import com.cibertec.api.service.UService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
@@ -27,6 +30,7 @@ public class PrestamistaController {
 	//service
 	private PrestamistaService service;
 	private GrupoPrestamistaController grupoController;
+	private UService userService;
 
 	@GetMapping({"/listar", "/", ""}) //localhost:9090 /
 	public String listarPrestamista(Model model, HttpSession session) {
@@ -34,7 +38,13 @@ public class PrestamistaController {
 		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
 		int idJefePrestamista = userLogged.getPersona().getIdPersona();
 		Prestamista jefePrestamista = service.getPrestamistaById(idJefePrestamista).orElse(null);
-
+		/* Listado por Jefes */
+		Rol rolJefes = new Rol();
+		rolJefes.setIdRol(2);
+		List<Usuario> users = userService.getUsuarioByRol(rolJefes);
+		List<Prestamista> prestamistas = users.stream()
+		.map(usuario -> service.getPrestamistaById(usuario.getPersona().getIdPersona()).orElse(null)).collect(Collectors.toList());
+		/* ================= */
 		// Validación correspondiente
 		if(jefePrestamista == null)
 			return "redirect:/intranet";
@@ -42,7 +52,7 @@ public class PrestamistaController {
 		// Obtener la lista de prestamistas asociado al Jefe y que estén Activos
 		List<Prestamista> lista = grupoController.listGrupoByJefePrestamistaAndActivo(jefePrestamista);
 	
-		model.addAttribute("lista",lista);
+		model.addAttribute("lista",prestamistas);
 	
 		model.addAttribute("titulo","Lista de Prestamista");
 		
