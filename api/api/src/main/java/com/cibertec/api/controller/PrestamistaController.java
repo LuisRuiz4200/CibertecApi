@@ -11,10 +11,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.cibertec.api.model.GrupoPrestamista;
 import com.cibertec.api.model.Persona;
 import com.cibertec.api.model.Prestamista;
+import com.cibertec.api.model.Rol;
+import com.cibertec.api.model.Usuario;
 import com.cibertec.api.service.PrestamistaService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 @Controller
 @AllArgsConstructor
@@ -23,10 +27,21 @@ public class PrestamistaController {
 	//----
 	//service
 	private PrestamistaService service;
+	private GrupoPrestamistaController grupoController;
+
 	@GetMapping({"/listar", "/", ""}) //localhost:9090 /
-	public String listarPrestamista(Model model) {
-		
-		List<Prestamista> lista =service.listarPrestamista();
+	public String listarPrestamista(Model model, HttpSession session) {
+		// Obtener al JefePrestamista desde la session de su Usuario
+		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
+		int idJefePrestamista = userLogged.getPersona().getIdPersona();
+		Prestamista jefePrestamista = service.getPrestamistaById(idJefePrestamista).orElse(null);
+
+		// Validación correspondiente
+		if(jefePrestamista == null)
+			return "redirect:/intranet";
+			
+		// Obtener la lista de prestamistas asociado al Jefe y que estén Activos
+		List<Prestamista> lista = grupoController.listGrupoByJefePrestamistaAndActivo(jefePrestamista);
 	
 		model.addAttribute("lista",lista);
 	
@@ -52,7 +67,7 @@ public class PrestamistaController {
 	
 	@PostMapping("/registrar") //localhost:9090/registrar
 	public String guardarPrestamista(Prestamista prestamista,BindingResult result,
-			Model model,RedirectAttributes flash,SessionStatus status) {
+			Model model,RedirectAttributes flash,SessionStatus status, HttpSession session) {
 		
 		if(result.hasErrors()) {
 		
@@ -61,24 +76,33 @@ public class PrestamistaController {
 			return "formulario";
 		}
 
+		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
+		int idJefePrestamista = userLogged.getPersona().getIdPersona();
+		Prestamista jefePrestamista = service.getPrestamistaById(idJefePrestamista).orElse(null);
 		
+		String mensaje;
+		int idPersona = prestamista.getPrestamista().getIdPersona();
+		// if (prestamista.getIdPrestamista() != 0) 
+		if(idPersona != 0) 
+			mensaje = "El Prestamista se actualizó correctamente"; 
+		else 
+			mensaje = "El Prestamista se registró correctamente";
 		
+		Prestamista newPrestamista = service.guardarPrestamista(prestamista); //Marca el status como completo.
+
+		// Registrar en Grupo del Jefe
+		GrupoPrestamista grupo = null;
+		if(idPersona == 0){
+			grupo = grupoController.insertGrupoPrestamista(jefePrestamista, newPrestamista, userLogged);
+		}
+		if(grupo == null)
+			System.out.println("Eres peruano destino a sufrir!");
+
+		status.setComplete();
 		
+		flash.addFlashAttribute("success", mensaje);
 		
-		
-		  String mensaje;
-		  
-		  // if (prestamista.getIdPrestamista() != 0) 
-		  if(prestamista.getPrestamista().getIdPersona() != 0) mensaje =
-		  "El Prestamista se actualizó correctamente"; else mensaje =
-		  "El Prestamista se registró correctamente";
-		  
-		  service.guardarPrestamista(prestamista); //Marca el status como completo.
-		  status.setComplete();
-		  
-		  flash.addFlashAttribute("success", mensaje);
-		  
-		  return "redirect:/listar";
+		return "redirect:/listar";
 		 
 	} //fin de guardarPrestamista
 	

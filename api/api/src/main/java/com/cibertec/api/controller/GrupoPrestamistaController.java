@@ -18,12 +18,12 @@ import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 
 @Controller
-@RequestMapping("grupo")
+// @RequestMapping("grupo")
 @AllArgsConstructor
 public class GrupoPrestamistaController {
 	private GrupoPrestamistaService grupoPrestamistaService;
 
-	@GetMapping({"/listar", "", "/"})
+	// @GetMapping({"/listar", "", "/"})
 	public String listGrupo(Model model, HttpSession session){
 		return "intranet";
 	}
