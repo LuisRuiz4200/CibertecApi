@@ -177,7 +177,7 @@ public class UsuarioController {
 				
 				//enviamos en atributo llamado titulo, un string que
 				//dice Detalle de Empleado concantenado el nombre
-				model.addAttribute("titulo","Actualización del Empleado");
+				model.addAttribute("titulo","Actualización del Usuario");
 				//esta vista se usara para el agregar y actualizar reutilizando la vista
 				return "usuarioRegistro";
 			} //fin de editarEmpleado
