@@ -33,8 +33,8 @@ public class GrupoPrestamistaServiceImpl implements GrupoPrestamistaService{
 
     @Override
     public GrupoPrestamista delete(GrupoPrestamista grupoPrestamista) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+        grupoPrestamista.setActivo(false);
+        return repository.save(grupoPrestamista);
     }
     
 }

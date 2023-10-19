@@ -53,6 +53,13 @@ public class GrupoPrestamistaController {
 		return response;
 	}
 
+	public GrupoPrestamista deleteGrupoPrestamista(Prestamista jefePrestamista, Prestamista asesorPrestamista, Usuario usuario){
+		GrupoPrestamista grupo = new GrupoPrestamista();
+		grupo.setJefePrestamista(jefePrestamista);
+		grupo.setAsesorPrestamista(asesorPrestamista);
+		return grupoPrestamistaService.delete(grupo);
+	}
+
 	private void print(Object object){
 		System.out.println("\n\n======================");
 		System.out.println(object);

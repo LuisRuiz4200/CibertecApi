@@ -200,25 +200,28 @@ public class PrestamistaController {
 	//Mapea la petición GET a la URL "/eliminar/{id}"
 	//Extrae el id de la URL usando @PathVariable
 	@GetMapping("/eliminar/{id}")
-	public String eliminarPrestamista(@PathVariable(name="id") int id,
-				RedirectAttributes flash) {	
-	//Valida que el id sea mayor a 0
-			if(id>0) {
-				//Si es válido, llama al método eliminarPrestamista del servicio, pasándole el id
+	public String eliminarPrestamista(@PathVariable(name="id") int id, RedirectAttributes flash, HttpSession session) {
+		//Valida que el id sea mayor a 0
+		if(id>0) {
+			Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
+			int rolIngreso = userLogged.getRol().getIdRol();
+			if(rolIngreso == 1){
+				// Eliminar jefePrestamista si tiene 0 miembros
+			}else{
+				// Eliminar asesorPrestamista 
+				int idJefePrestamista = userLogged.getPersona().getIdPersona();
+				Prestamista jefePrestamista = service.getPrestamistaById(idJefePrestamista).orElse(null);
+				Prestamista asesorPresmista = service.getPrestamistaById(id).orElse(null);
+
+				// Eliminacion Lógica
 				service.eliminarPrestamista(id);
-				//Agrega un mensaje "flash" de éxito indicando que se eliminó
-					flash.addFlashAttribute("success","El Prestamista ha sido eliminado");
-					//Retorna un redirect a la URL /listar para mostrar la lista con el atributo success que almacena
-					//el mensaje
-					return "redirect:/listar";
-					
-				} //fin de if
-			return "redirect:/listar";
-		} //fin de eliminarEmpleado
-	
-	
-	
-	
-	
+				grupoController.deleteGrupoPrestamista(jefePrestamista, asesorPresmista, userLogged);
+
+				flash.addFlashAttribute("success","El Prestamista ha sido eliminado");
+				return "redirect:/listar";
+			}
+		} //fin de if
+		return "redirect:/listar";
+	} //fin de eliminarEmpleado
 	
 } //Fin de PrestamistaController

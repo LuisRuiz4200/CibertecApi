@@ -51,4 +51,8 @@ public class GrupoPrestamista{
     @ManyToOne
     @JoinColumn(name = "usuarioActualiza", referencedColumnName = "idUsuario")
     private Usuario usuarioActualiza;
+
+    public boolean getActivo(){
+        return this.activo;
+    }
 }
