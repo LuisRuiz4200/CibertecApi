@@ -81,12 +81,15 @@ public class UsuarioController {
 			return "listarUsuario";
 		} //fin de listarUsuario
 		
-		@GetMapping("/registrarUsuario")
-		public String mostrarFormularioRegistroUsuario(Model model) {
+		@GetMapping("/registrarUsuario/{rolId}")
+		public String mostrarFormularioRegistroUsuario(Model model,@PathVariable int rolId) {
 			//creamos objeto usuario vacio
 			Usuario usuario=new Usuario();
 			//creamos listado para rol para combo
 			List<Rol> dataRol=serviceRol.listarRol();
+			Rol rol = new Rol();
+			rol.setIdRol(rolId);
+			usuario.setRol(rol);
 			//creamos listado para persona para combo
 			List<Persona> dataPersona=servicePersona.listarPersona();
 			//crear un nuevo PersonaM para registrar al darle al boton registrar crea un nuevo objeto PersonaM

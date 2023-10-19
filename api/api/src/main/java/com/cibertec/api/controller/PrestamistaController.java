@@ -125,9 +125,7 @@ public class PrestamistaController {
 		}
 
 		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
-		
-		int idJefePrestamista = userLogged.getPersona().getIdPersona();
-		Prestamista jefePrestamista = service.getPrestamistaById(idJefePrestamista).orElse(null);
+		int rolUsuario = userLogged.getRol().getIdRol();
 		
 		String mensaje;
 		int idPersona = prestamista.getPrestamista().getIdPersona();
@@ -139,19 +137,26 @@ public class PrestamistaController {
 		
 		Prestamista newPrestamista = service.guardarPrestamista(prestamista); //Marca el status como completo.
 
-		// Registrar en Grupo del Jefe
-		GrupoPrestamista grupo = null;
-		if(idPersona == 0){
-			grupo = grupoController.insertGrupoPrestamista(jefePrestamista, newPrestamista, userLogged);
+		if(rolUsuario == 1){
+			int registrarJefe = 2;
+			return "redirect:/registrarUsuario/" + registrarJefe;
+		}else{
+			int idJefePrestamista = userLogged.getPersona().getIdPersona();
+			Prestamista jefePrestamista = service.getPrestamistaById(idJefePrestamista).orElse(null);
+			// Registrar Asesor Prestamista
+			GrupoPrestamista grupo = null;
+			if(idPersona == 0){
+				grupo = grupoController.insertGrupoPrestamista(jefePrestamista, newPrestamista, userLogged);
+			}
+			int registrarAsesor = 3;
+			return "redirect:/registrarUsuario/" + registrarAsesor;
 		}
-		if(grupo == null)
-			System.out.println("Eres peruano destino a sufrir!");
 
-		status.setComplete();
+		// status.setComplete();
 		
-		flash.addFlashAttribute("success", mensaje);
+		// flash.addFlashAttribute("success", mensaje);
 		
-		return "redirect:/listar";
+		// return "redirect:/listar";
 		 
 	} //fin de guardarPrestamista
 	

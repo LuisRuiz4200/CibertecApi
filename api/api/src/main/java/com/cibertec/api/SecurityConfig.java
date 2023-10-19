@@ -29,10 +29,10 @@ public class SecurityConfig {
 		
 	http.csrf(csrf->csrf.disable())
 	//.authorizeHttpRequests((auth)-> {auth.antMatchers("/lista").hasRole("Administrador");
-	.authorizeHttpRequests((auth)-> {auth.requestMatchers("/lista").hasRole("Administrador"); 
-	auth.anyRequest().authenticated();})
-	.formLogin(form-> form.loginPage("/login")
-	.permitAll().defaultSuccessUrl("/intranet"));
+		.authorizeHttpRequests((auth)-> {auth.requestMatchers("/lista").hasRole("Administrador"); 
+		auth.anyRequest().authenticated();})
+		.formLogin(form-> form.loginPage("/login")
+		.permitAll().defaultSuccessUrl("/intranet"));
 	
 	http.exceptionHandling(exceptions -> {
 	    exceptions.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"));
