@@ -14,7 +14,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.cibertec.api.model.GrupoPrestamista;
 import com.cibertec.api.model.Persona;
 import com.cibertec.api.model.Prestamista;
-import com.cibertec.api.model.Rol;
 import com.cibertec.api.model.Usuario;
 import com.cibertec.api.service.PrestamistaService;
 
