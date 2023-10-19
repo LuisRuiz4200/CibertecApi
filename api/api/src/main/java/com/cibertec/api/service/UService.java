@@ -2,6 +2,7 @@ package com.cibertec.api.service;
 
 import java.util.List;
 
+import com.cibertec.api.model.Rol;
 import com.cibertec.api.model.Usuario;
 
 public interface UService {
@@ -16,4 +17,5 @@ public interface UService {
 
 	public void eliminarUsuario(int id);
 
+	List<Usuario> getUsuarioByRol(Rol rol);
 }

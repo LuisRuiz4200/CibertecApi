@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.cibertec.api.model.Persona;
+import com.cibertec.api.model.Rol;
 import com.cibertec.api.model.Usuario;
 import com.cibertec.api.repository.UsuarioRepository;
 import com.cibertec.api.service.UService;
@@ -90,6 +92,11 @@ public class UserServiceImpl implements UService {
 	    	usua.setActivo(true);
 	        repo.save(usua);
 	    }
+	}
+
+	@Override
+	public List<Usuario> getUsuarioByRol(Rol rol) {
+		return repo.findByRol(rol);
 	}
 	
 
