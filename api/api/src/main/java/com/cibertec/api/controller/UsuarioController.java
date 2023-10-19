@@ -125,13 +125,13 @@ public class UsuarioController {
 			  "El Prestamista se actualizó correctamente"; 
 			  else mensaje =
 			  "El Prestamista se registró correctamente";
-			  
+			  usuario.setActivo(true);
 			  serviceUsuario.guardarUsuario(usuario); 
 			  //Marca el status como completo.
 			  status.setComplete();
 			  flash.addFlashAttribute("success", mensaje);
 			  //redireccionamos
-			  return "redirect:/listar";
+			  return "redirect:/listarUsuario";
 		} //fin de guardarUsuario
 		
 		
