@@ -49,11 +49,11 @@ public class UsuarioController {
 	@RequestMapping("/intranet")
 	public String intranet(Authentication  auth, Model model, HttpSession session){
 		String vLogin=auth.getName();
-		 Usuario u=servicio.loginUsuario(vLogin);
-		 List<Menu> lista=servicio.enlacesDelUsuario(u.getRol().getIdRol());
+		Usuario u=servicio.loginUsuario(vLogin);
+		List<Menu> lista=servicio.enlacesDelUsuario(u.getRol().getIdRol());
 		 
-	     model.addAttribute("ENLACES",lista);
-	    session.setAttribute("UserLogin", u);
+	    model.addAttribute("ENLACES",lista);
+	    session.setAttribute("UserLogged", u);
 			//retornamos la pagina o vista intranet.html
 		return "intranet";		
 	}
@@ -204,7 +204,7 @@ public class UsuarioController {
 		
 	@PostMapping("/cerrarSession")
 	public String cerrarSession(HttpSession session) {
-		session.removeAttribute("UserLogin");
+		session.removeAttribute("UserLogged");
 		return "redirect:/login";
 	}
 

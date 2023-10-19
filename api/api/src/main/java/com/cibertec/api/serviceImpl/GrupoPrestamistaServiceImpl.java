@@ -1,51 +1,40 @@
 package com.cibertec.api.serviceImpl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cibertec.api.model.GrupoPrestamista;
+import com.cibertec.api.model.Prestamista;
 import com.cibertec.api.repository.GrupoPrestamistaRepository;
 import com.cibertec.api.service.GrupoPrestamistaService;
 
-import lombok.AllArgsConstructor;
-
 @Service
-@AllArgsConstructor
 public class GrupoPrestamistaServiceImpl implements GrupoPrestamistaService{
+
     @Autowired
     private GrupoPrestamistaRepository repository;
 
     @Override
-    public List<GrupoPrestamista> getGrupoPrestamistaList() {
-        return repository.findAll();
+    public List<GrupoPrestamista> listByJefe(Prestamista jefePrestamista) {
+        return repository.findByJefePrestamista(jefePrestamista);
     }
 
     @Override
-    public List<GrupoPrestamista> getGrupoPrestamistaByPrestamista(int idPrestamista) {
-        return new ArrayList<GrupoPrestamista>();
+    public List<GrupoPrestamista> listByJefeAndActivo(Prestamista jefePrestamista, boolean activo) {
+        return repository.findByJefePrestamistaAndActivo(jefePrestamista, activo);
     }
 
     @Override
-    public GrupoPrestamista saveGrupoPrestamista(GrupoPrestamista grupoPrestamista) {
+    public GrupoPrestamista addOrUpdate(GrupoPrestamista grupoPrestamista) {
         return repository.save(grupoPrestamista);
     }
 
     @Override
-    public GrupoPrestamista getGrupoPrestamistaByGrupoAndPrestamista(int grupoId, int prestamistaId) {
-        return repository.findById_IdGrupoAndId_IdPrestamista(grupoId, prestamistaId);
-    }
-
-    @Override
-    public List<GrupoPrestamista> getGrupoPrestamistaByGrupo(int idGrupo) {
-        return repository.findById_IdGrupo(idGrupo);
-    }
-
-    @Override
-    public List<GrupoPrestamista> getByGrupoAndState(int idGrupo, boolean activo) {
-        return repository.findById_IdGrupoAndActivo(idGrupo, activo);
+    public GrupoPrestamista delete(GrupoPrestamista grupoPrestamista) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'delete'");
     }
     
 }

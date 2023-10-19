@@ -10,9 +10,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.MapsId;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
@@ -53,19 +52,11 @@ public class Prestamista {
 	private boolean activo;
 //	@OneToMany(mappedBy = "prestamista")
 //	@JsonIgnore
-//	private List<GrupoPrestamista> listaGrupoPrestamista;
-//	
-//	@OneToMany(mappedBy = "prestamista")
-//	@JsonIgnore
 //	private List<SolicitudPrestamo> listaSolicitudPrestamo;
 
+	@OneToMany(mappedBy = "jefePrestamista")
+	private List<GrupoPrestamista> jefePrestamista;
 
-	@ManyToMany
-	@JoinTable(
-		name = "tb_grupo_prestamista",
-		joinColumns = @JoinColumn(name = "idPrestamista"),
-		inverseJoinColumns = @JoinColumn(name = "idGrupo")
-	)
-	private List<Grupo> grupos;
-
+	@OneToMany(mappedBy = "asesorPrestamista")
+	private List<GrupoPrestamista> asesorPrestamista;
 }//fin de PrestamistaM
