@@ -205,10 +205,20 @@ public class PrestamistaController {
 		if(id>0) {
 			Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
 			int rolIngreso = userLogged.getRol().getIdRol();
+
+			// Como admin - Elimino a un Jefe
 			if(rolIngreso == 1){
-				// Eliminar jefePrestamista si tiene 0 miembros
-			}else{
-				// Eliminar asesorPrestamista 
+				Prestamista jefePrestamista = service.getPrestamistaById(id).orElse(null);
+				int totalDeMiembros = grupoController.listGrupoByJefePrestamista(jefePrestamista).size();
+				//De ser el caso que no tenga miembros, se podrá eliminar al jefePrestamista
+				if(totalDeMiembros < 1)
+					service.eliminarPrestamista(id);
+				else
+					System.out.println("Sry manito no se puede, este jefe es gozu :v");
+			}
+			
+			// Como Jefe - Elimino a un asesorPrestamista
+			else{
 				int idJefePrestamista = userLogged.getPersona().getIdPersona();
 				Prestamista jefePrestamista = service.getPrestamistaById(idJefePrestamista).orElse(null);
 				Prestamista asesorPresmista = service.getPrestamistaById(id).orElse(null);
