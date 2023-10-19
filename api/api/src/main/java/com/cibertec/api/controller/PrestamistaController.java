@@ -88,15 +88,27 @@ public class PrestamistaController {
 
 
 	@GetMapping("/registrar")
-	public String mostrarFormularioRegistroPrestamista(Model model) {
-	
-		Prestamista prestamista=new Prestamista();
-		//crear un nuevo PersonaM para registrar al darle al boton registrar crea un nuevo objeto PersonaM
-		prestamista.setPrestamista(new Persona());
-		
+	public String mostrarFormularioRegistroPrestamista(Model model, HttpSession session) {
+		//for mensaje
+				String titulo = "";
+				//objeto prestamista en vacio
+				Prestamista prestamista=null;
+		// Obtener la sesion de quien ingresa
+				Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
+				//obtener el rol
+				int rolIngreso = userLogged.getRol().getIdRol();
+				prestamista=new Prestamista();
+				//crear un nuevo PersonaM para registrar al darle al boton registrar crea un nuevo objeto PersonaM
+				prestamista.setPrestamista(new Persona());
+				
+				if(rolIngreso == 1) 
+					titulo = "Registrar Jefe Prestamista"; 
+				else 
+					titulo = "Registrar Prestamista";
+
 		model.addAttribute("prestamista",prestamista);
 		
-		model.addAttribute("titulo","Registrar Prestamista");
+		model.addAttribute("titulo",titulo);
 		
 		return "formulario";
 	} //fin de mostrarFormularioRegistroPrestamista
@@ -105,7 +117,6 @@ public class PrestamistaController {
 	@PostMapping("/registrar") //localhost:9090/registrar
 	public String guardarPrestamista(Prestamista prestamista,BindingResult result,
 			Model model,RedirectAttributes flash,SessionStatus status, HttpSession session) {
-		
 		if(result.hasErrors()) {
 		
 			model.addAttribute("titulo","Registrar Prestamista");
@@ -114,6 +125,7 @@ public class PrestamistaController {
 		}
 
 		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
+		
 		int idJefePrestamista = userLogged.getPersona().getIdPersona();
 		Prestamista jefePrestamista = service.getPrestamistaById(idJefePrestamista).orElse(null);
 		
