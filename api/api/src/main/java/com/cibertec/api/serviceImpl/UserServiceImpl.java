@@ -30,7 +30,7 @@ public class UserServiceImpl implements UService {
 	@Override
 	public List<Usuario> listarUsuario() {
 		  return repo.findAll().stream()
-				   .filter(usuario -> !usuario.isActivo())
+				   .filter(usuario -> usuario.isActivo())
 				   .collect(Collectors.toList());
 	}
 
@@ -88,8 +88,8 @@ public class UserServiceImpl implements UService {
 		// TODO Auto-generated method stub
 		Usuario usua = repo.findById(id).orElse(null);
 	    if (usua != null) {
-	        //al  campo usua de tipo tbusuario lo cambia a true osea de eliminado(1)
-	    	usua.setActivo(true);
+	        //al  campo usua de tipo tbusuario lo cambia a false osea de eliminado(1)
+	    	usua.setActivo(false);
 	        repo.save(usua);
 	    }
 	}

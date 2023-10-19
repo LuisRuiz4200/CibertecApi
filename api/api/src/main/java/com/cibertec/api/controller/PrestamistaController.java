@@ -119,10 +119,12 @@ public class PrestamistaController {
 			Model model,RedirectAttributes flash,SessionStatus status, HttpSession session) {
 		if(result.hasErrors()) {
 		
-			model.addAttribute("titulo","Registrar Prestamista");
+			model.addAttribute("titulo","Registro");
 			
 			return "formulario";
 		}
+		prestamista.setActivo(true);
+		prestamista.getPrestamista().setActivo(true);
 
 		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
 		int rolUsuario = userLogged.getRol().getIdRol();
@@ -130,27 +132,35 @@ public class PrestamistaController {
 		String mensaje;
 		int idPersona = prestamista.getPrestamista().getIdPersona();
 		// if (prestamista.getIdPrestamista() != 0) 
-		if(idPersona != 0) 
-			mensaje = "El Prestamista se actualizó correctamente"; 
-		else 
-			mensaje = "El Prestamista se registró correctamente";
-		
-		Prestamista newPrestamista = service.guardarPrestamista(prestamista); //Marca el status como completo.
-
-		if(rolUsuario == 1){
-			int registrarJefe = 2;
-			return "redirect:/registrarUsuario/" + registrarJefe;
-		}else{
-			int idJefePrestamista = userLogged.getPersona().getIdPersona();
-			Prestamista jefePrestamista = service.getPrestamistaById(idJefePrestamista).orElse(null);
-			// Registrar Asesor Prestamista
-			GrupoPrestamista grupo = null;
-			if(idPersona == 0){
-				grupo = grupoController.insertGrupoPrestamista(jefePrestamista, newPrestamista, userLogged);
-			}
-			int registrarAsesor = 3;
-			return "redirect:/registrarUsuario/" + registrarAsesor;
+		if(idPersona != 0) {
+			mensaje = "El Prestamista se actualizó correctamente";
+			Prestamista newPrestamista = service.guardarPrestamista(prestamista);
+			return "redirect:/listar";
 		}
+			 
+		else {
+			
+			mensaje = "El Prestamista se registró correctamente";
+			Prestamista newPrestamista = service.guardarPrestamista(prestamista); //Marca el status como completo.
+
+			if(rolUsuario == 1){
+				int registrarJefe = 2;
+				return "redirect:/registrarUsuario/" + registrarJefe + "/" +newPrestamista.getIdPrestamista();
+			}else{
+				int idJefePrestamista = userLogged.getPersona().getIdPersona();
+				Prestamista jefePrestamista = service.getPrestamistaById(idJefePrestamista).orElse(null);
+				// Registrar Asesor Prestamista
+				GrupoPrestamista grupo = null;
+				if(idPersona == 0){
+					grupo = grupoController.insertGrupoPrestamista(jefePrestamista, newPrestamista, userLogged);
+				}
+				int registrarAsesor = 3;
+				return "redirect:/registrarUsuario/" + registrarAsesor + "/" +newPrestamista.getIdPrestamista();
+			}
+		}
+			
+		
+		
 
 		// status.setComplete();
 		
@@ -191,7 +201,7 @@ public class PrestamistaController {
 		model.addAttribute("prestamista", presta);
 		//enviamos en atributo llamado titulo, un string que
 		//dice Detalle de Empleado concantenado el nombre
-		model.addAttribute("titulo","Edición del Empleado");
+		model.addAttribute("titulo","Actualización");
 		//esta vista se usara para el agregar y actualizar reutilizando la vista
 		return "formulario";
 	} //fin de editarEmpleado
