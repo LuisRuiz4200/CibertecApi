@@ -139,7 +139,7 @@ public class PrestamistaController {
 
 		if(rolUsuario == 1){
 			int registrarJefe = 2;
-			return "redirect:/registrarUsuario/" + registrarJefe;
+			return "redirect:/registrarUsuario/" + registrarJefe + "/" +newPrestamista.getIdPrestamista();
 		}else{
 			int idJefePrestamista = userLogged.getPersona().getIdPersona();
 			Prestamista jefePrestamista = service.getPrestamistaById(idJefePrestamista).orElse(null);
@@ -149,7 +149,7 @@ public class PrestamistaController {
 				grupo = grupoController.insertGrupoPrestamista(jefePrestamista, newPrestamista, userLogged);
 			}
 			int registrarAsesor = 3;
-			return "redirect:/registrarUsuario/" + registrarAsesor;
+			return "redirect:/registrarUsuario/" + registrarAsesor + "/" +newPrestamista.getIdPrestamista();
 		}
 
 		// status.setComplete();

@@ -81,24 +81,28 @@ public class UsuarioController {
 			return "listarUsuario";
 		} //fin de listarUsuario
 		
-		@GetMapping("/registrarUsuario/{rolId}")
-		public String mostrarFormularioRegistroUsuario(Model model,@PathVariable int rolId) {
+		@GetMapping("/registrarUsuario/{rolId}/{personaId}")
+		public String mostrarFormularioRegistroUsuario(Model model,@PathVariable int rolId,@PathVariable int personaId) {
 			//creamos objeto usuario vacio
 			Usuario usuario=new Usuario();
 			//creamos listado para rol para combo
-			List<Rol> dataRol=serviceRol.listarRol();
+			//List<Rol> dataRol=serviceRol.listarRol();
 			Rol rol = new Rol();
 			rol.setIdRol(rolId);
 			usuario.setRol(rol);
+			
+			Persona persona = new Persona();
+			persona.setIdPersona(personaId);
+			usuario.setPersona(persona);
 			//creamos listado para persona para combo
-			List<Persona> dataPersona=servicePersona.listarPersona();
+			//List<Persona> dataPersona=servicePersona.listarPersona();
 			//crear un nuevo PersonaM para registrar al darle al boton registrar crea un nuevo objeto PersonaM
 			//usuario.setPrestamista  (new PersonaM());
 			
 			model.addAttribute("usuario",usuario);
 			//pasamos para los combobox
-			model.addAttribute("comboRol",dataRol);
-			model.addAttribute("comboPersona",dataPersona);
+			//model.addAttribute("comboRol",dataRol);
+			//model.addAttribute("comboPersona",dataPersona);
 			//
 			model.addAttribute("titulo","Registrar Usuario");
 			//asi se llamara el html
@@ -127,7 +131,7 @@ public class UsuarioController {
 			  status.setComplete();
 			  flash.addFlashAttribute("success", mensaje);
 			  //redireccionamos
-			  return "redirect:/listarUsuario";
+			  return "redirect:/listar";
 		} //fin de guardarUsuario
 		
 		

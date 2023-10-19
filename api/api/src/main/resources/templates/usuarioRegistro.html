@@ -42,83 +42,26 @@
 	                    <input type="text" th:field="*{claveUsuario}" class="form-control" th:errorclass="'form-control alert-danger'" id="clave"/>
 	                    <!--<small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.apellidos')}" th:errors="*{prestamista.apellidos}"></small>--> 
 	                 </div>
-	                 
-	                 <!--<div class="form-group">
-	                    <label>Persona : </label>
-	                    <input type="text" th:field="*{prestamista.direccion}" class="form-control" th:errorclass="'form-control alert-danger'"/>
-	                    <small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.direccion')}" th:errors="*{prestamista.direccion}"></small> 
-	                 </div>-->
-	                 <!--INICIO Combo para Persona-->
+
+					 <!--Persona-->
+                     <div class="form-group">
+                        <input type="text" th:field="*{persona.idPersona}" class="form-control" th:value="${usuario.persona.idPersona}" th:errorclass="'form-control alert-danger'"/>
+                        <!--<small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.nombres')}" th:errors="*{prestamista.nombres}"></small>-->
+                     </div>
+
+	                 <!--Text for Rol-->
 	                 <div class="form-group">
-				<label for="validationCustomUsername" class="form-label fw-bold">Persona</label>
-						<div class="input-group has-validation">
-					<!--el name de este select osea el persona debe ser igual a 
-				     							@JoinColumn(name="id_categoria_producto")
-								//variable ASOCIACION ENTRE TABLAS este es un Objeto de PersonaM
-								private PersonaM persona; a cate que lo parsea
-								agregamos el value a 0-->
-					<select class="form-select form-control" name="persona" id="idPer">
-						<option value="0">[Seleccione Persona]</option>
-
-						<!--<option th:each="bean:${comboPersona}" th:utext="${bean.nombres}"
-							th:value="${bean.idPersona}" />-->
-							<!--El selected viene del UsuarioController el 
-							model.addAttribute("PersonaId",usu.getPersona().getIdPersona());-->
-							<!--<option th:each="bean:${comboPersona}" th:utext="${bean.nombres}"
-							th:value="${bean.idPersona}" th:selected="${PersonaId == bean.idPersona}" />-->
-							<option th:each="bean:${comboPersona}" 
-						        th:value="${bean.idPersona}" 
-						        th:selected="${PersonaId == bean.idPersona}"
-						        th:utext="${bean.nombres + ' ' + bean.apellidos}">
-							</option>
-					</select>
-
-						</div>
-					</div>
-	                 <!--FIN Combo para Persona-->
+                        <input type="text" th:field="*{rol.idRol}" class="form-control" th:value="${usuario.rol.idRol}" th:errorclass="'form-control alert-danger'"/>
+                        <!--<small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.nombres')}" th:errors="*{prestamista.nombres}"></small>-->
+                     </div>
+                    
 	                 
-	                <!-- 
-	                 <div class="form-group">
-	                    <label>Rol : </label>
-		                    <input type="text" th:field="*{prestamista.email}" class="form-control" th:errorclass="'form-control alert-danger'"/>
-	                    <small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.email')}" th:errors="*{prestamista.email}"></small> 
-	                 </div>-->
-	                 
-	                  <!--INICIO Combo para Persona-->
-	                 <div class="form-group">
-				<label for="validationCustomUsername" class="form-label fw-bold">Rol</label>
-						<div class="input-group has-validation">
-					<!--el name de este select osea el cate debe ser igual a 
-				     							@JoinColumn(name="id_categoria_producto")
-								//variable ASOCIACION ENTRE TABLAS este es un Objeto de CategoriaProducto
-								private CategoriaProducto cate; a cate que lo parsea-->
-					<select class="form-select form-control" name="rol" id="idR">
-						<option value="0">[Seleccione Rol]</option>
-
-						<!--<option th:each="bean:${comboRol}" th:utext="${bean.descripcion}"
-							th:value="${bean.idRol}" />-->
-							<!--El selected viene del UsuarioController el 
-							model.addAttribute("RolId",usu.getRol().getIdRol());-->
-							<option th:each="bean:${comboRol}" th:utext="${bean.descripcion}"
-							th:value="${bean.idRol}" th:selected="${RolId == bean.idRol}" />
-							
-					</select>
-
-						</div>
-					</div>
-	                 <!--FIN Combo para Persona-->
+	              
 	                 
 	                 
 	                 
 	                 
-	                <!-- <div class="form-group">
-	                    <label>Sexo : </label>
-	                    <select class="form-control" th:field="*{sexo}">
-	                        <option th:value='M'>Masculino</option>
-	                        <option th:value='F'>Femenino</option>
-	                        <option th:value='Otro'>Otro</option>
-	                    </select>
-	                 </div>-->
+	              
 	                 <div class="box-footer"> 
 	                     <input type="submit" value="Guardar" class="btn btn-primary">
 	                 </div>
@@ -152,8 +95,8 @@ form.addEventListener('submit', (event) => {
 	// Obtener los valores de los campos
   const nombre = document.getElementById('nombre').value;
   const clave = document.getElementById('clave').value;
-const comboPersona = document.getElementById('idPer');
-const comboRol = document.getElementById('idR');
+//const comboPersona = document.getElementById('idPer');
+//const comboRol = document.getElementById('idR');
   // Verificar que no estén vacíos y mostrar mensajes de error por campo
   if (!nombre) {
     toastr.error('Falta completar el campo nombre de usuario');
@@ -163,16 +106,16 @@ const comboRol = document.getElementById('idR');
     toastr.error('Falta completar el campo clave de usuario');
     return;
   }
-  if(comboPersona.value == '0'){
-	  toastr.error('Debe seleccionar una persona válida');
-	   return;
-  }
+  //if(comboPersona.value == '0'){
+	//  toastr.error('Debe seleccionar una persona válida');
+	  // return;
+  //}
   
-  if(comboRol.value == '0'){
-	  toastr.error('Debe seleccionar una rol válido');
+  //if(comboRol.value == '0'){
+	//  toastr.error('Debe seleccionar una rol válido');
 	  //para que se quede aqui y no pase a lo demás hasta completar esto
-	   return;
-  }
+	   //return;
+  //}
 	//CONFIRMACION de Agregado
   // Si todo está bien, enviar el formulario validando por codePre y codePer para el mensaje
   // Obtener los valores de los campos
