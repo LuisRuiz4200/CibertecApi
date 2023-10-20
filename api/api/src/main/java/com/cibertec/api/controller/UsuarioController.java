@@ -94,6 +94,8 @@ public class UsuarioController {
 			Persona persona = new Persona();
 			persona.setIdPersona(personaId);
 			usuario.setPersona(persona);
+			
+			
 			//creamos listado para persona para combo
 			//List<Persona> dataPersona=servicePersona.listarPersona();
 			//crear un nuevo PersonaM para registrar al darle al boton registrar crea un nuevo objeto PersonaM
@@ -114,10 +116,12 @@ public class UsuarioController {
 		//public String guardarUsuario(@Valid tbusuario usuario,BindingResult result,
 		public String guardarUsuario(Usuario usuario,BindingResult result,
 				Model model,RedirectAttributes flash,SessionStatus status) {
+		
 			if(result.hasErrors()) {
 				model.addAttribute("titulo","Registrar Usuario");
 				return "usuarioRegistro";
 			}
+		
 			  String mensaje; 
 			  // if (usuario.getIdPrestamista() != 0) 
 			  if(usuario.getIdUsuario() != 0) 
@@ -125,13 +129,16 @@ public class UsuarioController {
 			  "El Prestamista se actualizó correctamente"; 
 			  else mensaje =
 			  "El Prestamista se registró correctamente";
-			  usuario.setActivo(true);
+			  
 			  serviceUsuario.guardarUsuario(usuario); 
 			  //Marca el status como completo.
 			  status.setComplete();
 			  flash.addFlashAttribute("success", mensaje);
-			  //redireccionamos
-			  return "redirect:/listarUsuario";
+			//redireccionamos
+	            if(usuario.getIdUsuario() != 0)
+	                return "redirect:/listarUsuario";
+	            else
+	                return "redirect:/listar";
 		} //fin de guardarUsuario
 		
 		

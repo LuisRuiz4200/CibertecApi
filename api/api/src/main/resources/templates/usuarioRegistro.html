@@ -45,13 +45,13 @@
 
 					 <!--Persona-->
                      <div class="form-group">
-                        <input type="text" th:field="*{persona.idPersona}" class="form-control" th:value="${usuario.persona.idPersona}" th:errorclass="'form-control alert-danger'"/>
+                        <input type="hidden" th:field="*{persona.idPersona}" class="form-control" th:value="${usuario.persona.idPersona}" th:errorclass="'form-control alert-danger'"/>
                         <!--<small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.nombres')}" th:errors="*{prestamista.nombres}"></small>-->
                      </div>
 
 	                 <!--Text for Rol-->
 	                 <div class="form-group">
-                        <input type="text" th:field="*{rol.idRol}" class="form-control" th:value="${usuario.rol.idRol}" th:errorclass="'form-control alert-danger'"/>
+                        <input type="hidden" th:field="*{rol.idRol}" class="form-control" th:value="${usuario.rol.idRol}" th:errorclass="'form-control alert-danger'"/>
                         <!--<small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.nombres')}" th:errors="*{prestamista.nombres}"></small>-->
                      </div>
                     

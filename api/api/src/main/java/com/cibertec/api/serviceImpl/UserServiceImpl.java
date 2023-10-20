@@ -61,6 +61,7 @@ public class UserServiceImpl implements UService {
 	        usu.setClaveUsuario(passwordEncoder.encode(usuario.getClaveUsuario()));
 	        usu.setPersona(usuario.getPersona());
 	        usu.setRol(usuario.getRol());
+	        usu.setActivo(true);
 	        
 	        // Guardamos los cambios
 	        repo.save(usu);
@@ -71,6 +72,7 @@ public class UserServiceImpl implements UService {
 	        usu.setClaveUsuario(passwordEncoder.encode(usuario.getClaveUsuario()));
 	        usu.setPersona(usuario.getPersona());
 	        usu.setRol(usuario.getRol());
+	        usu.setActivo(true);
 	        
 	        // Guardamos el nuevo usuario
 	        repo.save(usu);
