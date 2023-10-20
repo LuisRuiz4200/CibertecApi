@@ -11,62 +11,100 @@
 	<div>
 		<div th:replace="static/navbar.html"></div>
 	</div>
-	<div class="container">
-
+	<div class="container-sm">
 		<div class="mt-4">
-			<div>
-				<h2>PRESTAMO</h2>
-				<hr>
-			</div>
+			<div class="card">
+				<div class="card-header">
 
-			<div>
-				<form th:action="@{guardar}" th:object="${prestamo}" method="post">
-					<div class="row gap-4">
-						<div class="col-12">
-							<div class="row row-cols-auto g-auto">
-								<div>
-									<label>PRESTATARIO</label>
-									<input class="form-control" type="text"
-										th:value="*{solicitudPrestamo.prestatario.prestatario.nombres} + ' '  +  *{solicitudPrestamo.prestatario.prestatario.apellidos}">
-								</div>
-								<div>
-									<label>RUC</label>
-									<input class="form-control" type="text" th:field="*{solicitudPrestamo.prestatario.prestatario.ruc}">
-								</div>
-								<div>
-									<label>FECHA REGISTRO</label>
-									<input class="form-control" type="date" th:field="*{fechaRegistro}">
-								</div>
-							</div>
+					<div class="col-12">
+						<div>
+							<h2>PRESTAMO</h2>
 						</div>
-
-						<div class="col-12">
-							<div class="row row-cols-auto g-auto">
-								<div>
-									<label>MONTO</label>
-									<input class="form-control" type="text" th:field="*{monto}">
-								</div>
-
-								<div>
-									<label>CUOTAS</label>
-									<input class="form-control" type="text" th:field="*{cuotas}">
-								</div>
-							</div>
-						</div>
-
-						<div class="col-12">
-							<div>
-								<button class="btn btn-success btn-sm">GUARDAR</button>
-								<a class="btn btn-danger btn-sm" th:href="@{listar}">CANCELAR</a>
-							</div>
-						</div>
-
 					</div>
-				</form>
+				</div>
+				<div class="card-body">
+					<div class="row">
+
+
+						<div class="col-6">
+							<div>
+								<form th:action="@{guardar}" th:object="${prestamo}" method="post">
+									<div class="row gap-4">
+										<div class="col-12">
+											<div class="row row-cols-3 g-auto">
+												<div>
+													<label>PRESTATARIO</label>
+													<input class="form-control" type="text"
+														th:value="*{solicitudPrestamo.prestatario.prestatario.nombres} + ' '  +  *{solicitudPrestamo.prestatario.prestatario.apellidos}">
+												</div>
+												<div>
+													<label>RUC</label>
+													<input class="form-control" type="text"
+														th:field="*{solicitudPrestamo.prestatario.prestatario.ruc}">
+												</div>
+												<div>
+													<label>FECHA REGISTRO</label>
+													<input class="form-control" type="date" th:field="*{fechaRegistro}">
+												</div>
+											</div>
+										</div>
+
+										<div class="col-12">
+											<div class="row row-cols-auto g-auto">
+												<div>
+													<label>MONTO</label>
+													<input class="form-control" type="text" th:field="*{monto}">
+												</div>
+
+												<div>
+													<label>CUOTAS</label>
+													<input class="form-control" type="text" th:field="*{cuotas}">
+												</div>
+											</div>
+										</div>
+										
+										<div class="col-12">
+											<div>
+												<button class="btn btn-success btn-sm">GUARDAR</button>
+												<a href="#" class="btn btn-danger btn-sm" onclick="limpiarCuotas()">CANCELAR</a>
+
+												<a href="#" class="btn btn-warning btn-sm" onclick="cargarCuotas()">VALIDAR</a>
+											</div>
+										</div>
+
+									</div>
+								</form>
+							</div>
+						</div>
+						<div class="col-6">
+
+							<div class="table-responsive">
+								<table class="table" id="tbCuotas">
+									<thead>
+										<tr>
+											<th>NRO CUOTA</th>
+											<th>MONTO</th>
+											<th>FECHA A PAGAR</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+
 			</div>
 		</div>
+
+
 	</div>
+	
+	<footer th:replace="static/footer.html"></footer>
+	
 </body>
 
+<script src="/js/prestamo/prestamo.js"></script>
 
 </html>
