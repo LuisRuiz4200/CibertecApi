@@ -60,9 +60,15 @@ public class PrestamistaController {
 			Rol rolJefes = new Rol();
 			rolJefes.setIdRol(2);
 			List<Usuario> users = userService.getUsuarioByRol(rolJefes);
-			lista = users.stream()
+
+			List<Prestamista> jefesPrestamistas = users.stream()
 			.map(usuario -> service.getPrestamistaById(usuario.getPersona().getIdPersona()).orElse(null)).collect(Collectors.toList());
-			/* ================= */
+
+			lista = jefesPrestamistas.stream()
+			.map(jefe -> service.getByIdPrestamistaActivo(jefe.getIdPrestamista()))
+			.filter(Objects::nonNull) // Filtrar elementos no nulos
+			.collect(Collectors.toList());
+			
 			titulo = "Lista de Jefes de Prestamista";
 			break;
 		}
@@ -226,7 +232,7 @@ public class PrestamistaController {
 				else
 					System.out.println("Sry manito no se puede, este jefe es gozu :v");
 			}
-			
+
 			// Como Jefe - Elimino a un asesorPrestamista
 			else{
 				int idJefePrestamista = userLogged.getPersona().getIdPersona();

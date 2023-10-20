@@ -13,5 +13,6 @@ import java.util.List;
 public interface GrupoPrestamistaRepository extends JpaRepository<GrupoPrestamista, Integer>{
     List<GrupoPrestamista> findByJefePrestamista(Prestamista jefePrestamista);
     List<GrupoPrestamista> findByJefePrestamistaAndActivo(Prestamista jefePrestamista, boolean activo);
+    GrupoPrestamista findByJefePrestamistaAndAsesorPrestamista(Prestamista jefePrestamista, Prestamista asesorPrestamista);
 }
 

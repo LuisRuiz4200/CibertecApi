@@ -54,9 +54,7 @@ public class GrupoPrestamistaController {
 	}
 
 	public GrupoPrestamista deleteGrupoPrestamista(Prestamista jefePrestamista, Prestamista asesorPrestamista, Usuario usuario){
-		GrupoPrestamista grupo = new GrupoPrestamista();
-		grupo.setJefePrestamista(jefePrestamista);
-		grupo.setAsesorPrestamista(asesorPrestamista);
+		GrupoPrestamista grupo = grupoPrestamistaService.getByJefeAndAsesor(jefePrestamista, asesorPrestamista);
 		return grupoPrestamistaService.delete(grupo);
 	}
 

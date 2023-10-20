@@ -36,5 +36,10 @@ public class GrupoPrestamistaServiceImpl implements GrupoPrestamistaService{
         grupoPrestamista.setActivo(false);
         return repository.save(grupoPrestamista);
     }
+
+    @Override
+    public GrupoPrestamista getByJefeAndAsesor(Prestamista jefePrestamista, Prestamista asesorPrestamista) {
+        return repository.findByJefePrestamistaAndAsesorPrestamista(jefePrestamista, asesorPrestamista);
+    }
     
 }
