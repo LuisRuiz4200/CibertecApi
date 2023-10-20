@@ -82,4 +82,8 @@ public class PrestamistaServiceImpl implements PrestamistaService {
 		return repo.findById(id);
 	}
 
+	@Override
+	public Prestamista getByIdPrestamistaActivo(int idPrestamista) {
+		return repo.findByIdPrestamistaAndActivo(idPrestamista, true);
+	}
 }
