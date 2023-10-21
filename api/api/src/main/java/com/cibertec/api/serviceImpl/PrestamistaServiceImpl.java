@@ -86,4 +86,20 @@ public class PrestamistaServiceImpl implements PrestamistaService {
 	public Prestamista getByIdPrestamistaActivo(int idPrestamista) {
 		return repo.findByIdPrestamistaAndActivo(idPrestamista, true);
 	}
+
+	@Override
+	public Prestamista buscarPorDni(String dni) {
+		// TODO Auto-generated method stub
+		return repo.findByPrestamistaDni(dni);
+	}
+	@Override
+	public Prestamista buscarPorRuc(String ruc) {
+		// TODO Auto-generated method stub
+		return repo.findByPrestamistaRuc(ruc);
+	}
+	@Override
+	public Prestamista buscarPorDniOPorRuc(String dni,String ruc) {
+		// TODO Auto-generated method stub
+		return repo.findByPrestamistaDniOrPrestamistaRuc(dni,ruc);
+	}
 }
