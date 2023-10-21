@@ -94,4 +94,22 @@ public class PrestamistaApiController {
 		return response;
 	}
 	
+	@GetMapping("/obtenerDni/{id}")
+	private Map<?,?> obtenerDni(@PathVariable int id){
+		
+		Map<String,Object> response = new HashMap<>();
+		Prestamista prestamista = prestamistaService.getPrestamistaById( id).get(); 
+		try {
+			
+			if (prestamista!=null) {
+				response.put("mensaje", prestamista.getPrestamista().getDni() );
+			}
+		}catch(Exception ex) {
+			response.put("error", ex.getMessage() );
+		}
+		
+		return response;
+	}
+	
+	
 }
