@@ -41,7 +41,8 @@ public class UsuarioController {
 	private UsuarioService servicio;
 	
 	@RequestMapping("/login")
-	public String login(){
+	public String login(Model model){
+		 model.addAttribute("validacion",false);		
 		//Si ponemos en la ruta localhost:9090/login nos redirecciona AQUI 
 		return "inicio";
 	}
@@ -52,7 +53,7 @@ public class UsuarioController {
 		Usuario u=servicio.loginUsuario(vLogin);
 		List<Menu> lista=servicio.enlacesDelUsuario(u.getRol().getIdRol());
 		 
-	    model.addAttribute("ENLACES",lista);
+	    model.addAttribute("ENLACES",lista); 
 	    session.setAttribute("UserLogged", u);
 			//retornamos la pagina o vista intranet.html
 		return "intranet";		

@@ -22,10 +22,10 @@
 
 	<div class="py-4 ml-5 mr-5">
 		<div class="card bg-light">
-			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-header h2 text-center" th:text="${titulo}"></div>
 			<div class="card-body">
 				<h4 class="card-title">
-					<a th:href="@{/registrar}" class="btn btn-primary">Agregar Prestamista</a>
+					<a th:href="@{/registrar}" class="btn btn-primary" th:text="${boton_agregar}"></a>
 
 					<!-- <a sec:authorize="hasRole('ADMIN')" th:href="@{/exportarPdf}"
 						class="btn btn-secondary">Exportar a PDF</a> <a

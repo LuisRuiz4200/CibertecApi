@@ -45,6 +45,7 @@ public class PrestamistaController {
 		List<Prestamista> lista = new ArrayList<>();
 		//for mensaje
 		String titulo = "";
+		String boton_agregar = "";
 		switch(rolIngreso) {
 		//admin lista de jefes
 		
@@ -69,7 +70,8 @@ public class PrestamistaController {
 			.filter(Objects::nonNull) // Filtrar elementos no nulos
 			.collect(Collectors.toList());
 			
-			titulo = "Lista de Jefes de Prestamista";
+			titulo = "Lista de Jefes Prestamistas";
+			boton_agregar =  "Agregar Jefe";
 			break;
 		}
 		//jefe de prestamista, lista de prestamistas
@@ -89,6 +91,7 @@ public class PrestamistaController {
 		} //fin de switch
 		model.addAttribute("lista",lista);
 		model.addAttribute("titulo",titulo);
+		model.addAttribute("boton_agregar",boton_agregar);
 		return "listar";
 	} //fin de listarPrestamista
 

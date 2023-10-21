@@ -11,10 +11,11 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <style type="text/css">
 body {
-  background: #eee;
+  background: #dcf5e4;
 }
 .wrapper {
   margin: 15%;
+  
 }
 .form-signin {
   max-width: 380px;
@@ -22,7 +23,7 @@ body {
   background-color: #fff;
   padding: 5px 40px 50px;
   border: 1px solid #e5e5e5;
-  border-radius: 10px;
+  border-radius: 15px;
 }
 .form-signin .form-signin-heading, .form-signin .checkbox {
   margin-bottom: 30px;
@@ -34,19 +35,21 @@ body {
   padding: 10px;
 }
 .modal-login {
-		color: #636363;
+		color: #48b086;
 		/*width: 350px;*/
 		margin: 25px auto;
+		
 	}
 	.modal-login .modal-content {
 		padding: 0px;
-		border-radius: 5px;
+		border-radius: 15px;
 		border: none;
 	}
 	.modal-login .modal-header {
 		border-bottom: none;
 		position: relative;
 		justify-content: center;
+		border-radius: 15px 15px 0 0 ;
 	}
 	.modal-login h4 {
 		text-align: center;
@@ -81,14 +84,17 @@ body {
 		right: -5px;
 	}
 	.modal-login .btn {
-		background: #428bca;
-		border: none;
+		/*background:#1d6e4d;
+		border: none;*/
 		line-height: normal;
 		font-weight:bold;
-		width:40%;
+		width:60%;
+		border-radius: 10px;
 	}
 	.modal-login .btn:hover, .modal-login .btn:focus {
-		background: #428bca;
+		background: #269669;
+		border-radius: 10px;
+		width:60%;
 	}
 	.modal-login .modal-footer {
 		background: #ecf0f1;
@@ -110,7 +116,7 @@ body {
 	.modal-header{
 		margin:0px;
 		color:#fff;
-		background: #428bca;
+		background: #1d6e4d;
 		display: flex;
   		justify-content: center;
   		
@@ -130,11 +136,11 @@ body {
 	<div class="modal-dialog modal-login">
 		<div class="modal-content">
 			<div class="modal-header">				
-				<h5 class="modal-title">INGRESAR SISTEMA</h5>
+				<h5 class="modal-title"> 💰 SISTEMA DE PRÉSTAMOS </h5>
 			</div>
 			<div class="modal-body">
-				<div class="alert alert-danger"></div>
-				<div class="alert alert-success"></div>
+				<div class="alert alert-danger" th:if="${validacion}"></div>
+				<div class="alert alert-success" th:if="${validacion}"></div>
 				<form th:action="@{/login}" method="post">
 					<div class="form-group">
 						<i class="fa fa-user"></i>
@@ -145,7 +151,7 @@ body {
 						<input type="password" class="form-control" name="password" placeholder="Clave" required="required">					
 					</div>
 					<div class="ingresar">
-						<input type="submit" class="btn btn-primary btn-sm" aria-pressed="true"value="Iniciar sesion">
+						<input type="submit" class="btn btn-outline-success btn-sm" aria-pressed="true"value="Iniciar sesion">
 					</div>
 				</form>				
 				
