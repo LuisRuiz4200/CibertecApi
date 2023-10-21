@@ -22,7 +22,7 @@
 				<div class="row row-cols-auto">
 					<div class="col-2">
 						<label>PRESTATARIO</label>
-						<select class="form-select"  th:field="*{idPrestatario}">
+						<select class="form-select" th:field="*{idPrestatario}">
 							<option th:each="prestatario : ${listaPrestatario}"
 								th:text="${prestatario.prestatario.nombres} + ' ' +  ${prestatario.prestatario.apellidos}"
 								th:value="${prestatario.idPrestatario}"></option>
@@ -65,7 +65,8 @@
 							<td>
 								<div>
 									<div>
-										<a th:href="@{actualizar/{id}(id=${solicitud.idSolicitudPrestamo})}" class="btn btn-warning btn-sm">EVALUAR</a>
+										<a th:href="@{actualizar/{id}(id=${solicitud.idSolicitudPrestamo})}"
+											class="btn btn-warning btn-sm">EVALUAR</a>
 									</div>
 								</div>
 							</td>
@@ -78,6 +79,7 @@
 		</div>
 
 	</div>
+	
 </body>
 
 </html>
