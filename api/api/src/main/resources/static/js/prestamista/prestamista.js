@@ -15,8 +15,8 @@ function obtenerDni() {
 			.then(data => {
 				if (data.mensaje) {
 					toastr.warning(data.mensaje);
-					resolve (data.mensaje);
-				} 
+					resolve(data.mensaje);
+				}
 			});
 	})
 }
@@ -106,7 +106,7 @@ function validarFormulario() {
 			toastr.error('El campo DNI debe tener 8 dígitos');
 			return;
 		}
-		
+
 		const codePre = document.getElementById('CodePre').value;
 		const codePer = document.getElementById('CodePer').value;
 		// Validar si los campos CodePre y CodePer son iguales a cero
@@ -138,90 +138,90 @@ function validarFormulario() {
 		} else {
 			// Mostrar SweetAlert para prestamista actualizado
 			var dniPersona;
-			Promise.all ([obtenerDni()]).then(([dni]) => {
-				dniPersona = dni;toastr.success(dniPersona);
-					if(dniPersona===codePer){
-				Swal.fire({
-				title: '¡Formulario completado!',
-				text: 'Actualizado',
-				icon: 'success',
-				confirmButtonText: 'Aceptar'
-			}).then(() => {
-				form.submit();
-				});
-			}else{
-				Promise.all([validarDniExiste()])
-				.then(([dniExiste]) => {
-
-					if (!dniExiste) {
-						toastr.success("dni permitido");
-					}
-
-					documentoExiste = dniExiste
-
-					if (!documentoExiste) {
-						Swal.fire({
-							title: '¡Formulario completado!',
-							text: 'Actualizado',
-							icon: 'success',
-							confirmButtonText: 'Aceptar'
-						}).then(() => {
-							form.submit();
-						});
-					}
-				});
-			}
-	
-				})
-				
-			}
-		
-	/*	var documentoExiste = true;
-
-			Promise.all([validarDniExiste()])
-				.then(([dniExiste]) => {
-
-					if (!dniExiste) {
-						toastr.success("dni permitido");
-					}
-					
-					documentoExiste = dniExiste
-
-					if (!documentoExiste) {
-						
-						
-						const codePre = document.getElementById('CodePre').value;
-						const codePer = document.getElementById('CodePer').value;
-						// Validar si los campos CodePre y CodePer son iguales a cero
-					if (codePre == '0' && codePer == '0') {
-						// Mostrar SweetAlert para prestamista registrado
-
-						Swal.fire({
-				
-						title: '¡Formulario completado!',
-						text: 'Registrado',
-						icon: 'success',
-						confirmButtonText: 'Aceptar'
-						}).then(() => {
-						   form.submit();
-						 });
-			
-					} else {
-						// Mostrar SweetAlert para prestamista actualizado
-						Swal.fire({
+			Promise.all([obtenerDni()]).then(([dni]) => {
+				dniPersona = dni; toastr.success(dniPersona);
+				if (dniPersona === codePer) {
+					Swal.fire({
 						title: '¡Formulario completado!',
 						text: 'Actualizado',
 						icon: 'success',
 						confirmButtonText: 'Aceptar'
-						}).then(() => {
-					form.submit();
-						});
-					}
-								
-						
-					}
+					}).then(() => {
+						form.submit();
+					});
+				} else {
+					Promise.all([validarDniExiste()])
+						.then(([dniExiste]) => {
 
-				});*/
+							if (!dniExiste) {
+								toastr.success("dni permitido");
+							}
+
+							documentoExiste = dniExiste
+
+							if (!documentoExiste) {
+								Swal.fire({
+									title: '¡Formulario completado!',
+									text: 'Actualizado',
+									icon: 'success',
+									confirmButtonText: 'Aceptar'
+								}).then(() => {
+									form.submit();
+								});
+							}
+						});
+				}
+
+			})
+
+		}
+
+		/*	var documentoExiste = true;
+	
+				Promise.all([validarDniExiste()])
+					.then(([dniExiste]) => {
+	
+						if (!dniExiste) {
+							toastr.success("dni permitido");
+						}
+						
+						documentoExiste = dniExiste
+	
+						if (!documentoExiste) {
+							
+							
+							const codePre = document.getElementById('CodePre').value;
+							const codePer = document.getElementById('CodePer').value;
+							// Validar si los campos CodePre y CodePer son iguales a cero
+						if (codePre == '0' && codePer == '0') {
+							// Mostrar SweetAlert para prestamista registrado
+	
+							Swal.fire({
+					
+							title: '¡Formulario completado!',
+							text: 'Registrado',
+							icon: 'success',
+							confirmButtonText: 'Aceptar'
+							}).then(() => {
+							   form.submit();
+							 });
+				
+						} else {
+							// Mostrar SweetAlert para prestamista actualizado
+							Swal.fire({
+							title: '¡Formulario completado!',
+							text: 'Actualizado',
+							icon: 'success',
+							confirmButtonText: 'Aceptar'
+							}).then(() => {
+						form.submit();
+							});
+						}
+									
+							
+						}
+	
+					});*/
 
 
 
