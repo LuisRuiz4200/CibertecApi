@@ -147,7 +147,7 @@ public class PrestamistaController {
 		// if (prestamista.getIdPrestamista() != 0)
 		
 		String dni = prestamista.getPrestamista().getDni();
-		String ruc = prestamista.getPrestamista().getRuc();
+		
 
 		if (idPersona != 0) {
 			service.guardarPrestamista(prestamista);
@@ -162,12 +162,7 @@ public class PrestamistaController {
 				flash.addFlashAttribute("mensaje",mensaje);
 				return "redirect:/registrar";
 			}
-			if (service.buscarPorRuc(ruc)!=null) {
-				mensaje = "El ruc " + ruc + " ha sido registrado anteriormente";
-				flash.addFlashAttribute("mensaje",mensaje);
-				return "redirect:/registrar";
-			}
-
+			
 			mensaje = "El Prestamista se registró correctamente";
 			Prestamista newPrestamista = service.guardarPrestamista(prestamista); // Marca el status como completo.
 
