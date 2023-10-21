@@ -63,13 +63,18 @@ public class PrestamistaController {
 			rolJefes.setIdRol(2);
 			List<Usuario> users = userService.getUsuarioByRol(rolJefes);
 
-			List<Prestamista> jefesPrestamistas = users.stream()
+			List<Prestamista> jefesPrestamistas = new ArrayList<>();
+			jefesPrestamistas = users.stream()
 					.map(usuario -> service.getPrestamistaById(usuario.getPersona().getIdPersona()).orElse(null))
 					.collect(Collectors.toList());
 
-			lista = jefesPrestamistas.stream().map(jefe -> service.getByIdPrestamistaActivo(jefe.getIdPrestamista()))
-					.filter(Objects::nonNull) // Filtrar elementos no nulos
-					.collect(Collectors.toList());
+			
+			
+			if(jefesPrestamistas == null) {
+				lista = jefesPrestamistas.stream().map(jefe -> service.getByIdPrestamistaActivo(jefe.getIdPrestamista()))
+						.filter(Objects::nonNull) // Filtrar elementos no nulos
+						.collect(Collectors.toList());
+			}
 
 			titulo = "Lista de Jefes de Prestamista";
 			break;

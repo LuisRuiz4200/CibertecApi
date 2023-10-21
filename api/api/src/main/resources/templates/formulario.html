@@ -66,26 +66,11 @@
 							<small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.dni')}"
 								th:errors="*{prestamista.dni}"></small>
 						</div>
-						<div class="form-group">
-							<label>RUC : </label>
-							<input th:field="*{prestamista.ruc}" class="form-control"
-								th:errorclass="'form-control alert-danger'" id="ruc" />
-							<small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.ruc')}"
-								th:errors="*{prestamista.ruc}"></small>
-						</div>
-						<!-- <div class="form-group">
-	                    <label>Sexo : </label>
-	                    <select class="form-control" th:field="*{sexo}">
-	                        <option th:value='M'>Masculino</option>
-	                        <option th:value='F'>Femenino</option>
-	                        <option th:value='Otro'>Otro</option>
-	                    </select>
-	                 </div>-->
+						
 						<div class="box-footer d-flex gap-3">
 							<input type="submit" value="Guardar" class="btn btn-primary">
 							
 							<div class=" mt-auto fs-bold text-danger " th:text="${mensaje}"></div>
-							<a onclick="validarDniExiste()" class="btn btn-warning">VALIDAR</a>
 						</div>
 					</form>
 				</div>
@@ -108,100 +93,6 @@
 <!--   VALIDANDO 09-10-23-->
 
 <script src="/js/prestamista/prestamista.js"></script>
-
-<script>
-	// Obtener el formulario
-	const form = document.getElementById('guardarPrestamista');
-
-	// Agregar un evento "submit" al formulario
-	form.addEventListener('submit', (event) => {
-		// Prevenir que se envíe el formulario
-		event.preventDefault();
-
-		// Obtener los valores de los campos
-		const nombres = document.getElementById('nombres').value;
-		const apellidos = document.getElementById('apellidos').value;
-		const direccion = document.getElementById('direccion').value;
-		const email = document.getElementById('email').value;
-		const dni = document.getElementById('dni').value;
-		const ruc = document.getElementById('ruc').value;
-
-
-		// Verificar que no estén vacíos y mostrar mensajes de error por campo
-		if (!nombres) {
-			toastr.error('Falta completar el campo nombres');
-			return;
-		}
-
-		if (!apellidos) {
-			toastr.error('Falta completar el campo apellidos');
-			return;
-		}
-
-		if (!direccion) {
-			toastr.error('Falta completar el campo dirección');
-			return;
-		}
-
-		if (!email) {
-			toastr.error('Falta completar el campo email');
-			return;
-		} else if (!/\S+@\S+\.\S+/.test(email)) {
-			toastr.error('El campo email debe tener una estructura de correo electrónico válida');
-			return;
-		}
-
-		if (!dni) {
-			toastr.error('Falta completar el campo DNI');
-			return;
-		} else if (dni.length !== 8) {
-			toastr.error('El campo DNI debe tener 8 dígitos');
-			return;
-		}
-
-		if (!ruc) {
-			toastr.error('Falta completar el campo RUC');
-			return;
-		} else if (ruc.length !== 11) {
-			toastr.error('El campo RUC debe tener 11 dígitos');
-			return;
-		}
-
-
-		// Si todo está bien, enviar el formulario
-		//form.submit();
-		//CONFIRMACION de Agregado
-		// Si todo está bien, enviar el formulario validando por codePre y codePer para el mensaje
-		// Obtener los valores de los campos
-		const codePre = document.getElementById('CodePre').value;
-		const codePer = document.getElementById('CodePer').value;
-		// Validar si los campos CodePre y CodePer son iguales a cero
-		if (codePre == '0' && codePer == '0') {
-			// Mostrar SweetAlert para prestamista registrado
-			Swal.fire({
-				title: '¡Formulario completado!',
-				text: 'Registrado',
-				icon: 'success',
-				confirmButtonText: 'Aceptar'
-			}).then(() => {
-				form.submit();
-			});
-		} else {
-			// Mostrar SweetAlert para prestamista actualizado
-			Swal.fire({
-				title: '¡Formulario completado!',
-				text: 'Actualizado',
-				icon: 'success',
-				confirmButtonText: 'Aceptar'
-			}).then(() => {
-				form.submit();
-			});
-		}
-	}); //fin de form.addEventListener
-
-</script>
-
-<!--   VALIDANDO 09-10-23-->
 
 
 </html>

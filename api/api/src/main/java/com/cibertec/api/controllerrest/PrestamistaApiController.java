@@ -76,7 +76,7 @@ public class PrestamistaApiController {
 		
 		return response;
 	}
-	@PostMapping("/validarRucExiste/{ruc}")
+	@GetMapping("/validarRucExiste/{ruc}")
 	private Map<?,?> validarRucExiste(@PathVariable String ruc){
 		
 		Map<String,Object> response = new HashMap<>();
