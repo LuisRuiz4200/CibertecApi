@@ -13,9 +13,11 @@
     <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
 	
 	<!--FIN para validacion -->
-</head>
-<body>
+	<div th:replace="static/head.html"></div>
+</head >
 
+<body>
+<div th:replace="static/navbar.html"></div>
 	<!-- <header th:replace="layout/layout :: header"></header> -->
 
 	<div class="py-4 ml-5 mr-5">
@@ -79,7 +81,7 @@
 		</div>
 	</div>
 
-	<footer></footer>
+	<footer th:replace="static/footer.html"></footer>
 </body>
 
 <!--Para validacion 09-10-23   -->
