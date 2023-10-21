@@ -49,11 +49,11 @@ public class UsuarioController {
 	@RequestMapping("/intranet")
 	public String intranet(Authentication  auth, Model model, HttpSession session){
 		String vLogin=auth.getName();
-		 Usuario u=servicio.loginUsuario(vLogin);
-		 List<Menu> lista=servicio.enlacesDelUsuario(u.getRol().getIdRol());
+		Usuario u=servicio.loginUsuario(vLogin);
+		List<Menu> lista=servicio.enlacesDelUsuario(u.getRol().getIdRol());
 		 
-	     model.addAttribute("ENLACES",lista);
-	    session.setAttribute("UserLogin", u);
+	    model.addAttribute("ENLACES",lista);
+	    session.setAttribute("UserLogged", u);
 			//retornamos la pagina o vista intranet.html
 		return "intranet";		
 	}
@@ -81,21 +81,30 @@ public class UsuarioController {
 			return "listarUsuario";
 		} //fin de listarUsuario
 		
-		@GetMapping("/registrarUsuario")
-		public String mostrarFormularioRegistroUsuario(Model model) {
+		@GetMapping("/registrarUsuario/{rolId}/{personaId}")
+		public String mostrarFormularioRegistroUsuario(Model model,@PathVariable int rolId,@PathVariable int personaId) {
 			//creamos objeto usuario vacio
 			Usuario usuario=new Usuario();
 			//creamos listado para rol para combo
-			List<Rol> dataRol=serviceRol.listarRol();
+			//List<Rol> dataRol=serviceRol.listarRol();
+			Rol rol = new Rol();
+			rol.setIdRol(rolId);
+			usuario.setRol(rol);
+			
+			Persona persona = new Persona();
+			persona.setIdPersona(personaId);
+			usuario.setPersona(persona);
+			
+			
 			//creamos listado para persona para combo
-			List<Persona> dataPersona=servicePersona.listarPersona();
+			//List<Persona> dataPersona=servicePersona.listarPersona();
 			//crear un nuevo PersonaM para registrar al darle al boton registrar crea un nuevo objeto PersonaM
 			//usuario.setPrestamista  (new PersonaM());
 			
 			model.addAttribute("usuario",usuario);
 			//pasamos para los combobox
-			model.addAttribute("comboRol",dataRol);
-			model.addAttribute("comboPersona",dataPersona);
+			//model.addAttribute("comboRol",dataRol);
+			//model.addAttribute("comboPersona",dataPersona);
 			//
 			model.addAttribute("titulo","Registrar Usuario");
 			//asi se llamara el html
@@ -107,10 +116,12 @@ public class UsuarioController {
 		//public String guardarUsuario(@Valid tbusuario usuario,BindingResult result,
 		public String guardarUsuario(Usuario usuario,BindingResult result,
 				Model model,RedirectAttributes flash,SessionStatus status) {
+		
 			if(result.hasErrors()) {
 				model.addAttribute("titulo","Registrar Usuario");
 				return "usuarioRegistro";
 			}
+		
 			  String mensaje; 
 			  // if (usuario.getIdPrestamista() != 0) 
 			  if(usuario.getIdUsuario() != 0) 
@@ -123,8 +134,11 @@ public class UsuarioController {
 			  //Marca el status como completo.
 			  status.setComplete();
 			  flash.addFlashAttribute("success", mensaje);
-			  //redireccionamos
-			  return "redirect:/listarUsuario";
+			//redireccionamos
+	            if(usuario.getIdUsuario() != 0)
+	                return "redirect:/listarUsuario";
+	            else
+	                return "redirect:/listar";
 		} //fin de guardarUsuario
 		
 		
@@ -177,7 +191,7 @@ public class UsuarioController {
 				
 				//enviamos en atributo llamado titulo, un string que
 				//dice Detalle de Empleado concantenado el nombre
-				model.addAttribute("titulo","Actualización del Empleado");
+				model.addAttribute("titulo","Actualización del Usuario");
 				//esta vista se usara para el agregar y actualizar reutilizando la vista
 				return "usuarioRegistro";
 			} //fin de editarEmpleado
@@ -204,7 +218,7 @@ public class UsuarioController {
 		
 	@PostMapping("/cerrarSession")
 	public String cerrarSession(HttpSession session) {
-		session.removeAttribute("UserLogin");
+		session.removeAttribute("UserLogged");
 		return "redirect:/login";
 	}
 

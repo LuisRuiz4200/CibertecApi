@@ -70,9 +70,9 @@ public class PrestamistaServiceImpl implements PrestamistaService {
 	public void eliminarPrestamista(int id) {
 	    Prestamista prestamista = repo.findById(id).orElse(null);
 	    if (prestamista != null) {
-	        prestamista.getPrestamista().setActivo(true);
+	        prestamista.getPrestamista().setActivo(false);
 	        //al  campo prestamista de tipo PrestamistaM lo cambia a true osea de eliminado
-	        prestamista.setActivo(true);
+	        prestamista.setActivo(false);
 	        repo.save(prestamista);
 	    }
 	}
@@ -82,4 +82,8 @@ public class PrestamistaServiceImpl implements PrestamistaService {
 		return repo.findById(id);
 	}
 
+	@Override
+	public Prestamista getByIdPrestamistaActivo(int idPrestamista) {
+		return repo.findByIdPrestamistaAndActivo(idPrestamista, true);
+	}
 }

@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.cibertec.api.model.Persona;
+import com.cibertec.api.model.Rol;
 import com.cibertec.api.model.Usuario;
 import com.cibertec.api.repository.UsuarioRepository;
 import com.cibertec.api.service.UService;
@@ -28,7 +30,7 @@ public class UserServiceImpl implements UService {
 	@Override
 	public List<Usuario> listarUsuario() {
 		  return repo.findAll().stream()
-				   .filter(usuario -> !usuario.isActivo())
+				   .filter(usuario -> usuario.isActivo())
 				   .collect(Collectors.toList());
 	}
 
@@ -59,6 +61,7 @@ public class UserServiceImpl implements UService {
 	        usu.setClaveUsuario(passwordEncoder.encode(usuario.getClaveUsuario()));
 	        usu.setPersona(usuario.getPersona());
 	        usu.setRol(usuario.getRol());
+	        usu.setActivo(true);
 	        
 	        // Guardamos los cambios
 	        repo.save(usu);
@@ -69,6 +72,7 @@ public class UserServiceImpl implements UService {
 	        usu.setClaveUsuario(passwordEncoder.encode(usuario.getClaveUsuario()));
 	        usu.setPersona(usuario.getPersona());
 	        usu.setRol(usuario.getRol());
+	        usu.setActivo(true);
 	        
 	        // Guardamos el nuevo usuario
 	        repo.save(usu);
@@ -86,10 +90,15 @@ public class UserServiceImpl implements UService {
 		// TODO Auto-generated method stub
 		Usuario usua = repo.findById(id).orElse(null);
 	    if (usua != null) {
-	        //al  campo usua de tipo tbusuario lo cambia a true osea de eliminado(1)
-	    	usua.setActivo(true);
+	        //al  campo usua de tipo tbusuario lo cambia a false osea de eliminado(1)
+	    	usua.setActivo(false);
 	        repo.save(usua);
 	    }
+	}
+
+	@Override
+	public List<Usuario> getUsuarioByRol(Rol rol) {
+		return repo.findByRol(rol);
 	}
 	
 

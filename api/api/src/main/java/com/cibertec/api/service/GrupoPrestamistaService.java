@@ -3,12 +3,12 @@ package com.cibertec.api.service;
 import java.util.List;
 
 import com.cibertec.api.model.GrupoPrestamista;
+import com.cibertec.api.model.Prestamista;
 
 public interface GrupoPrestamistaService {
-    List<GrupoPrestamista> getGrupoPrestamistaList();
-    List<GrupoPrestamista> getGrupoPrestamistaByPrestamista(int idPrestamista);
-    GrupoPrestamista saveGrupoPrestamista(GrupoPrestamista grupoPrestamista);
-    GrupoPrestamista getGrupoPrestamistaByGrupoAndPrestamista(int grupoId, int prestamistaId);
-    List<GrupoPrestamista> getGrupoPrestamistaByGrupo(int idGrupo);
-    List<GrupoPrestamista> getByGrupoAndState(int idGrupo, boolean activo);
+    List<GrupoPrestamista> listByJefe(Prestamista jefePrestamista);
+    List<GrupoPrestamista> listByJefeAndActivo(Prestamista jefePrestamista, boolean activo);
+    GrupoPrestamista addOrUpdate(GrupoPrestamista grupoPrestamista);
+    GrupoPrestamista delete(GrupoPrestamista grupoPrestamista);
+    GrupoPrestamista getByJefeAndAsesor(Prestamista jefePrestamista, Prestamista asesorPrestamista);
 }
