@@ -7,7 +7,7 @@ import com.cibertec.api.model.Prestamista;
 @Repository
 public interface PrestamistaRepository extends JpaRepository<Prestamista,Integer> {
 	Prestamista findByIdPrestamistaAndActivo (int idPresmita, boolean activo);
-	
+	Prestamista findByPrestamistaDni(String dni);
 	
 
 } //fin de PrestamistaRepository
