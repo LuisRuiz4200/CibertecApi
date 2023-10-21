@@ -18,6 +18,6 @@ public interface PrestamistaService {
 
 	Optional<Prestamista> getPrestamistaById(int id);	
 	
-	
+	Prestamista getByIdPrestamistaActivo(int idPrestamista);
 
 } //fin de PrestamitaMService

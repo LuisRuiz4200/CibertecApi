@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.cibertec.api.model.Menu;
 import com.cibertec.api.model.Usuario;
+import com.cibertec.api.model.Rol;
 
 
 @Repository
@@ -20,5 +21,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario,Integer>{
 	
 	@Query("select m from RolMenu rm join rm.menu m where rm.rol.idRol=?1")
 	public List<Menu> traerMenusDelUsuario(int idRol);
-	
+
+	List<Usuario> findByRol(Rol rol);
 }
