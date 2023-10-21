@@ -8,60 +8,22 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.Data;
 
 @Entity
 @Table(name="tb_menu")
+@Data
 public class Menu {
 	@Id
 	private int idMenu;
 
 	private String descripcion;
 	private String ruta;
-	private int activo;
+	private boolean activo;
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "menu")
 	private List<RolMenu> listaRolMenu;
 
-	public int getIdMenu() {
-		return idMenu;
-	}
-
-	public void setIdMenu(int idMenu) {
-		this.idMenu = idMenu;
-	}
-
-	public String getDescripcion() {
-		return descripcion;
-	}
-
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
-
-	public String getRuta() {
-		return ruta;
-	}
-
-	public void setRuta(String ruta) {
-		this.ruta = ruta;
-	}
-
-	public int getActivo() {
-		return activo;
-	}
-
-	public void setActivo(int activo) {
-		this.activo = activo;
-	}
-
-	public List<RolMenu> getListaRolMenu() {
-		return listaRolMenu;
-	}
-
-	public void setListaRolMenu(List<RolMenu> listaRolMenu) {
-		this.listaRolMenu = listaRolMenu;
-	}
-	
 	
 }

@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.security.core.Authentication;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import com.cibertec.api.model.Menu;
 import com.cibertec.api.model.Persona;
@@ -50,7 +51,8 @@ public class UsuarioController {
 	public String intranet(Authentication  auth, Model model, HttpSession session){
 		String vLogin=auth.getName();
 		Usuario u=servicio.loginUsuario(vLogin);
-		List<Menu> lista=servicio.enlacesDelUsuario(u.getRol().getIdRol());
+		List<Menu> lista=servicio.enlacesDelUsuario(u.getRol().getIdRol()).stream()
+				.filter(menu->menu.isActivo()).collect(Collectors.toList());
 		 
 	    model.addAttribute("ENLACES",lista);
 	    session.setAttribute("UserLogged", u);

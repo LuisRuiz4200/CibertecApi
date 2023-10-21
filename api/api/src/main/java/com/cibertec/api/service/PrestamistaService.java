@@ -19,5 +19,11 @@ public interface PrestamistaService {
 	Optional<Prestamista> getPrestamistaById(int id);	
 	
 	Prestamista getByIdPrestamistaActivo(int idPrestamista);
+	
+	Prestamista buscarPorDni(String dni);
+
+	Prestamista buscarPorDniOPorRuc(String dni, String ruc);
+
+	Prestamista buscarPorRuc(String ruc);
 
 } //fin de PrestamitaMService
