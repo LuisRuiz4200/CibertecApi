@@ -37,5 +37,24 @@ public class UsuarioApiController {
 		}
 		return response;
 	}
+	
+	@GetMapping("/obtenerUsuario/{idUsuario}")
+	@ResponseBody
+	private Map<?, ?> obtenerUsuario(@PathVariable int idUsuario) {
+
+		Map<String, Object> response = new HashMap<>();
+
+		try {
+			Usuario usuario = uService.listarUsuarioPorId(idUsuario);
+			if (usuario != null) {
+				response.put("nombreUsuario", usuario.getNombreUsuario() );
+				response.put("claveUsuario", usuario.getClaveUsuario() );
+			}
+
+		} catch (Exception ex) {
+			response.put("error", ex.getMessage());
+		}
+		return response;
+	}
 
 }

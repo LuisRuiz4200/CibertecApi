@@ -5,7 +5,8 @@ init();
 
 function validarUsuarioExiste() {
 	var nombre = document.getElementById("nombre").value;
-	return new Promise((resolve)=>{fetch("/api/usuario/validarUsuarioExiste/" + nombre)
+	return new Promise((resolve) => {
+		fetch("/api/usuario/validarUsuarioExiste/" + nombre)
 		.then(response => response.json())
 		.then(data => {
 			if (data.mensaje) {
@@ -14,7 +15,19 @@ function validarUsuarioExiste() {
 			} else {
 				resolve(false);
 			}
-		})});
+		})
+	});
+}
+
+function obtenerUsuario() {
+	var idUsuario = document.getElementById("code").value;
+	return new Promise((resolve) => {
+		fetch("/api/usuario/obtenerUsuario/" + idUsuario)
+		.then(response => response.json())
+		.then(data => {
+			resolve(data.nombreUsuario);
+		})
+	});
 }
 
 function validarFormulario() {
@@ -72,6 +85,14 @@ function validarFormulario() {
 				})
 
 		} else {
+			
+			Promise.all([obtenerUsuario()])
+				.then(([nombreUsuario]) => {
+					if (nombreUsuario === nombre) {
+						
+					}
+				})
+			
 			// Mostrar SweetAlert para usuario actualizado
 			Swal.fire({
 				title: '¡Formulario completado!',
