@@ -26,7 +26,7 @@ public class PrestamistaServiceImpl implements PrestamistaService {
 	@Override
 	public List<Prestamista> listarPrestamista() {
 		return repo.findAll().stream()
-	    .filter(prestamista -> !prestamista.isActivo() && !prestamista.getPrestamista().isActivo())
+	    .filter(prestamista -> prestamista.isActivo() && prestamista.getPrestamista().isActivo())
 		.collect(Collectors.toList());
 	}
 

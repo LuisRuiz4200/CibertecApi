@@ -68,7 +68,7 @@ public class PrestamistaController {
 					.map(usuario -> service.getPrestamistaById(usuario.getPersona().getIdPersona()).orElse(null))
 					.collect(Collectors.toList());
 
-			if (jefesPrestamistas == null) {
+			if (jefesPrestamistas != null) {
 				lista = jefesPrestamistas.stream()
 						.map(jefe -> service.getByIdPrestamistaActivo(jefe.getIdPrestamista())).filter(Objects::nonNull) // Filtrar
 																															// elementos
