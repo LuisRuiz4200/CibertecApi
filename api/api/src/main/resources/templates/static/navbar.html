@@ -11,8 +11,21 @@
 			</div>
 			<div class="collapse navbar-collapse">
 				<ul class="navbar-nav">
-					<li class="nav-item" th:each="bean:${session.ENLACES}">
-						<a class="nav-link" th:text="${bean.descripcion}" th:href="${bean.ruta}"></a>
+					<li class="nav-item">
+						<!-- <a class="nav-link" th:text="${bean.descripcion}" th:href="${bean.ruta}"></a> -->
+						<a href="/listar" class="nav-link">Prestamista</a>
+						
+						
+						
+					</li>
+					<li>
+						<a href="/listarUsuario" class="nav-link">Usuario</a>
+					</li>
+					<li>
+						<a href="/solicitudPrestamo/listar" class="nav-link">Prestamos</a>
+					</li>
+					<li>
+						<a href="/prestatario/listar" class="nav-link">Prestatario</a>
 					</li>
 
 				</ul>

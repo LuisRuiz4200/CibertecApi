@@ -83,6 +83,8 @@ public class UsuarioController {
 			
 			return "listarUsuario";
 		} //fin de listarUsuario
+
+		
 		
 		@GetMapping("/registrarUsuario/{rolId}/{personaId}")
 		public String mostrarFormularioRegistroUsuario(Model model,@PathVariable int rolId,@PathVariable int personaId) {
