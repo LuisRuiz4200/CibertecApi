@@ -41,7 +41,7 @@
 							<th>Dirección</th>
 							<th>Email</th>
 							<th>DNI</th>
-							<th>RUC</th>
+							<!-- <th>RUC</th> -->
 							<!--	<th>Fecha</th>-->
 							<!-- <th>Detalles</th>-->
 							<!--<th sec:authorize="hasRole('ADMIN')">Editar</th>
@@ -60,7 +60,7 @@
 							<td th:text="${prestamista.prestamista.direccion}"></td>
 							<td th:text="${prestamista.prestamista.email}"></td>
 							<td th:text="${prestamista.prestamista.dni}"></td>
-							<td th:text="${prestamista.prestamista.ruc}"></td>
+							<!-- <td th:text="${prestamista.prestamista.ruc}"></td> -->
 
 							<td><a class="btn btn-warning btn-sm"
 									th:href="@{/actualizar/} + ${prestamista.prestamista.idPersona}">Editar</a></td>
