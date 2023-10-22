@@ -23,4 +23,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario,Integer>{
 	public List<Menu> traerMenusDelUsuario(int idRol);
 
 	List<Usuario> findByRol(Rol rol);
+	
+	public Usuario findByNombreUsuario(String nombreUsuario);
 }
