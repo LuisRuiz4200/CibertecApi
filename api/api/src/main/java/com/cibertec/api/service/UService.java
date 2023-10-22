@@ -18,4 +18,6 @@ public interface UService {
 	public void eliminarUsuario(int id);
 
 	List<Usuario> getUsuarioByRol(Rol rol);
+
+	Usuario buscarPorNombreUsuario(String nombreUsuario);
 }

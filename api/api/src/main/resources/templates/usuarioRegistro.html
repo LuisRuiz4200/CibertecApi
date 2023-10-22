@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
-<meta charset="utf-8">
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
-	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-	crossorigin="anonymous">
-	
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
 	<!--Para validacion 09-10-23 -->
-		<link rel="stylesheet" href="/css/toastr.min.css">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
-	
+	<link rel="stylesheet" href="/css/toastr.min.css">
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+
 	<!--FIN para validacion -->
 	<div th:replace="static/head.html"></div>
 </head>
@@ -18,64 +17,60 @@
 <body>
 	<div th:replace="static/navbar.html"></div>
 	<!-- <header th:replace="layout/layout :: header"></header> -->
-	
+
 	<br>
-	
+
 	<div class="container">
-	   <div class="row">
-	      <div class="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
-	           <h1 class="text-center" th:text="${titulo}"></h1>
-	           <div class="card-body">
-	              <form th:action="@{/registrarUsuario}" th:object="${usuario}" method="post">
-					  <!--OJO Agregamos id a todos los campos para validar con toastr  -->
-					  <input type="hidden" th:field="*{idUsuario}" th:value="${usuario.idUsuario}" id="code"/>
-	                  
-	                 <!--OJO-->
-	                 <div class="form-group">
-	                    <label>Nombre de Usuario : </label>
-	                    <input type="text" th:field="*{nombreUsuario}" class="form-control" th:errorclass="'form-control alert-danger'" id="nombre"/>
-	                    <!--<small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.nombres')}" th:errors="*{prestamista.nombres}"></small>-->
-	                    
- 
-	                 </div>
-	                 <div class="form-group">
-	                    <label>Clave de Usuario : </label>
-	                    <input type="text" th:field="*{claveUsuario}" class="form-control" th:errorclass="'form-control alert-danger'" id="clave"/>
-	                    <!--<small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.apellidos')}" th:errors="*{prestamista.apellidos}"></small>--> 
-	                 </div>
+		<div class="row">
+			<div class="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
+				<h1 class="text-center" th:text="${titulo}"></h1>
+				<div class="card-body">
+					<form id="formularioUsuario" th:action="@{/registrarUsuario}" th:object="${usuario}" method="post">
+						<!--OJO Agregamos id a todos los campos para validar con toastr  -->
+						<input type="hidden" th:field="*{idUsuario}" th:value="${usuario.idUsuario}" id="code" />
 
-					 <!--Persona-->
-                     <div class="form-group">
-                        <input type="hidden" th:field="*{persona.idPersona}" class="form-control" th:value="${usuario.persona.idPersona}" th:errorclass="'form-control alert-danger'"/>
-                        <!--<small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.nombres')}" th:errors="*{prestamista.nombres}"></small>-->
-                     </div>
+						<!--OJO-->
+						<div class="form-group">
+							<label>Nombre de Usuario : </label>
+							<input type="text" th:field="*{nombreUsuario}" class="form-control"
+								th:errorclass="'form-control alert-danger'" id="nombre" />
+							<!--<small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.nombres')}" th:errors="*{prestamista.nombres}"></small>-->
 
-	                 <!--Text for Rol-->
-	                 <div class="form-group">
-                        <input type="hidden" th:field="*{rol.idRol}" class="form-control" th:value="${usuario.rol.idRol}" th:errorclass="'form-control alert-danger'"/>
-                        <!--<small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.nombres')}" th:errors="*{prestamista.nombres}"></small>-->
-                     </div>
-                    
-	                 
-	              
-	                 
-	                 
-	                 
-	                 
-	              
-	                 <div class="box-footer"> 
-	                     <input type="submit" value="Guardar" class="btn btn-primary">
-	                 </div>
-	              </form>
-	           </div>
-	      </div>
-	   </div>
+
+						</div>
+						<div class="form-group">
+							<label>Clave de Usuario : </label>
+							<input type="text" th:field="*{claveUsuario}" class="form-control"
+								th:errorclass="'form-control alert-danger'" id="clave" />
+							<!--<small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.apellidos')}" th:errors="*{prestamista.apellidos}"></small>-->
+						</div>
+
+						<!--Persona-->
+						<div class="form-group">
+							<input type="hidden" th:field="*{persona.idPersona}" class="form-control"
+								th:value="${usuario.persona.idPersona}" th:errorclass="'form-control alert-danger'" />
+							<!--<small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.nombres')}" th:errors="*{prestamista.nombres}"></small>-->
+						</div>
+
+						<!--Text for Rol-->
+						<div class="form-group">
+							<input type="hidden" th:field="*{rol.idRol}" class="form-control"
+								th:value="${usuario.rol.idRol}" th:errorclass="'form-control alert-danger'" />
+							<!--<small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.nombres')}" th:errors="*{prestamista.nombres}"></small>-->
+						</div>
+						<div class="box-footer">
+							<input type="submit" value="Guardar" class="btn btn-primary">
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
 	</div>
-	
-	<footer th:replace="static/footer.html"></footer>
-		
-		
-		
+
+	<!--<footer th:replace="static/footer.html"></footer>-->
+
+
+
 </body>
 <!--Para validacion 09-10-23   -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -85,67 +80,7 @@
 <!-- Fin para validacion -->
 
 <!--   VALIDANDO 09-10-23-->
-<script>
-	// Obtener el formulario
-const form = document.querySelector('form');
-
-// Agregar un evento "submit" al formulario
-form.addEventListener('submit', (event) => {
-	  // Prevenir que se envíe el formulario
-  event.preventDefault();
-	// Obtener los valores de los campos
-  const nombre = document.getElementById('nombre').value;
-  const clave = document.getElementById('clave').value;
-//const comboPersona = document.getElementById('idPer');
-//const comboRol = document.getElementById('idR');
-  // Verificar que no estén vacíos y mostrar mensajes de error por campo
-  if (!nombre) {
-    toastr.error('Falta completar el campo nombre de usuario');
-    return;
-  }
- if (!clave) {
-    toastr.error('Falta completar el campo clave de usuario');
-    return;
-  }
-  //if(comboPersona.value == '0'){
-	//  toastr.error('Debe seleccionar una persona válida');
-	  // return;
-  //}
-  
-  //if(comboRol.value == '0'){
-	//  toastr.error('Debe seleccionar una rol válido');
-	  //para que se quede aqui y no pase a lo demás hasta completar esto
-	   //return;
-  //}
-	//CONFIRMACION de Agregado
-  // Si todo está bien, enviar el formulario validando por codePre y codePer para el mensaje
-  // Obtener los valores de los campos
-const code = document.getElementById('code').value;
-// Validar si los campos CodePre y CodePer son iguales a cero
-if (code == '0') {
-  // Mostrar SweetAlert para usuario registrado
-  Swal.fire({
-    title: '¡Formulario completado!',
-    text: 'Usuario Registrado',
-    icon: 'success',
-    confirmButtonText: 'Aceptar'
-  }).then(() => {
-    form.submit();
-  });
-} else {
-  // Mostrar SweetAlert para usuario actualizado
-  Swal.fire({
-    title: '¡Formulario completado!',
-    text: 'Usuario Actualizado',
-    icon: 'success',
-    confirmButtonText: 'Aceptar'
-  }).then(() => {
-    form.submit();
-  });
-}
-
-	}); //fin de form.addEventListener
-</script>
+<script src="/js/usuario/usuario.js"></script>
 <!--   VALIDANDO 09-10-23-->
 
 </html>

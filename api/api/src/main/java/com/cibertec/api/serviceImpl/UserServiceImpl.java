@@ -18,15 +18,11 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class UserServiceImpl implements UService {
 
-	//Listado normal
-	//@Override
-	//public List<tbusuario> listarUsuario() {
-	//return repo.findAll();
-	//}
-	//Listado de manera logica
-	//para tema de seguridad y clave con la libreria PasswordEncoder podemos encriptar la clave
+	
 	private PasswordEncoder passwordEncoder;
 	private UsuarioRepository repo;
+	
+	
 	@Override
 	public List<Usuario> listarUsuario() {
 		  return repo.findAll().stream()
@@ -99,6 +95,11 @@ public class UserServiceImpl implements UService {
 	@Override
 	public List<Usuario> getUsuarioByRol(Rol rol) {
 		return repo.findByRol(rol);
+	}
+	
+	@Override
+	public Usuario buscarPorNombreUsuario(String nombreUsuario) {
+		return repo.findByNombreUsuario(nombreUsuario);
 	}
 	
 

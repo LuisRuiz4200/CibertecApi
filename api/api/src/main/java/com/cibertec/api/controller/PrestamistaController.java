@@ -68,11 +68,12 @@ public class PrestamistaController {
 					.map(usuario -> service.getPrestamistaById(usuario.getPersona().getIdPersona()).orElse(null))
 					.collect(Collectors.toList());
 
-			
-			
-			if(jefesPrestamistas == null) {
-				lista = jefesPrestamistas.stream().map(jefe -> service.getByIdPrestamistaActivo(jefe.getIdPrestamista()))
-						.filter(Objects::nonNull) // Filtrar elementos no nulos
+			if (jefesPrestamistas == null) {
+				lista = jefesPrestamistas.stream()
+						.map(jefe -> service.getByIdPrestamistaActivo(jefe.getIdPrestamista())).filter(Objects::nonNull) // Filtrar
+																															// elementos
+																															// no
+																															// nulos
 						.collect(Collectors.toList());
 			}
 
@@ -145,9 +146,8 @@ public class PrestamistaController {
 		String mensaje;
 		int idPersona = prestamista.getPrestamista().getIdPersona();
 		// if (prestamista.getIdPrestamista() != 0)
-		
+
 		String dni = prestamista.getPrestamista().getDni();
-		String ruc = prestamista.getPrestamista().getRuc();
 
 		if (idPersona != 0) {
 			service.guardarPrestamista(prestamista);
@@ -155,16 +155,10 @@ public class PrestamistaController {
 		}
 
 		else {
-			
-			
-			if (service.buscarPorDni(dni)!=null) {
+
+			if (service.buscarPorDni(dni) != null) {
 				mensaje = "El dni " + dni + " ha sido registrado anteriormente";
-				flash.addFlashAttribute("mensaje",mensaje);
-				return "redirect:/registrar";
-			}
-			if (service.buscarPorRuc(ruc)!=null) {
-				mensaje = "El ruc " + ruc + " ha sido registrado anteriormente";
-				flash.addFlashAttribute("mensaje",mensaje);
+				flash.addFlashAttribute("mensaje", mensaje);
 				return "redirect:/registrar";
 			}
 

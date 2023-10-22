@@ -5,6 +5,21 @@ function init() {
 }
 
 init();
+function obtenerDni() {
+
+	var id = document.getElementById("CodePer").value;
+
+	return new Promise((resolve, reject) => {
+		fetch("/api/prestamista/obtenerDni/" + id)
+			.then(response => response.json())
+			.then(data => {
+				if (data.mensaje) {
+					
+					resolve(data.mensaje);
+				}
+			});
+	})
+}
 
 function validarDniExiste() {
 
@@ -92,9 +107,6 @@ function validarFormulario() {
 			return;
 		}
 
-
-
-
 		const codePre = document.getElementById('CodePre').value;
 		const codePer = document.getElementById('CodePer').value;
 		// Validar si los campos CodePre y CodePer son iguales a cero
@@ -109,7 +121,7 @@ function validarFormulario() {
 					if (!dniExiste) {
 						toastr.success("dni permitido");
 					}
-					
+
 					documentoExiste = dniExiste
 
 					if (!documentoExiste) {
@@ -122,24 +134,46 @@ function validarFormulario() {
 							form.submit();
 						});
 					}
-
 				});
-
-
-
-
 		} else {
 			// Mostrar SweetAlert para prestamista actualizado
-			Swal.fire({
-				title: '¡Formulario completado!',
-				text: 'Actualizado',
-				icon: 'success',
-				confirmButtonText: 'Aceptar'
-			}).then(() => {
-				form.submit();
-			});
+			
+			Promise.all([obtenerDni()]).then(([dniPersona]) => {
+				 
+				if (dniPersona === dni) {
+					Swal.fire({
+						title: '¡Formulario completado!',
+						text: 'Actualizado',
+						icon: 'success',
+						confirmButtonText: 'Aceptar'
+					}).then(() => {
+						form.submit();
+					});
+				} else {
+					Promise.all([validarDniExiste()])
+						.then(([dniExiste]) => {
+
+							if (!dniExiste) {
+								toastr.success("dni permitido");
+							}
+
+							documentoExiste = dniExiste
+
+							if (!documentoExiste) {
+								Swal.fire({
+									title: '¡Formulario completado!',
+									text: 'Actualizado',
+									icon: 'success',
+									confirmButtonText: 'Aceptar'
+								}).then(() => {
+									form.submit();
+								});
+							}
+						});
+				}
+
+			})
+
 		}
-
-
 	}); //fin de form.addEventListener
 }
