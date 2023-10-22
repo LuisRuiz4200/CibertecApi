@@ -68,7 +68,7 @@ public class PrestamistaController {
 					.map(usuario -> service.getPrestamistaById(usuario.getPersona().getIdPersona()).orElse(null))
 					.collect(Collectors.toList());
 
-			if (jefesPrestamistas == null) {
+			if (jefesPrestamistas != null) {
 				lista = jefesPrestamistas.stream()
 						.map(jefe -> service.getByIdPrestamistaActivo(jefe.getIdPrestamista())).filter(Objects::nonNull) // Filtrar
 																															// elementos
@@ -76,7 +76,7 @@ public class PrestamistaController {
 																															// nulos
 						.collect(Collectors.toList());
 			}
-
+			model.addAttribute("navbar", true);
 			titulo = "Lista de Jefes de Prestamista";
 			break;
 		}
@@ -90,6 +90,7 @@ public class PrestamistaController {
 			// Obtener la lista de prestamistas asociado al Jefe y que estén Activos
 			lista = grupoController.listGrupoByJefePrestamistaAndActivo(jefePrestamista);
 			titulo = "Lista de Prestamistas";
+			model.addAttribute("navbar", false);
 			break;
 		}
 		default:

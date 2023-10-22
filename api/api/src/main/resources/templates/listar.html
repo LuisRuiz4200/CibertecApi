@@ -9,7 +9,7 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
 		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 	<!--Para validacion 09-10-23 -->
-	<link rel="stylesheet" href="templates/static/css/toastr.min.css">
+	<link rel="stylesheet" href="/css/toastr.min.css">
 	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
 	<!--FIN para validacion -->
 
@@ -22,10 +22,10 @@
 
 	<div class="py-4 ml-5 mr-5">
 		<div class="card bg-light">
-			<div class="card-header" th:text="${titulo}"></div>
+			<div class="card-header h2 text-center" th:text="${titulo}"></div>
 			<div class="card-body">
 				<h4 class="card-title">
-					<a th:href="@{/registrar}" class="btn btn-primary">Agregar Prestamista</a>
+					<a th:href="@{/registrar}" class="btn btn-primary" >AGREGAR</a>
 
 					<!-- <a sec:authorize="hasRole('ADMIN')" th:href="@{/exportarPdf}"
 						class="btn btn-secondary">Exportar a PDF</a> <a
@@ -41,7 +41,7 @@
 							<th>Dirección</th>
 							<th>Email</th>
 							<th>DNI</th>
-							<th>RUC</th>
+							<!-- <th>RUC</th> -->
 							<!--	<th>Fecha</th>-->
 							<!-- <th>Detalles</th>-->
 							<!--<th sec:authorize="hasRole('ADMIN')">Editar</th>
@@ -60,7 +60,7 @@
 							<td th:text="${prestamista.prestamista.direccion}"></td>
 							<td th:text="${prestamista.prestamista.email}"></td>
 							<td th:text="${prestamista.prestamista.dni}"></td>
-							<td th:text="${prestamista.prestamista.ruc}"></td>
+							<!-- <td th:text="${prestamista.prestamista.ruc}"></td> -->
 
 							<td><a class="btn btn-warning btn-sm"
 									th:href="@{/actualizar/} + ${prestamista.prestamista.idPersona}">Editar</a></td>
