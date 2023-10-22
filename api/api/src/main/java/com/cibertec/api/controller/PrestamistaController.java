@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import javax.swing.JOptionPane;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -67,10 +69,10 @@ public class PrestamistaController {
 			jefesPrestamistas = users.stream()
 					.map(usuario -> service.getPrestamistaById(usuario.getPersona().getIdPersona()).orElse(null))
 					.collect(Collectors.toList());
+			
 
 			if (jefesPrestamistas != null) {
-				lista = jefesPrestamistas.stream()
-						.map(jefe -> service.getByIdPrestamistaActivo(jefe.getIdPrestamista())).filter(Objects::nonNull) // Filtrar
+				lista = jefesPrestamistas.stream().filter(Objects::nonNull) // Filtrar
 																															// elementos
 																															// no
 																															// nulos
