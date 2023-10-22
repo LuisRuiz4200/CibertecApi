@@ -21,28 +21,30 @@
 					</div>
 				</div>
 				<div class="collapse navbar-collapse">
-					<!--Dentro de la etiqueta ul , en los li, llamamos con etiqueta de thymeleaf un bucle each
-			  donde con variable bean es cualquier variable, pero es un objeto de tipo de la entidad Enlace
-			  donde podemos acceder a sus campos private Integer codigo;
-				private String descripcion;
-				private String ruta;
-			   accedemos con session al atributo sesion llamado ENLACES
-			  de UsuarioController  -->
-					<ul class="navbar-nav">
-						<li class="nav-item" th:each="bean:${session.ENLACES}">
-							<!--y con la etiqueta thymeleaf th text accedemos con bean(objeto de tipo Enlace) a la descripcion
-						de la entidad Enlace y con href accedemos a la ruta osea es el valor de la descripcion
-						del enlace que aparece tambien accediendo con bean objeto de tipo Enlace-->
-							<a class="nav-link" th:text="${bean.descripcion}" th:href="${bean.ruta}"></a>
-						</li>
+				<ul class="navbar-nav">
+					<li class="nav-item">
+						<!-- <a class="nav-link" th:text="${bean.descripcion}" th:href="${bean.ruta}"></a> -->
+						<a href="/listar" class="nav-link">Prestamista</a>
+						
+						
+						
+					</li>
+					<li>
+						<a href="/listarUsuario" class="nav-link">Usuario</a>
+					</li>
+					<li>
+						<a href="/solicitudPrestamo/listar" class="nav-link">Prestamos</a>
+					</li>
+					<li>
+						<a href="/prestatario/listar" class="nav-link">Prestatario</a>
+					</li>
 
-					</ul>
-					<div class="navbar-nav ml-auto">
-						<span class="nav-item nav-link"></span>
-						<form method="post" th:action="@{/cerrarSession}">
-							<input type="submit" class="btn btn-success" value="Cerrar sesion">
-						</form>
-					</div>
+				</ul>
+				<div class="navbar-nav ml-auto">
+					<span class="nav-item nav-link"></span>
+					<form method="post" th:action="@{/cerrarSession}">
+						<input type="submit" class="btn btn-success" value="Cerrar sesion">
+					</form>
 				</div>
 			</nav>
 		</div>
