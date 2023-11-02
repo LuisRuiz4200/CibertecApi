@@ -3,11 +3,11 @@
 
 <head>
 	<meta charset="utf-8">
-	<div th:replace="static/head.html"></div>
+	<div th:replace="~{static/head.html}"></div>
 </head>
 
 <body>
-	<div th:replace="static/navbar.html"></div>
+	<div th:insert="~{plantilla/UITemplate.html::cabecera}"></div>
 	<!-- <header th:replace="layout/layout :: header"></header> -->
 
 	<br>

@@ -2,14 +2,14 @@
 <html xmlsn:th="www.thymeleaf.org">
 
 <head>
-	<div th:replace="static/head.html"></div>
+	<div th:replace="~{static/head.html}"></div>
 	<title>GRUPO 6</title>
 
 </head>
 
 <body>
 	<div>
-		<div th:replace="static/navbar.html"></div>
+		<div th:insert="~{plantilla/UITemplate.html::cabecera}"></div>
 	</div>
 	<div class="container-sm vh-100">
 		<div class="mt-4">
