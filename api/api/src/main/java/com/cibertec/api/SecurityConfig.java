@@ -36,7 +36,7 @@ public class SecurityConfig {
 				.authorizeHttpRequests((auth) -> {
 					auth.requestMatchers("/**").permitAll();
 					auth.anyRequest().authenticated();
-				}).formLogin(form -> form.loginPage("/login").permitAll().defaultSuccessUrl("/intranet"));
+				}).formLogin(form -> form.loginPage("/login").permitAll().defaultSuccessUrl("/intranet").failureUrl("/login?error"));
 
 		http.exceptionHandling(exceptions -> {
 			exceptions.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"));
