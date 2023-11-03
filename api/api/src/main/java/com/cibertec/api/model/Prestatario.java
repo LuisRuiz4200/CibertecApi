@@ -3,6 +3,8 @@ package com.cibertec.api.model;
 import java.sql.Date;
 import java.util.List;
 
+import org.hibernate.annotations.ManyToAny;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
@@ -10,6 +12,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -47,4 +50,6 @@ public class Prestatario {
 	@JsonIgnore
 	private List<SolicitudPrestamo> listaSolicitudPrestamo;
 	
+	@OneToMany(mappedBy = "idPrestamistaCuenta")
+    private List<Cuenta> cuentaList;
 }
