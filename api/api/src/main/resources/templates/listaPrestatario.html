@@ -1,70 +1,91 @@
 <!DOCTYPE html>
-<html xmlns:th="www.thymleaf.org">
-	
+<html xmlns:th="http://www.thymeleaf.org">
+<!-- xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">-->
+<!-- <head th:replace="layout/layout :: head">-->
+
 <head>
 	<div th:replace="~{static/head.html}"></div>
-	<title>GRUPO 6/Jean Pi</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<!--Para validacion 09-10-23 -->
+	<link rel="stylesheet" href="/css/toastr.min.css">
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+	<!--FIN para validacion -->
+
 </head>
-	
+
 <body>
-	<div th:replace="static/navbar.html"></div>
-	
-	<div class="container">
-		
-		<div class="mt-4">
-			<h2>LISTA DE PRESTATARIO</h2>
-			<hr>
-		</div>
-		<div class="mt-auto">
-			<div class="">
-				
-				<a class="btn btn-primary btn-sm" th:href="@{/prestatarioWeb/registrar}">
-					REGISTRAR
-				</a>
-			</div>
-			</br>
-		</div>
-		
-		<div class="mb-4">
-			<div class="table-responsive">
-				<table class="table table-striped table-hover">
+	<!-- <div th:replace="~{static/navbar.html}"></div> -->
+	<div th:insert="~{plantilla/UITemplate.html::cabecera}"></div>
+	<!-- <header th:replace="layout/layout :: header"></header> -->
+
+	<div class="py-4 ml-5 mr-5">
+		<div class="card bg-light">
+			<div class="card-header h2 text-center" th:text="${titulo}"></div>
+			<div class="card-body">
+				<h4 class="card-title">
+					<a th:href="@{/prestatario/registrarPrestatario}" class="btn btn-primary" >AGREGAR</a>
+
+					<!-- <a sec:authorize="hasRole('ADMIN')" th:href="@{/exportarPdf}"
+						class="btn btn-secondary">Exportar a PDF</a> <a
+						sec:authorize="hasRole('ADMIN')" th:href="@{/exportarExcel}"
+						class="btn btn-success">Exportar a Excel</a> -->
+				</h4>
+				<table class="table table-striped">
 					<thead>
 						<tr>
 							<th>ID</th>
-							<th>NOMBRE</th>
-							<th>APELLIDOS</th>
+							<th>Nombres</th>
+							<th>Apellidos</th>
+							<th>Dirección</th>
+							<th>Email</th>
 							<th>DNI</th>
-							<th>FECHA DE REGISTRO</th>
-							<th>ESTADO</th>
+							<!-- <th>RUC</th> -->
+							<!--	<th>Fecha</th>-->
+							<!-- <th>Detalles</th>-->
+							<!--<th sec:authorize="hasRole('ADMIN')">Editar</th>
+							<th sec:authorize="hasRole('ADMIN')">Eliminar</th>-->
+							<th>Editar</th>
+							<th>Eliminar</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each=" prestatario : ${listaPrestatario}">
-							
-							<td th:text="${prestatario.idPrestatario}"></td>
+						<tr th:each="prestatario : ${listaPrestatario}">
+							<!--<td th:text="${prestamista.idPrestamista}"></td>-->
+							<!--Datos de persona-->
+							<td th:text="${prestatario.prestatario.idPersona}"></td>
 							<td th:text="${prestatario.prestatario.nombres}"></td>
 							<td th:text="${prestatario.prestatario.apellidos}"></td>
+							<td th:text="${prestatario.prestatario.direccion}"></td>
+							<td th:text="${prestatario.prestatario.email}"></td>
 							<td th:text="${prestatario.prestatario.dni}"></td>
-							<td th:text="${prestatario.fechaRegistro}"></td>
-							<td th:text="${prestatario.activo}"></td>						
+							<!-- <td th:text="${prestamista.prestamista.ruc}"></td> -->
+
+							<td><a class="btn btn-warning btn-sm"
+									th:href="@{/actualizar/} + ${prestatario.prestatario.idPersona}">Editar</a></td>
+							<td>
+								<a class="btn btn-danger btn-sm"
+									th:href="@{/eliminar/} + ${prestatario.prestatario.idPersona}"
+									onclick="confirmarEliminacion(event, this)">Eliminar</a>
+							</td>
 						</tr>
-						  
-						
 					</tbody>
-					
 				</table>
-				
 			</div>
 		</div>
-		
 	</div>
-	
-	
-	
-	
-</body>	
-	
-	
-	
-	
+
+	<!--<footer th:replace="static/footer.html"></footer>-->
+</body>
+<!--Para validacion 09-10-23   -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="/js/toastr.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+<!-- Fin para validacion -->
+<!--Para alerta de eliminacion-->
+
+
+
 </html>

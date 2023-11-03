@@ -1,8 +1,21 @@
 package com.cibertec.api.service;
 
+import java.util.List;
+
+
 import com.cibertec.api.model.Prestatario;
-import com.cibertec.api.reuzable.CrudService;
 
-public interface PrestatarioService extends CrudService<Prestatario> {
 
+public interface PrestatarioService {
+
+	//Creamos metodos para CRUD	
+	
+	public List<Prestatario> listarPrestatario();
+			
+	public Prestatario listarPrestatarioPorId(int id);
+			
+	public Prestatario guardarPrestatario(Prestatario prestatario);
+	
+	public void eliminarPrestatario(int id);
+	
 }

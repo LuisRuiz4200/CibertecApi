@@ -1,63 +1,98 @@
 <!DOCTYPE html>
-<html xmlsn:th="www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
+
 <head>
+	<meta charset="utf-8">
 	<div th:replace="~{static/head.html}"></div>
-    <title>GRUPO 6/ Jean Pi</title>
-	
 </head>
 
 <body>
-	<div>
-		<div th:insert="~{plantilla/UITemplate.html::cabecera}"></div>
-	</div>
+	<div th:insert="~{plantilla/UITemplate.html::cabecera}"></div>
+	<!-- <header th:replace="layout/layout :: header"></header> -->
+
+	<br>
+
 	<div class="container">
-		
-		<div class="mt-4">
-			<div>
-				<h2>REGISTRAR PRESTATARIO</h2>
-				<hr>
-			</div>
-			
-			<div>
-				<form th:action="@{guardar}" th:object="${prestatario}" method="post">
-					<div class="now">
-						<div>
-							<div>
-								<label>FECHA REGISTRO</label>
-								<input class="form-control" type="date" th:field="*{fechaRegistro}">
-							</div>
-						</div>
-						
-						<div>
-							<div>
-								<label>NOMBRES</label>
-								<input class="form-control" type="text" th:field="*{prestatario.nombres}" >
-							</div>
-							
-							<div>
-								<label>APELLIDOS</label>
-								<input class="form-control" type="text" th:field="*{prestatario.apellidos}" >
-							</div>
-							
-							<div>
-								<label>DNI</label>
-								<input class="form-control" type="text" th:field="*{prestatario.dni}" >
-							</div>
-						</div>
-						
-						<div>
-							<div>
-								<button class="btn btn-sucess btn-sm">GUARDAR</button>
-								<a class="btn btn-danger btn-sm" th:href="@{listar}">CANCELAR</a>
-							</div>
-						</div>
+		<div class="row">
+			<div class="col-lg-8 col-md-6 col-sm-6 container justify-content-center card">
+				<h1 class="text-center" th:text="${titulo}"></h1>
+				<div class="card-body">
 					
-					</div>
-				</form>
+					
+					<form id="guardarPrestatario" th:action="@{/prestatario/registrarPrestatario}" th:object="${prestatario}" method="post">
+						<!--OJO Debe estar los 2 le asignamos ID para mensaje de actualizar o registrar-->
+						<input type="hidden" th:field="*{idPrestatario}" th:value="${prestatario.idPrestatario}"
+							id="CodePre" />
+						<input type="hidden" th:field="*{prestatario.idPersona}"
+							th:value="${prestatario.prestatario.idPersona}" id="CodePer" />
+						<!--<input type="text" th:field="*{prestamista.idPersona}" th:value="${prestamista.prestamista.idPersona}"/> -->
+						<!--OJO-->
+						<div class="form-group">
+							<!--Agregamos a todos los id para poder validar-->
+							<label>Nombres : </label>
+							<input type="text" th:field="*{prestatario.nombres}" class="form-control"
+								th:errorclass="'form-control alert-danger'" id="nombres" />
+							<small class="form-text text-danger" th:if="${#fields.hasErrors('prestatario.nombres')}"
+								th:errors="*{prestatario.nombres}"></small>
+
+
+						</div>
+						<div class="form-group">
+							<label>Apellidos : </label>
+							<input type="text" th:field="*{prestatario.apellidos}" class="form-control"
+								th:errorclass="'form-control alert-danger'" id="apellidos" />
+							<small class="form-text text-danger" th:if="${#fields.hasErrors('prestatario.apellidos')}"
+								th:errors="*{prestatario.apellidos}"></small>
+						</div>
+						<div class="form-group">
+							<label>Direccion : </label>
+							<input type="text" th:field="*{prestatario.direccion}" class="form-control"
+								th:errorclass="'form-control alert-danger'" id="direccion" />
+							<small class="form-text text-danger" th:if="${#fields.hasErrors('prestatario.direccion')}"
+								th:errors="*{prestatario.direccion}"></small>
+						</div>
+						<div class="form-group">
+							<label>Email : </label>
+							<input type="text" th:field="*{prestatario.email}" class="form-control"
+								th:errorclass="'form-control alert-danger'" id="email" />
+							<small class="form-text text-danger" th:if="${#fields.hasErrors('prestatario.email')}"
+								th:errors="*{prestatario.email}"></small>
+						</div>
+						<div class="form-group">
+							<label>DNI : </label>
+							<input type="number" th:field="*{prestatario.dni}" class="form-control"
+								th:errorclass="'form-control alert-danger'" id="dni" />
+							<small class="form-text text-danger" th:if="${#fields.hasErrors('prestatario.dni')}"
+								th:errors="*{prestatario.dni}"></small>
+						</div>
+						
+						<div class="box-footer d-flex gap-3">
+							<input type="submit" value="Guardar" class="btn btn-primary">
+							
+							<div class=" mt-auto fs-bold text-danger " th:text="${mensaje}"></div>
+						</div>
+					</form>
+				</div>
 			</div>
 		</div>
 	</div>
-</body>
+
+	<!--<footer th:replace="static/footer.html"></footer>-->
 
 	
+
+</body>
+
+<!--Para validacion 09-10-23   -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="/js/toastr.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+<!-- Fin para validacion -->
+
+<!--   VALIDANDO 09-10-23-->
+
+<!--   <script src="/js/prestamista/prestamista.js"></script> -->
+
+
 </html>

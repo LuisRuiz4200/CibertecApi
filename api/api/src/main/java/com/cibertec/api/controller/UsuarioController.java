@@ -57,7 +57,7 @@ public class UsuarioController {
 		 
 	    model.addAttribute("ENLACES",lista); 
 	    session.setAttribute("UserLogged", u);
-			//retornamos la pagina o vista intranet.html
+		//retornamos la pagina o vista intranet.html
 		return "intranet";		
 	}
 	

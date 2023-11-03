@@ -17,15 +17,19 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 
 @Entity
 @Table(name="tb_prestatario")
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
+@ToString
 public class Prestatario {
 	@Id
     @Column(name = "idprestatario")
@@ -34,7 +38,7 @@ public class Prestatario {
 	@OneToOne(cascade = CascadeType.ALL)
 	@MapsId
 	@JoinColumn(name="idprestatario")
-	private Persona prestatario ;
+	private Persona prestatario = new Persona(); ;
 	@Temporal(TemporalType.DATE)
 	@Column(name="fecharegistro")
 	private Date fechaRegistro;
@@ -45,6 +49,10 @@ public class Prestatario {
 	
 	@OneToMany(mappedBy = "prestatario")
 	@JsonIgnore
+	@ToString.Exclude
 	private List<SolicitudPrestamo> listaSolicitudPrestamo;
 	
+	@OneToMany(mappedBy = "idPrestamistaCuenta")
+	@ToString.Exclude
+    private List<Cuenta> cuentaList;
 }
