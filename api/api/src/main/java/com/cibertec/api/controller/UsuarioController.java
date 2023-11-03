@@ -137,7 +137,7 @@ public class UsuarioController {
 			  
 			  serviceUsuario.guardarUsuario(usuario); 
 			  //Marca el status como completo.
-			  status.setComplete();
+			  //status.setComplete();
 			  flash.addFlashAttribute("success", mensaje);
 			//redireccionamos
 	            if(usuario.getIdUsuario() != 0)
