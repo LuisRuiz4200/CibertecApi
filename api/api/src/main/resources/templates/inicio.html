@@ -45,6 +45,7 @@ height: 100%;
             <p class="text-center fw-bold mx-3 h4 mb-0">Bienvenido</p>
           </div>
 		  <form th:action="@{/login}" method="post">
+        <div class="alert alert-danger my-2" th:if="${param.error}">Usuario y/o Contraseña incorrectas.</div>
 					<div class="form-outline mb-4">
 						
 						<input type="text" class="form-control" name="username" id="username" placeholder="Ingrese un usuario válido" required="required">

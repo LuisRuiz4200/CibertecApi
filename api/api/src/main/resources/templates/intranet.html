@@ -12,7 +12,8 @@
 <body>
 <!--Agregamos un div con etiqueta de thymeleaf insert para llamar o consumir el fragment llamado cabecera
 a UITemplate que esta dentro de la carpeta plantilla de templates y que con :: accedemos a cabecera-->
-<div th:replace="static/navbar.html"></div>
+<!-- <div th:replace="~{static/navbar.html}"></div> -->
+<div th:insert="~{plantilla/UITemplate.html::cabecera}"></div>
 
 <div class="container-fluid mt-4">
 	<div class="row">

@@ -57,10 +57,4 @@ public class GrupoPrestamistaController {
 		GrupoPrestamista grupo = grupoPrestamistaService.getByJefeAndAsesor(jefePrestamista, asesorPrestamista);
 		return grupoPrestamistaService.delete(grupo);
 	}
-
-	private void print(Object object){
-		System.out.println("\n\n======================");
-		System.out.println(object);
-		System.out.println("======================\n\n");
-	}
 }
