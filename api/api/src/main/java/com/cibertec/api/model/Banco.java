@@ -22,7 +22,7 @@ public class Banco {
     @Id
     @GeneratedValue(strategy =GenerationType.IDENTITY)
     private int idBanco;
-    private String nombre;
+    private String descripcion;
 
     @OneToMany(mappedBy = "idBancoCuenta")
     @ToString.Exclude
