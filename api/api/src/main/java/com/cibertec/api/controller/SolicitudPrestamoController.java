@@ -36,7 +36,7 @@ public class SolicitudPrestamoController {
 		
 		List<SolicitudPrestamo> listaSolicitudPrestamo = new ArrayList<SolicitudPrestamo>();
 		listaSolicitudPrestamo = solicitudPrestamoService.listar();
-		List<Prestatario> listaPrestatario = prestatarioService.listar();
+		List<Prestatario> listaPrestatario = prestatarioService.listarPrestatario();
 		Prestatario prestatario = new Prestatario();
 		
 		
@@ -52,8 +52,8 @@ public class SolicitudPrestamoController {
 		
 		List<SolicitudPrestamo> listaSolicitudPrestamo = new ArrayList<SolicitudPrestamo>();
 		listaSolicitudPrestamo = solicitudPrestamoService.listarPorPrestatario(idPrestatario);
-		List<Prestatario> listaPrestatario = prestatarioService.listar();
-		Prestatario prestatario = prestatarioService.buscarPorId(idPrestatario);
+		List<Prestatario> listaPrestatario = prestatarioService.listarPrestatario();
+		Prestatario prestatario = prestatarioService.listarPrestatarioPorId(idPrestatario);
 		
 		
 		model.addAttribute("prestatario",prestatario);
@@ -70,7 +70,7 @@ public class SolicitudPrestamoController {
 		solicitudPrestamo.setEstado("PENDIENTE DE ENVIO");
 		solicitudPrestamo.setFechaRegistro(new Date(new java.util.Date().getTime()));
 		
-		List<Prestatario> listaPrestatario = prestatarioService.listar();
+		List<Prestatario> listaPrestatario = prestatarioService.listarPrestatario();
 		
 		
 		model.addAttribute("solicitudPrestamo",solicitudPrestamo);
@@ -84,7 +84,7 @@ public class SolicitudPrestamoController {
 		SolicitudPrestamo solicitudPrestamo = new SolicitudPrestamo();
 		solicitudPrestamo = solicitudPrestamoService.buscarPorId(id);
 		
-		List<Prestatario> listaPrestatario = prestatarioService.listar();
+		List<Prestatario> listaPrestatario = prestatarioService.listarPrestatario();
 		
 		model.addAttribute("solicitudPrestamo",solicitudPrestamo);
 		model.addAttribute("listaPrestatario",listaPrestatario);
