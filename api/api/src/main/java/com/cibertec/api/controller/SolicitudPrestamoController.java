@@ -21,7 +21,7 @@ import com.cibertec.api.service.PrestatarioService;
 import com.cibertec.api.service.SolicitudPrestamoService;
 
 @Controller
-@RequestMapping("/web/solicitudPrestamo")
+@RequestMapping("/solicitudPrestamo")
 public class SolicitudPrestamoController {
 	
 	@Autowired

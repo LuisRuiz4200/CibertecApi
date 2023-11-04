@@ -258,5 +258,16 @@ public class PrestamistaController {
 		} // fin de if
 		return "redirect:/listar";
 	} // fin de eliminarEmpleado
+	
+	
+	@GetMapping("/aprobarPrestamo")
+	private String listar33(Model mode) {
+		
+		
+		return "ApruebaByPrestamista";
+	}
+	
+	
+	
 
 } // Fin de PrestamistaController
