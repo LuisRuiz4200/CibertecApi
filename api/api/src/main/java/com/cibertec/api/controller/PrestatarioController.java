@@ -74,6 +74,12 @@ public class PrestatarioController {
 		 
 	} //fin de guardarPrestamista
 	
+	@GetMapping("/solicitoPrestamo")
+	private String listar22(Model mode) {
+		
+		
+		return "solicitudPrestamoByPrestatario";
+	}
 	
 	
 	
