@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<!--Importamos bootstrap-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+   <!-- Fin de Bootstrap -->
+   <!-- Estilo de la tabla -->
+   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.2/css/dataTables.bootstrap4.min.css">
+   <!-- Fin del estilo de tabla -->
+<title>Docente</title>
+<!-- Creamos style para css -->
+<style type="text/css">
+/*Aqui con este modal-header damos estilo al contenedor del titulo REGISTRAR DOCENTE */
+.modal-header{
+color:#fff;
+background:#428bca;
+display:flex;
+justify-content:center;
+}
+/*Esto de aqui abajo son para el color de errores de validacion*/
+.help-block{
+color:red;
+}
+.form-group.has-error .form-control-label{
+color:red;
+}
+.form-group.has-error .form-control{
+border:1px solid red;
+box-shadow: 0 0 0 0.2rem rgba(250,16,0,0.18);
+}
+</style>
+<!-- FIN DEL CSS -->
+</head>
+<body>
+<!-- Contenido centrado y con margens con container -->
+<div class="container">
+<!---FIN DEL ALERT DE BOOTSTRAP  -->
+  <h2 class="text-center" >SOLICITUD DE PRESTAMOS</h2>
+<div class="container" id="" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <!-- Agregamos para que este centrado el modal el modal-dialog centered -->
+<!--  <div class="modal-dialog modal-dialog-centered">-->
+	<div class="container">
+		<div class="modal-content" style="width: 100%;">
+      <div class="modal-header">
+      <!-- Nombre del docente  -->
+        <h5 class="modal-title" id="exampleModalLabel">SOLICITUD</h5>
+     
+      </div>
+      <!-- Dentro del div class modal-body ponemos el formulario -->
+      <!--<div class="modal-body">-->
+		  <div class="container" style="width: 100%;">
+      <!-- Creamos el formulario form y agregamos id o identificador con el nombre de idRegistrar 
+      Para el validator del script del ultimo-->
+      <!-- FORMULARIO -->
+      <!-- Al form agregamos action donde ira al ServletDocente y al parametro Tipo y elige GRABAR
+      y asignamos methodo post para que no se vea en el URL -->
+		<form id="idRegistrar" action="" method="post">
+		<!--Para codigo y no visualizar llamamos solo al input y, le pondremos hidden-->
+		<input type="hidden" class="form-control" id="idCodigo" name="codigo">
+		<!--Para label de quien entra y tasa  -->
+		<div class="row align-items-center">
+			<div class="col-md-10">
+		  <div class="form-group mb-0">
+		    <label for="exampleInputNombre1">Prestatario: Maximus Moneyman</label>
+		  </div>
+		  </div>
+		  
+  		<div class="col-md-2">
+		  <div class="form-group">
+		    <!-- input type text por que sera una caja y asignamos name para reconocerlos en Servlet y para la validación  -->
+		    <label for="exampleInputNombre1">Tasa 20% (MENSUAL)</label>
+		  </div>
+		  </div>
+		</div>
+		
+		<!-- -->
+
+		</br>
+		<!-- FIN DE PARA CODIGO -->
+		<!-- MONTO -->
+		<div class="row align-items-center">
+			<div class="col-md-3">
+		  <div class="form-group mb-0">
+		    <label for="exampleInputNombre1">Monto</label>
+		  </div>
+		  </div>
+		  
+  		<div class="col-md-9">
+		  <div class="form-group">
+		    <!-- input type text por que sera una caja y asignamos name para reconocerlos en Servlet y para la validación  -->
+		    <input type="text" class="form-control" id="idNombre" name="nombre" placeholder="Ingresar monto">
+		  </div>
+		  </div>
+		</div>
+		<!-- Interés-->
+		<div class="row align-items-center">
+			<div class="col-md-3">
+		  <div class="form-group mb-0">
+		    <label for="exampleInputNombre1">Interés</label>
+		  </div>
+		  </div>
+		  
+  		<div class="col-md-9">
+		  <div class="form-group">
+		    <!-- input type text por que sera una caja y asignamos name para reconocerlos en Servlet y para la validación  -->
+		    <input type="text" class="form-control" id="idNombre" name="nombre" placeholder="Ingresar monto" value="182.88" readonly>
+		  </div>
+		  </div>
+		</div>
+		<!-- Meses-->
+		  	<div class="row align-items-center">
+			<div class="col-md-3">
+		  <div class="form-group mb-0">
+		    <label for="exampleInputNombre1">Meses</label>
+		  </div>
+		  </div>
+		  
+  		<div class="col-md-9">
+		  <div class="form-group">
+		    <!-- input type text por que sera una caja y asignamos name para reconocerlos en Servlet y para la validación  -->
+		    <input type="text" class="form-control" id="idNombre" name="nombre" placeholder="Ingresar meses">
+		  </div>
+		  </div>
+		</div>
+		  	<!-- Fecha de Prestamo-->
+		  <div class="row align-items-center">
+			<div class="col-md-4">
+		  <div class="form-group mb-0">
+		    <label for="exampleInputNombre1">Fecha Prestamo</label>
+		  </div>
+		  </div>
+		  
+  		<div class="col-md-8">
+		  <div class="form-group">
+		    <!-- input type text por que sera una caja y asignamos name para reconocerlos en Servlet y para la validación  -->
+		    <input type="text" class="form-control" id="idNombre" name="nombre" placeholder="Ingresar fecha">
+		  </div>
+		  </div>
+		</div>
+		   	<!-- -   -  - -Número de cuenta-->
+		   	 <div class="row align-items-center">
+			<div class="col-md-4">
+		  <div class="form-group mb-0">
+		    <label for="exampleInputNombre1">Número de cuenta</label>
+		  </div>
+		  </div>
+		  
+  		<div class="col-md-6">
+		  <div class="form-group">
+		    <!-- input type text por que sera una caja y asignamos name para reconocerlos en Servlet y para la validación  -->
+		    <input type="text" class="form-control" id="idObtenemosCuenta" name="nombre" placeholder="Ingresar cuenta" readonly>
+		  </div>
+		  </div>
+		  
+		  <!--Boton de combobox-->
+		  
+		  <div class="col-md-2">
+		  <div class="form-group">
+			  <!--Llama a modal-->
+		   <button  type="button" class="btn btn-success" id="cuenta" data-toggle="modal" data-target="#modalCuenta" >N° CUENTA</button>
+		  </div>
+		  </div>
+		  
+		</div>
+		  <!-- Creamos botones dentro de formulario -->
+		   <div class="modal-footer" style="display: flex; justify-content: center;">
+		   <!-- para grabar le ponemos type submit para que active al formulario y active la validación de abajo -->
+		   <!-- Cuando son varios como el boton editar y eliminar usar class , cuando es 1 o pocos usar id -->
+		    <button type="submit" class="btn btn-primary">Registrar</button>
+		    
+     	  </div>
+		</form>
+		<!-- FIN DEL FORMULARIO FORM -->
+      </div>
+      <!-- FIN del div class modal-body -->
+     
+    </div>
+  </div>
+</div>
+  <!-- INICIO DEL MODAL de NUMERO DE CUENTA-->
+<div class="modal fade" id="modalCuenta" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <!-- Agregamos para que este centrado el modal el modal-dialog centered -->
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+      <!-- Nombre del docente  -->
+        <h5 class="modal-title" id="exampleModalLabel">Número de cuenta</h5>
+      </div>
+      <!-- Dentro del div class modal-body ponemos el formulario -->
+      <div class="modal-body">
+		<form id="" action="" method="post">
+
+		<!--Contenedor 10 + 1 del boton para que este a costado-->
+		<div class="row align-items-center">
+				<div class="col-md-10">
+			
+		<!-- Banco combobox -->
+		<div class="row align-items-center">
+			<div class="col-md-3">
+		  <div class="form-group mb-0">
+		    <label for="exampleInputNombre1">Banco: </label>
+		  </div>
+		  </div>
+		  
+  		<div class="col-md-9">
+		  <div class="form-group">
+		    <!-- Para despegable con bootstrap con SELECT y asignamos id =idSexo -->
+			  <select class="form-control" id="idCuenta" name="cuenta">
+			  <!-- donde para Seleccione su value es vacio(espacio) es empty y agarra para la validación, y para los otros si tienen value-->
+		      <option value=" ">[Seleccione Banco...]</option>
+		      <option value="Femenino">BBVA</option>
+		       <option value="Femenino">Scotiabank</option>
+		      <option value="Masculino">BCP</option>
+		      </select>
+		  </div>
+		  </div>
+		</div>
+		
+		
+		
+		
+	<!-- Número de cuenta seleccionada del combobox -->
+		 <div class="row align-items-center">
+			<div class="col-md-3">
+		  <div class="form-group mb-0">
+		    <label for="exampleInputNombre1">N° Cuenta: </label>
+		  </div>
+		  </div>
+		  
+  		<div class="col-md-9">
+		  <div class="form-group">
+		    <input type="text" class="form-control" id="idCuentaBloqueada" name="nombre" readonly>
+		  </div>
+		  </div>
+		</div>
+		  
+		
+	 	</div>
+	 	<!--BOTON ROJO > -->
+		 <div class="col-md-1">
+		  <div class="form-group">
+			
+		   <button  type="button" class="btn btn-danger">></button>
+		  </div>
+		  </div>
+		</div>	<!--FIN Contenedor 10 + 1 del boton para que este a costado-->
+		
+		
+		
+		 <!-- PARA EL AGREGAR si es uno nuevo-->
+		 </br>
+		  <div class="row align-items-center">
+			<div class="col-md-12">
+		  <div class="form-group mb-0">
+		    <label for="exampleInputNombre1" style="color: red;font-weight: bold;">AGREGAR: </label>
+		  </div>
+		  </div>
+		</div>
+		 </br>
+		 	<!--Contenedor 10 + 1 del boton para que este a costado-->
+		 <div class="row align-items-center">
+				<div class="col-md-10">
+		 
+		 
+		 <div class="row align-items-center">
+			<div class="col-md-3">
+		  <div class="form-group mb-0">
+		    <label for="exampleInputNombre1">Banco: </label>
+		  </div>
+		  </div>
+		    
+  		<div class="col-md-9">
+		  <div class="form-group">
+		    <!-- Para despegable con bootstrap con SELECT y asignamos id =idSexo -->
+			  <select class="form-control" id="idCuenta" name="cuenta">
+			  <!-- donde para Seleccione su value es vacio(espacio) es empty y agarra para la validación, y para los otros si tienen value-->
+		      <option value=" ">[Seleccione Banco...]</option>
+		      <option value="Femenino">BBVA</option>
+		       <option value="Femenino">Scotiabank</option>
+		      <option value="Masculino">BCP</option>
+		      </select>
+		  </div>
+		  </div>
+		</div>
+	
+		 <!-- caja para agregar uno nuevo-->
+		 <div class="row align-items-center">
+			<div class="col-md-3">
+		  <div class="form-group mb-0">
+		    <label for="exampleInputNombre1">N° Cuenta: </label>
+		  </div>
+		  </div>
+		  
+  		<div class="col-md-9">
+		  <div class="form-group">
+		    <input type="text" class="form-control" id="idCuentaLibre" name="nombre">
+		  </div>
+		  </div>
+		</div>
+		
+		 </div>
+		 <!--BOTON ROJO > -->
+		 <div class="col-md-1">
+		  <div class="form-group">
+			<!--ASIGNAMOS EVENTO -->
+		   <button  type="button" class="btn btn-danger" onclick="agregarCuenta()">></button>
+		  </div>
+		  </div>
+		</div>	<!--FIN Contenedor 10 + 1 del boton para que este a costado-->
+		 
+		 
+		 
+		 
+		  <!-- Creamos botones dentro de formulario -->
+		   <div class="modal-footer" style="display: flex; justify-content: center;">
+		    <!-- Asignamos idcerrar al boton cerrar para resetear las validaciones de bootstrap -->
+	        <button type="button" class="btn btn-secondary" id="idCerrar"  data-dismiss="modal">Cerrar</button>
+     	  </div>
+		</form>
+		<!-- FIN DEL FORMULARIO FORM -->
+      </div>
+      <!-- FIN del div class modal-body -->
+     
+    </div>
+  </div>
+</div>
+  <!-- FIN DEL MODAL DE NUMERO DE CUENTA -->
+  
+</div>
+<!-- Importamos más cosas que se necesitaran hasta mas campos para bootstrap esto sirve para paginacion y search y demás de la tabla junto a lo que esta en script -->
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.2/js/dataTables.bootstrap4.min.js"></script>
+<!-- script para validar las cajas de texto --> 
+<script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-validator/0.5.3/js/bootstrapValidator.js"></script>
+<!-- Para pasar dato de modal a caja --> 
+<script>
+	function agregarCuenta() {
+  // Obtener el valor ingresado en el input del modal
+  var numeroCuenta = document.getElementById("idCuentaLibre").value;
+
+  // Asignar el valor a la caja "idObtenemosCuenta"
+  document.getElementById("idObtenemosCuenta").value = numeroCuenta;
+
+  // Cerrar el modal
+  $('#modalCuenta').modal('hide');
+}
+
+//para cuando cierra modal
+	// Agregar evento al modal cuando se oculta, limpia cajas
+$('#modalCuenta').on('hidden.bs.modal', function () {
+  // Limpiar el valor de las cajas "idCuentaLibre" e "idCuentaBloqueada"
+  document.getElementById("idCuentaLibre").value = "";
+  document.getElementById("idCuentaBloqueada").value = "";
+});
+
+</script>
+
+
+</body>
+</html>
