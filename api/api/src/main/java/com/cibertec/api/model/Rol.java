@@ -12,6 +12,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name="tb_rol")
@@ -25,11 +26,13 @@ public class Rol {
 	
 	@JsonIgnore
 	@OneToMany(mappedBy="rol")
+	@ToString.Exclude
 	private List<Usuario> listaUsuarios;
 	
 	
 	@JsonIgnore
 	@OneToMany(mappedBy="rol")
+	@ToString.Exclude
 	private List<RolMenu> listaRolMenu;
 
 

@@ -3,7 +3,8 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>Intranet</title>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+<div th:replace="static/head.html"></div>
 
 </head>
 <body>
@@ -11,6 +12,27 @@
 a UITemplate que esta dentro de la carpeta plantilla de templates y que con :: accedemos a cabecera-->
 <!-- <div th:replace="~{static/navbar.html}"></div> -->
 <div th:insert="~{plantilla/UITemplate.html::cabecera}"></div>
+
+<div class="container-fluid mt-4">
+	<div class="row">
+		<div class="col-12 fs-4">
+			<table>
+				<tr>
+					<th class="col-4">BIENVENIDO </th>
+					<td th:text="${session.UserLogged.persona.nombres} + ' ' + ${session.UserLogged.persona.apellidos}"></td>
+				</tr>
+				<tr>
+					<th class="col-4">USUARIO </th>
+					<td th:text="${session.UserLogged.nombreUsuario}"></td>
+				</tr>
+				<tr>
+					<th class="col-4">ROL </th>
+					<td th:text="${session.UserLogged.rol.descripcion}"></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
 
 
 

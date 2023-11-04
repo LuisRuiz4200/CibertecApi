@@ -14,22 +14,25 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.cibertec.api.model.Banco;
 import com.cibertec.api.model.Prestatario;
 import com.cibertec.api.model.SolicitudPrestamo;
+import com.cibertec.api.service.BancoService;
 import com.cibertec.api.service.PrestamistaService;
 import com.cibertec.api.service.PrestatarioService;
 import com.cibertec.api.service.SolicitudPrestamoService;
 
+import lombok.AllArgsConstructor;
+
 @Controller
-@RequestMapping("/solicitudPrestamo")
+@RequestMapping("/web/solicitudPrestamo")
+@AllArgsConstructor
 public class SolicitudPrestamoController {
 	
-	@Autowired
 	SolicitudPrestamoService solicitudPrestamoService;
-	@Autowired
 	PrestamistaService prestamistaService;
-	@Autowired
 	PrestatarioService prestatarioService;
+	BancoService bancoService;
 	
 	@GetMapping("/listar")
 	private String listar(Model model) {
@@ -72,7 +75,10 @@ public class SolicitudPrestamoController {
 		
 		List<Prestatario> listaPrestatario = prestatarioService.listarPrestatario();
 		
-		
+		List<Banco> bancosList = bancoService.getAll();
+		System.out.println(bancosList);
+		model.addAttribute("bancos", bancosList);
+
 		model.addAttribute("solicitudPrestamo",solicitudPrestamo);
 		model.addAttribute("listaPrestatario",listaPrestatario);
 		

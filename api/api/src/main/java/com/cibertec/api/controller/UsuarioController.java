@@ -54,11 +54,15 @@ public class UsuarioController {
 		Usuario u=servicio.loginUsuario(vLogin);
 		List<Menu> lista=servicio.enlacesDelUsuario(u.getRol().getIdRol()).stream()
 				.filter(menu->menu.isActivo()).collect(Collectors.toList());
-		 
-	    model.addAttribute("ENLACES",lista); 
+		if(u.getRol().getIdRol() == 1){
+			Menu menuPrestamista = lista.stream().filter(item -> "Prestamista".equals(item.getDescripcion())).findFirst().orElse(null);
+			if(menuPrestamista != null)
+				menuPrestamista.setDescripcion("Jefe Prestamista");
+		}
+	    model.addAttribute("ENLACES",lista);
 	    session.setAttribute("UserLogged", u);
-			//retornamos la pagina o vista intranet.html
-		return "intranet";		
+		//retornamos la pagina o vista intranet.html
+		return "intranet";
 	}
 	
 	
@@ -137,7 +141,7 @@ public class UsuarioController {
 			  
 			  serviceUsuario.guardarUsuario(usuario); 
 			  //Marca el status como completo.
-			  status.setComplete();
+			  //status.setComplete();
 			  flash.addFlashAttribute("success", mensaje);
 			//redireccionamos
 	            if(usuario.getIdUsuario() != 0)
@@ -224,6 +228,7 @@ public class UsuarioController {
 	@PostMapping("/cerrarSession")
 	public String cerrarSession(HttpSession session) {
 		session.removeAttribute("UserLogged");
+		session.removeAttribute("ENLACES");
 		return "redirect:/login";
 	}
 

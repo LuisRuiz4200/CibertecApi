@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.cibertec.api.model.GrupoPrestamista;
 import com.cibertec.api.model.Persona;
 import com.cibertec.api.model.Prestamista;
 import com.cibertec.api.model.Rol;
@@ -47,6 +46,7 @@ public class PrestamistaController {
 		List<Prestamista> lista = new ArrayList<>();
 		// for mensaje
 		String titulo = "";
+		String txtButton = "";
 		switch (rolIngreso) {
 		// admin lista de jefes
 
@@ -67,10 +67,10 @@ public class PrestamistaController {
 			jefesPrestamistas = users.stream()
 					.map(usuario -> service.getPrestamistaById(usuario.getPersona().getIdPersona()).orElse(null))
 					.collect(Collectors.toList());
+			
 
 			if (jefesPrestamistas != null) {
-				lista = jefesPrestamistas.stream()
-						.map(jefe -> service.getByIdPrestamistaActivo(jefe.getIdPrestamista())).filter(Objects::nonNull) // Filtrar
+				lista = jefesPrestamistas.stream().filter(Objects::nonNull) // Filtrar
 																															// elementos
 																															// no
 																															// nulos
@@ -78,6 +78,7 @@ public class PrestamistaController {
 			}
 			model.addAttribute("navbar", true);
 			titulo = "Lista de Jefes de Prestamista";
+			txtButton = "Agregar Jefe Prestamista";
 			break;
 		}
 		// jefe de prestamista, lista de prestamistas
@@ -91,6 +92,7 @@ public class PrestamistaController {
 			lista = grupoController.listGrupoByJefePrestamistaAndActivo(jefePrestamista);
 			titulo = "Lista de Prestamistas";
 			model.addAttribute("navbar", false);
+			txtButton = "Agregar Prestamista";
 			break;
 		}
 		default:
@@ -99,6 +101,7 @@ public class PrestamistaController {
 		} // fin de switch
 		model.addAttribute("lista", lista);
 		model.addAttribute("titulo", titulo);
+		model.addAttribute("txtButton", txtButton);
 		return "listar";
 	} // fin de listarPrestamista
 
@@ -173,9 +176,8 @@ public class PrestamistaController {
 				int idJefePrestamista = userLogged.getPersona().getIdPersona();
 				Prestamista jefePrestamista = service.getPrestamistaById(idJefePrestamista).orElse(null);
 				// Registrar Asesor Prestamista
-				GrupoPrestamista grupo = null;
 				if (idPersona == 0) {
-					grupo = grupoController.insertGrupoPrestamista(jefePrestamista, newPrestamista, userLogged);
+					grupoController.insertGrupoPrestamista(jefePrestamista, newPrestamista, userLogged);
 				}
 				int registrarAsesor = 3;
 				return "redirect:/registrarUsuario/" + registrarAsesor + "/" + newPrestamista.getIdPrestamista();
