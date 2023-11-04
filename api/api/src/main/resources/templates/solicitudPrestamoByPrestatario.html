@@ -36,6 +36,9 @@ box-shadow: 0 0 0 0.2rem rgba(250,16,0,0.18);
 <!-- FIN DEL CSS -->
 </head>
 <body>
+	<div th:insert="~{plantilla/UITemplate.html::cabecera}"></div>
+	</br>
+	</br>
 <!-- Contenido centrado y con margens con container -->
 <div class="container">
 <!---FIN DEL ALERT DE BOOTSTRAP  -->
@@ -211,10 +214,8 @@ box-shadow: 0 0 0 0.2rem rgba(250,16,0,0.18);
 		    <!-- Para despegable con bootstrap con SELECT y asignamos id =idSexo -->
 			  <select class="form-control" id="idCuenta" name="cuenta">
 			  <!-- donde para Seleccione su value es vacio(espacio) es empty y agarra para la validación, y para los otros si tienen value-->
-		      <option value=" ">[Seleccione Banco...]</option>
-		      <option value="Femenino">BBVA</option>
-		       <option value="Femenino">Scotiabank</option>
-		      <option value="Masculino">BCP</option>
+		      	<option value="-1">[Seleccione Banco...]</option>
+				<option th:each="item : ${bancos}" th:value="${item.idBanco}" th:utext="${item.descripcion}"></option>
 		      </select>
 		  </div>
 		  </div>
@@ -278,10 +279,8 @@ box-shadow: 0 0 0 0.2rem rgba(250,16,0,0.18);
 		    <!-- Para despegable con bootstrap con SELECT y asignamos id =idSexo -->
 			  <select class="form-control" id="idCuenta" name="cuenta">
 			  <!-- donde para Seleccione su value es vacio(espacio) es empty y agarra para la validación, y para los otros si tienen value-->
-		      <option value=" ">[Seleccione Banco...]</option>
-		      <option value="Femenino">BBVA</option>
-		       <option value="Femenino">Scotiabank</option>
-		      <option value="Masculino">BCP</option>
+		  <option value="-1">[Seleccione Banco...]</option>
+				<option th:each="item : ${bancos}" th:value="${item.idBanco}" th:utext="${item.descripcion}"></option>
 		      </select>
 		  </div>
 		  </div>
