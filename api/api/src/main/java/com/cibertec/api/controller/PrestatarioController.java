@@ -13,8 +13,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+
+import com.cibertec.api.model.Banco;
 import com.cibertec.api.model.Persona;
 import com.cibertec.api.model.Prestatario;
+import com.cibertec.api.service.BancoService;
 import com.cibertec.api.service.PrestatarioService;
 
 import lombok.AllArgsConstructor;
@@ -26,7 +29,7 @@ public class PrestatarioController {
 	
 
 	PrestatarioService prestatarioService;
-	
+	BancoService bancoService;
 	@GetMapping("/listarPresta")
 	private String listar(Model model) {
 		List<Prestatario> listaPrestatario = prestatarioService.listarPrestatario();
@@ -75,9 +78,11 @@ public class PrestatarioController {
 	} //fin de guardarPrestamista
 	
 	@GetMapping("/solicitoPrestamo")
-	private String listar22(Model mode) {
+	private String listar22(Model model) {
 		
-		
+		List<Banco> bancosList = bancoService.getAll();
+		System.out.println(bancosList);
+		model.addAttribute("bancos", bancosList);
 		return "solicitudPrestamoByPrestatario";
 	}
 	
