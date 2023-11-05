@@ -19,7 +19,7 @@ public class CuentaServiceImpl implements CuentaService{
 
     @Override
     public List<Cuenta> getAllByPrestatario(Prestatario prestatario) {
-        return repository.findByIdPrestamistaCuenta(prestatario);
+        return repository.findByIdPrestatarioCuenta(prestatario);
     }
 
     @Override
