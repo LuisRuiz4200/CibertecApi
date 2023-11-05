@@ -52,7 +52,7 @@ public class Prestatario {
 	@ToString.Exclude
 	private List<SolicitudPrestamo> listaSolicitudPrestamo;
 	
-	@OneToMany(mappedBy = "idPrestamistaCuenta")
+	@OneToMany(mappedBy = "idPrestatarioCuenta")
 	@ToString.Exclude
     private List<Cuenta> cuentaList;
 }

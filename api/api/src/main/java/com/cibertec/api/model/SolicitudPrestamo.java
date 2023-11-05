@@ -34,6 +34,11 @@ public class SolicitudPrestamo {
 	@ManyToOne
 	@JoinColumn(name="idprestamista")
 	private Prestamista prestamista;
+
+	@ManyToOne
+	@JoinColumn(name="idCuenta")
+	private Cuenta cuentaSolicitud;
+
 	private double monto;
 	private double interes;
 	private int cuotas;

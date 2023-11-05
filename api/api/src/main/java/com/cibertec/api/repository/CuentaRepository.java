@@ -11,6 +11,6 @@ import com.cibertec.api.model.Prestatario;
 
 @Repository
 public interface CuentaRepository extends JpaRepository<Cuenta, Integer>{
-    public abstract List<Cuenta> findByIdPrestamistaCuenta(Prestatario prestatario);
+    public abstract List<Cuenta> findByIdPrestatarioCuenta(Prestatario prestatario);
     public abstract List<Cuenta> findByIdBancoCuenta(Banco banco);
 }
