@@ -1,14 +1,11 @@
 package com.cibertec.api.serviceImpl;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-
 //import com.cibertec.api.model.Prestamista;
 import com.cibertec.api.model.Prestatario;
-
 
 //import com.cibertec.api.repository.PrestamistaRepository;
 import com.cibertec.api.repository.PrestatarioRepository;

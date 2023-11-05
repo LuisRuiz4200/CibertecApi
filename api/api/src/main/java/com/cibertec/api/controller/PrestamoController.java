@@ -12,12 +12,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.cibertec.api.model.Prestamista;
 import com.cibertec.api.model.Prestamo;
 import com.cibertec.api.model.SolicitudPrestamo;
 import com.cibertec.api.service.PrestamistaService;
 import com.cibertec.api.service.PrestamoService;
-import com.cibertec.api.service.PrestatarioService;
 import com.cibertec.api.service.SolicitudPrestamoService;
 
 
