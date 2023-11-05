@@ -35,6 +35,9 @@ public class SolicitudPrestamo {
 	private Prestamista prestamista;
 	private double monto;
 	private String motivo;
+	//----------Add
+	private String cuentaBancaria;
+	//----------------
 	@Column(name="fecharegistro")
 	@Temporal(TemporalType.DATE)
 	private Date fechaRegistro;

@@ -1,5 +1,8 @@
 package com.cibertec.api.serviceImpl;
 
+
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +58,20 @@ public class SolicitudPrestamoServiceImpl implements SolicitudPrestamoService {
 	public List<SolicitudPrestamo> listarPorPrestamista(int idPrestamista) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	//FILTROOOOOO
+	@Override
+	public List<SolicitudPrestamo> filtrarSolicitudes(int idPrestamista, Date fechaDesde, Date fechaHasta) {
+		List<SolicitudPrestamo> listaSolicitudes = solicitudPrestamisteRepository.findAll();
+	    List<SolicitudPrestamo> listaFiltrada = new ArrayList<>();
+	    for (SolicitudPrestamo solicitud : listaSolicitudes) {
+	        if (solicitud.getPrestatario().getIdPrestatario() == idPrestamista
+	                && solicitud.getFechaRegistro().compareTo(fechaDesde) >= 0
+	                && solicitud.getFechaRegistro().compareTo(fechaHasta) <= 0) {
+	            listaFiltrada.add(solicitud);
+	        }
+	    }
+	    return listaFiltrada;
 	}
 
 }

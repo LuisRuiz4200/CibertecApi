@@ -195,7 +195,7 @@ box-shadow: 0 0 0 0.2rem rgba(250,16,0,0.18);
       </div>
       <!-- Dentro del div class modal-body ponemos el formulario -->
       <div class="modal-body">
-		<form id="" action="" method="post">
+		<form id="formularioCuenta" action="" method="post">
 
 		<!--Contenedor 10 + 1 del boton para que este a costado-->
 		<div class="row align-items-center">
@@ -357,6 +357,14 @@ $('#modalCuenta').on('hidden.bs.modal', function () {
   // Limpiar el valor de las cajas "idCuentaLibre" e "idCuentaBloqueada"
   document.getElementById("idCuentaLibre").value = "";
   document.getElementById("idCuentaBloqueada").value = "";
+ // Obtener el combobox para reestablecer valors al cerrar el modal 
+
+  
+ var form = document.getElementById("formularioCuenta");
+  
+  // Restablecer el formulario a sus valores predeterminados
+  form.reset();
+  
 });
 
 </script>

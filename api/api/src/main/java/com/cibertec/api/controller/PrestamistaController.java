@@ -1,24 +1,36 @@
 package com.cibertec.api.controller;
 
+import java.lang.ProcessBuilder.Redirect;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.cibertec.api.model.Cuenta;
 import com.cibertec.api.model.Persona;
 import com.cibertec.api.model.Prestamista;
+import com.cibertec.api.model.Prestatario;
 import com.cibertec.api.model.Rol;
+import com.cibertec.api.model.SolicitudPrestamo;
 import com.cibertec.api.model.Usuario;
 import com.cibertec.api.service.PrestamistaService;
+import com.cibertec.api.service.PrestatarioService;
+import com.cibertec.api.service.SolicitudPrestamoService;
 import com.cibertec.api.service.UService;
 
 import jakarta.servlet.http.HttpSession;
@@ -33,7 +45,8 @@ public class PrestamistaController {
 	private PrestamistaService service;
 	private GrupoPrestamistaController grupoController;
 	private UService userService;
-
+	PrestatarioService prestatarioService;
+	private SolicitudPrestamoService solicitudService;
 	@GetMapping({ "/listar", "/", "" }) // localhost:9090 /
 	public String listarPrestamista(Model model, HttpSession session) {
 		// Obtener al JefePrestamista desde la session de su Usuario
@@ -263,11 +276,52 @@ public class PrestamistaController {
 	
 	
 	@GetMapping("/aprobarPrestamo")
-	private String listar33(Model mode) {
+	private String listarSolicitudes(Model model) {
 		
+		List<Prestatario> listaPrestatario = prestatarioService.listarPrestatario();
+		model.addAttribute("listaPrestatario",listaPrestatario);
+		
+		List<SolicitudPrestamo> listaSolicitudes = solicitudService.listar();
+		model.addAttribute("listaSolicitudes",listaSolicitudes);
 		
 		return "ApruebaByPrestamista";
 	}
+	@PostMapping("/aprobarPrestamo")
+	private String aprobarSolicitudes(Model model) {
+		
+		
+		return "ApruebaByPrestamista";
+	}//fin de aprobarSolicitudes
+	
+	//-------------------------
+	
+	@GetMapping("/filtrarSolicitudes")
+	public String filtrarSolicitudes(@RequestParam("prestamista") int idPrestamista,
+	                                  @RequestParam("fechaDesde")  String fechaDesde,
+	                                  @RequestParam("fechaHasta")  String fechaHasta,
+	                                  Model model) throws ParseException {
+		
+		if(idPrestamista == -1 || fechaDesde == null || fechaHasta== null  ) {
+			
+			return "redirect:/aprobarPrestamo";
+		}
+		
+		
+		//filtra llena combobox
+		listarSolicitudes(model);
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+	    Date fechaDesdeDate = formatter.parse(fechaDesde);
+	    Date fechaHastaDate = formatter.parse(fechaHasta);
+	    List<SolicitudPrestamo> listaSolicitudes = solicitudService.filtrarSolicitudes(idPrestamista, fechaDesdeDate, fechaHastaDate);
+	    model.addAttribute("listaSolicitudes", listaSolicitudes);
+	    
+	    
+	    return "ApruebaByPrestamista";
+	}
+
+
+
+	
 	
 	
 	
