@@ -18,13 +18,11 @@ public class SolicitudPrestamoServiceImpl implements SolicitudPrestamoService {
 	
 	@Override
 	public SolicitudPrestamo guardar(SolicitudPrestamo model) {
-		// TODO Auto-generated method stub
 		return solicitudPrestamisteRepository.save(model);
 	}
 
 	@Override
 	public List<SolicitudPrestamo> listar() {
-		// TODO Auto-generated method stub
 		return solicitudPrestamisteRepository.findAll();
 	}
 
@@ -41,13 +39,11 @@ public class SolicitudPrestamoServiceImpl implements SolicitudPrestamoService {
 
 	@Override
 	public SolicitudPrestamo buscarPorId(int id) {
-		// TODO Auto-generated method stub
 		return solicitudPrestamisteRepository.findById(id).get();
 	}
 
 	@Override
 	public List<SolicitudPrestamo> listarPorPrestatario(int idPrestatario) {
-		// TODO Auto-generated method stub
 		return solicitudPrestamisteRepository.findByPrestatarioIdPrestatario(idPrestatario);
 	}
 

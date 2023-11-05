@@ -61,7 +61,11 @@ box-shadow: 0 0 0 0.2rem rgba(250,16,0,0.18);
       <!-- FORMULARIO -->
       <!-- Al form agregamos action donde ira al ServletDocente y al parametro Tipo y elige GRABAR
       y asignamos methodo post para que no se vea en el URL -->
-		<form id="idRegistrar" action="" method="post">
+		<form
+			id="idRegistrar"
+			th:action="@{/prestatario/solicitoPrestamo}"
+			th:object="${solicitudPrestamo}"
+			method="post">
 		<!--Para codigo y no visualizar llamamos solo al input y, le pondremos hidden-->
 		<input type="hidden" class="form-control" id="idCodigo" name="codigo">
 		<!--Para label de quien entra y tasa  -->
@@ -88,14 +92,14 @@ box-shadow: 0 0 0 0.2rem rgba(250,16,0,0.18);
 		<div class="row align-items-center">
 			<div class="col-md-3">
 		  <div class="form-group mb-0">
-		    <label for="exampleInputNombre1">Monto</label>
+		    <label for="monto">Monto</label>
 		  </div>
 		  </div>
 		  
   		<div class="col-md-9">
 		  <div class="form-group">
 		    <!-- input type text por que sera una caja y asignamos name para reconocerlos en Servlet y para la validación  -->
-		    <input type="text" class="form-control" id="idNombre" name="nombre" placeholder="Ingresar monto">
+		    <input id="monto" class="form-control" type="text" name="monto" placeholder="Ingresar monto" th:field="*{monto}">
 		  </div>
 		  </div>
 		</div>
@@ -103,14 +107,14 @@ box-shadow: 0 0 0 0.2rem rgba(250,16,0,0.18);
 		<div class="row align-items-center">
 			<div class="col-md-3">
 		  <div class="form-group mb-0">
-		    <label for="exampleInputNombre1">Interés</label>
+		    <label for="interes">Interés</label>
 		  </div>
 		  </div>
 		  
   		<div class="col-md-9">
 		  <div class="form-group">
 		    <!-- input type text por que sera una caja y asignamos name para reconocerlos en Servlet y para la validación  -->
-		    <input type="text" class="form-control" id="idNombre" name="nombre" placeholder="Ingresar monto" value="182.88" readonly>
+		    <input type="text" class="form-control" id="interes" name="interes" placeholder="Ingresar interes" th:field="*{interes}" value="182.88" readonly>
 		  </div>
 		  </div>
 		</div>
@@ -118,14 +122,14 @@ box-shadow: 0 0 0 0.2rem rgba(250,16,0,0.18);
 		  	<div class="row align-items-center">
 			<div class="col-md-3">
 		  <div class="form-group mb-0">
-		    <label for="exampleInputNombre1">Meses</label>
+		    <label for="meses">Meses</label>
 		  </div>
 		  </div>
 		  
   		<div class="col-md-9">
 		  <div class="form-group">
 		    <!-- input type text por que sera una caja y asignamos name para reconocerlos en Servlet y para la validación  -->
-		    <input type="text" class="form-control" id="idNombre" name="nombre" placeholder="Ingresar meses">
+		    <input type="text" class="form-control" id="meses" name="meses" placeholder="Ingresar meses" th:field="*{cuotas}">
 		  </div>
 		  </div>
 		</div>
@@ -133,14 +137,15 @@ box-shadow: 0 0 0 0.2rem rgba(250,16,0,0.18);
 		  <div class="row align-items-center">
 			<div class="col-md-4">
 		  <div class="form-group mb-0">
-		    <label for="exampleInputNombre1">Fecha Prestamo</label>
+		    <label for="fecha">Fecha Prestamo</label>
 		  </div>
 		  </div>
 		  
   		<div class="col-md-8">
 		  <div class="form-group">
 		    <!-- input type text por que sera una caja y asignamos name para reconocerlos en Servlet y para la validación  -->
-		    <input type="text" class="form-control" id="idNombre" name="nombre" placeholder="Ingresar fecha">
+		    <input type="text" class="form-control" id="fecha" name="fecha" placeholder="Ingresar fecha" readonly th:field="*{fechaRegistro}">
+			
 		  </div>
 		  </div>
 		</div>
@@ -148,14 +153,14 @@ box-shadow: 0 0 0 0.2rem rgba(250,16,0,0.18);
 		   	 <div class="row align-items-center">
 			<div class="col-md-4">
 		  <div class="form-group mb-0">
-		    <label for="exampleInputNombre1">Número de cuenta</label>
+		    <label for="nroCuenta">Número de cuenta</label>
 		  </div>
 		  </div>
 		  
   		<div class="col-md-6">
 		  <div class="form-group">
 		    <!-- input type text por que sera una caja y asignamos name para reconocerlos en Servlet y para la validación  -->
-		    <input type="text" class="form-control" id="idObtenemosCuenta" name="nombre" placeholder="Ingresar cuenta" readonly>
+		    <input type="text" class="form-control" id="idObtenemosCuenta" name="nroCuenta" placeholder="Ingresar cuenta" readonly th:field="*{cuentaBancaria}">
 		  </div>
 		  </div>
 		  
@@ -357,6 +362,24 @@ $('#modalCuenta').on('hidden.bs.modal', function () {
   // Limpiar el valor de las cajas "idCuentaLibre" e "idCuentaBloqueada"
   document.getElementById("idCuentaLibre").value = "";
   document.getElementById("idCuentaBloqueada").value = "";
+});
+
+let monto = document.getElementById("monto");
+let interes = document.getElementById("interes");
+let meses = document.getElementById("meses");
+
+meses.addEventListener("focusout", () => {
+	let montoPrestamo = monto.value;
+	let teaAnual = 0.80;
+	let mesesPrestamo = meses.value;
+ 
+	let base = (1 + teaAnual);
+	let exponente = (1 / 12);
+	let tasaMensual = Math.pow(base, exponente) - 1;
+
+	let interesPrestamo = montoPrestamo * tasaMensual * mesesPrestamo;
+	
+	interes.value = interesPrestamo.toFixed(2);
 });
 
 </script>
