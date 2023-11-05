@@ -4,8 +4,32 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <!-- Bootstrap CSS -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<!--FONT AWESOME-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <!-- Fin de Bootstrap -->
 <title>Listado de Solicitudes de Prestamo</title>
+<!-- Creamos style para css -->
+<style type="text/css">
+/*Aqui con este modal-header damos estilo al contenedor del titulo REGISTRAR DOCENTE */
+.modal-header{
+color:#fff;
+background:#428bca;
+display:flex;
+justify-content:center;
+}
+/*Esto de aqui abajo son para el color de errores de validacion*/
+.help-block{
+color:red;
+}
+.form-group.has-error .form-control-label{
+color:red;
+}
+.form-group.has-error .form-control{
+border:1px solid red;
+box-shadow: 0 0 0 0.2rem rgba(250,16,0,0.18);
+}
+</style>
+<!-- FIN DEL CSS -->
 </head>
 <body>
 	<div th:insert="~{plantilla/UITemplate.html::cabecera}"></div>
@@ -16,7 +40,7 @@
 <div class="container">
 <!-- Inicio de FORMULARIO -->
 
-<form class="form-inline">
+<form class="form-inline" th:action="@{/filtrarSolicitudes}" method="get">
 	
 	<!--Contenedor 10 + 1 del boton para que este a costado-->
 		<div class="row align-items-center" style="width: 100%;" >
@@ -26,7 +50,7 @@
 		<div class="row align-items-center">
 			<div class="col-md-3">
 		  <div class="form-group mb-0">
-		    <label for="exampleInputNombre1">Prestamista: </label>
+		    <label for="exampleInputNombre1">Prestatario: </label>
 		  </div>
 		  </div>
 		  
@@ -35,10 +59,10 @@
 		    <!-- Para despegable con bootstrap con SELECT y asignamos id =idSexo -->
 			  <select class="form-control" id="idPrestamista" name="prestamista">
 			  <!-- donde para Seleccione su value es vacio(espacio) es empty y agarra para la validación, y para los otros si tienen value-->
-		      <option value=" ">[Seleccione Prestamista...]</option>
-		      <option value="Femenino">Dixon</option>
-		       <option value="Femenino">Steven</option>
-		      <option value="Masculino">Moneyman</option>
+		      <option value="-1">[Seleccione Prestatario...]</option>
+		      <option th:each="prestatario : ${listaPrestatario}"
+								th:text="${prestatario.prestatario.nombres} + ' ' +  ${prestatario.prestatario.apellidos}"
+								th:value="${prestatario.idPrestatario}"></option>
 		      </select>
 		  </div>
 		  </div>
@@ -54,7 +78,7 @@
 		  
   		<div class="col-md-4">
 		  <div class="form-group">
-		    <input type="text" class="form-control" id="idCuentaBloqueada" name="nombre">
+		    <input type="text" class="form-control" id="idCuentaBloqueada" name="fechaDesde">
 		  </div>
 		  </div>
 		  <!-- FECHA HASTA del combobox -->
@@ -68,24 +92,18 @@
 		  
   		<div class="col-md-4">
 		  <div class="form-group">
-		    <input type="text" class="form-control" id="idCuentaBloqueada" name="nombre">
+		    <input type="text" class="form-control" id="idCuentaBloqueada" name="fechaHasta">
 		  </div>
 		  </div>
 		  
 		</div>
-		  
-		  
-	
-		  
-		  
-		  
 		
 	 	</div>
 	 	<!--BOTON ROJO > -->
 		 <div class="col-md-2">
 		  <div class="form-group">
 			
-		   <button  type="button" class="btn btn-success w-100" style="margin-left: 120px;">Filtrar</button>
+		   <button  type="submit"  class="btn btn-success w-100" id="btnFiltrar" style="margin-left: 120px;">Filtrar</button>
 		  </div>
 		  </div>
 		</div>	<!--FIN Contenedor 10 + 1 del boton para que este a costado-->
@@ -96,43 +114,162 @@
  <!-- ESPACIADO  class mt-4 es margen superior de 4 para toda la tabla -->
  <div class="mt-4">
   <!-- INICIO DE LA TABLA y asignamos id tableDocentes -->
-  <table id="tableDocentes" class="table table-striped table-bordered" style="width:100%">
+  <table id="tableSolicitudes" class="table table-striped table-bordered" style="width:100%">
   		<!-- thead seria para el nombre de las columnas o encabezado -->
         <thead>
             <tr>
             <!-- Aqui se ponen el nombre de los encabezados de la tabla -->
                 <th>Código</th>
                 <th>Nombres</th>
-                <th>Paterno</th>
-                <th>Materno</th>
-                <th>Sexo</th>
-                <th>Hijos</th>
-                <th>Sueldo</th>
+                <th>Apellidos</th>
+                <th>Monto</th>
+                <th>Interés</th>
+                <th>Meses</th>
+                <th>Fecha Solicitada</th>
+                <th>N° Cuenta</th>
                 <!-- Agregamos nuevo th Condicion para la foranea -->
-                <th>Condición</th>
+                <th>Detalle</th>
             </tr>
         </thead>
         <!-- Dentro del cuerpo creamos tr que es una fila y td es celda dentro de la fila -->
         <tbody>
         <!-- SI USAMOS JSTL, LA PÁGINA VA A REFRESCAR O ACTUALIZAR -->
-            <tr>
-            <!-- Aca creamos las celdas que tendran los registros, si hay 8 encabezados arriba de la tabla
-            abra 8 td aca -->
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
+           <!-- <tr>
+             Aca creamos las celdas que tendran los registros, si hay 8 encabezados arriba de la tabla
+            abra 8 td aca 
+                <td>1</td>
+                <td>Pedro</td>
+                <td>Pica Piedra</td>
+                <td>1500</td>
+                <td>18.18</td>
+                <td>9</td>
+                <td>2023-11-10</td>
+                <td>91827192209</td>
+                <td>
+				  <button type="button" class="btn btn-primary btnDetalle" id="idDetalle"  data-toggle="modal" data-target="#modalDetalle">
+				    <i class="fa-solid fa-eye"></i>
+				  </button>
+				</td>
+            </tr>-->
+            	<!--viene de PrestamistaController-->
+            			<tr th:each="solicitud : ${listaSolicitudes}">
+							<!--<td th:text="${prestamista.idPrestamista}"></td>-->
+							<!--Datos de persona-->
+							<td th:text="${solicitud.idSolicitudPrestamo}"></td>
+							<td th:text="${solicitud.prestatario.prestatario.nombres}"></td>
+							<td th:text="${solicitud.prestatario.prestatario.apellidos}"></td>
+							<td th:text="${solicitud.monto}"></td>
+							<!--OJO CAMPO NO REQUERIDO TOCA INTERES-->
+							<td th:text="${solicitud.motivo}"></td>
+							<!--OJO CAMPO NO REQUERIDO TOCA meses-->
+							<td th:text="${solicitud.motivo}"></td>
+								<!--OJO CAMPO NO REQUERIDO TOCA FECHAsolicitada-->
+							<td th:text="${solicitud.fechaRegistro}"></td>
+							<!--OJO CAMPO NO REQUERIDO TOCA NUMERO CUENTA-->
+							<td th:text="${solicitud.cuentaBancaria}"></td>
+							<!--<td th:text="${solicitud.prestatario.cuentaList.numero}"></td>-->
+							<!--<td>
+						    <span th:each="cuenta : ${solicitud.prestatario.listaSolicitudPrestamo}">
+						        <span th:text="${cuenta.cuentaBancaria}"></span>
+						    </span>
+						    </td>-->
+
+							<!-- <td th:text="${prestamista.prestamista.ruc}"></td> -->
+
+							<td><button type="button" class="btn btn-primary btnDetalle" id="idDetalle"  data-toggle="modal" data-target="#modalDetalle">
+				    			<i class="fa-solid fa-eye"></i>
+							  </button></td>
+							
+						</tr>
+            
+            
+            
+            
+            
          </tbody>
          <!--FIN de tbody  --> 
     </table>
   <!-- FIN DE LA TABLA -->
   </div>
-<!-- FIN DE DIV PARA SEPARACIÓN MT-4  -->
+
+
+<!-- INICIO Modal para que al darle nuevo docente aparezca campos a rellenar -->
+  <!-- el id es el identificador del div , le ponemos nombre modalDocente -->
+<div class="modal fade" id="modalDetalle" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <!-- Agregamos para que este centrado el modal el modal-dialog centered -->
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+      <!-- Nombre del docente  -->
+        <h5 class="modal-title" id="exampleModalLabel">Detalle</h5>
+
+      </div>
+      <!-- Dentro del div class modal-body ponemos el formulario -->
+      <div class="modal-body">
+      <!-- Creamos el formulario form y agregamos id o identificador con el nombre de idRegistrar 
+      Para el validator del script del ultimo-->
+      <!-- FORMULARIO -->
+		<form id="idRegistrar" action="" method="post">
+		<!--Para codigo y no visualizar llamamos solo al input y, le pondremos hidden-->
+		<input type="hidden" class="form-control" id="idCodigo" name="codigo">
+		<!-- FIN DE PARA CODIGO -->
+		  <div class="form-group">
+		    <label for="exampleInputNombre1">Nombre</label>
+		    <!-- input type text por que sera una caja y asignamos name para reconocerlos en Servlet y para la validación  -->
+		    <input type="text" class="form-control" id="idNombres" name="nombre" placeholder="Ingresar nombre" readonly>
+		  </div>
+		  <div class="form-group">
+		    <label for="exampleInputPaterno1">Paterno</label>
+		    <input type="text" class="form-control" id="idApellidos" name="paterno" placeholder="Ingresar apellidos" readonly>
+		  </div>
+		   <div class="form-group">
+		    <label for="exampleInputMaterno1">Materno</label>
+		    <input type="text" class="form-control" id="monto"  name="materno" placeholder="Ingresar monto" readonly>
+		  </div>
+		   <div class="form-group">
+		    <label for="exampleInputHijos1">Hijos</label>
+		    <input type="text" class="form-control" id="interes"  name="hijos" placeholder="Ingresar interés" readonly>
+		  </div>
+		   <div class="form-group">
+		    <label for="exampleInputSueldo1">Sueldo</label>
+		    <input type="text" class="form-control" id="meses" name="sueldo" placeholder="Ingresar Sueldo" readonly>
+		  </div>
+		   <div class="form-group">
+		    <label for="exampleInputSueldo1">Fecha Solicitada</label>
+		    <input type="text" class="form-control" id="fechaSolicitada" name="sueldo" placeholder="Ingresar fecha Solicitada" readonly>
+		  </div>
+		   <div class="form-group">
+		    <label for="exampleInputSueldo1">N° Cuenta</label>
+		    <input type="text" class="form-control" id="numCuenta" name="sueldo" placeholder="Ingresar Sueldo" readonly>
+		  </div>
+		  <!-- Creamos botones dentro de formulario -->
+		   <div class="modal-footer" style="display: flex; justify-content: center;">
+		   <!-- para grabar le ponemos type submit para que active al formulario y active la validación de abajo -->
+		   <!-- Cuando son varios como el boton editar y eliminar usar class , cuando es 1 o pocos usar id -->
+		    <button type="submit" class="btn btn-primary">APROBAR</button>
+		    <!-- Asignamos idcerrar al boton cerrar para resetear las validaciones de bootstrap -->
+	        <button type="button" class="btn btn-secondary" id="idCerrar"  data-dismiss="modal">RECHAZAR</button>
+     	  </div>
+		</form>
+		<!-- FIN DEL FORMULARIO FORM -->
+      </div>
+      <!-- FIN del div class modal-body -->
+     
+    </div>
+  </div>
+</div>
+  <!-- FIN DEL MODAL -->
+
+
+
+
+
+
+
+
+
+
+
 </div>
 <!-- FIN EL CONTAINER -->
 
@@ -144,63 +281,41 @@
 <script src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.2/js/dataTables.bootstrap4.min.js"></script>
 <!-- FIN DE IMPORTAMOS MÁS COSAS -->
-<!-- Abrimos bloque Script para usar el GSON -->
+<!-- INICIO PRUEBA DE COGE DE LA FILA A MOSTRAR EN MODAL -->
 <script>
-//PARA el boton Consultar agregamos evento click por medio del id btn-consultar
-$(document).on("click","#btn-consultar",function(){
-	//Leer el valor seleccionado del select "idSexo"
-	//donde la variable vSexo de tipo var obtiene lo que se ha marcado en el combo a partir de
-	//los options y por medio del value que es lo vale más para las selecciones
-	//SE LEE EL VALUE de los options
-	var vSexo;
-	//vSexo tiene si es vacio o Masculino o Femenino
-	vSexo=$("#idSexo").val();
-	//Limpiar filas de la tabla "tableDocentes" por cada consulta q se hace
-	//limpiamos el tbody que es el cuerpo del html creado arriba
-	$("#tableDocentes tbody").empty();
-	//
-	//Invocar al ServletDocenteSexoJSON
-	//funcion $.getJSON en JQUERY que permite invocar a un Servlet y retornar el JSON
-	//donde el primer parametro es el nombre del Servlet que se quiere llamar y ejecutara el service
-	//el segundo parametro iria los parametros del metodo listarDocentesPorSexo(vSexo) del
-	//ServletDocenteSexoJSON si es que tuviera
-	//el tercer parametro hace referencia en el ServletDocenteSexoJSON
-	//response.setContentType("application/json;charset=UTF-8"); donde response tiene el GSON
-	
-	//Donde en el segundo parametro ponemos sexo haciendo referencia al nombre en el ServletDocenteSexoJSON
-	//en la parte de request.getParameter("sexo"), donde lo que esta dentro de (" ") es lo que se pone
-	//primero y luego del : ponemos la variable creada arriba de tipo var llamada vSexo el cual
-	//almacena lo seleccionado por el combo
-	//Leyendose parametro sexo con el valor de vSexo que almacena lo seleccionado por el combo
-	//asi mandamos el parametro sexo al ServletDocenteSexoJSON
-	//y dentro de este servlet lo recupera asi -> vSexo=request.getParameter("sexo");
-	$.getJSON("ServletDocenteSexoJSON",{sexo:vSexo},function(response){
-		//Para comprobar q todo este OK
-		//ponemos console.log(response)  y ejecutamos y en la consola de navegdor vemos si sale error
-		
-		//bucle para imprimir lo que esta almacenado en JSON
-		//bucle da vueltas sobre response para traer la info 
-		//donde index es posición valor 0 de la primera fila
-		// y asi sucesivamente imprime los demás eso significa index
-		//donde item almacena el valor de cada fila del index 
-		$.each(response,function(index,item){
-			//Generar filas en la tabla , donde la tabla se llama por su identificador id
-			//id="tableDocentes", donde tr es fila y td celda
-			// y con item que almacena los valores, para imprimir llamamos asi
-			//item.codigo, item.codigoCondicion y asi sucesivamente, donde lo que esta despues
-			//del . del item van los campos de la entidad Docente creada en net.colegio.entidad
-			$("#tableDocentes").append("<tr><td>"+item.codigo+"</td><td>"+item.nombres+"</td><td>"+
-					item.paterno+"</td><td>"+item.materno+"</td><td>"+item.sexo+"</td><td>"+
-					item.hijos+"</td><td>"+item.sueldo+"</td><td>"+item.nombreCondicion+"</td></tr>");
-		})
-		
-		
-		
-	})
-	
-})
+// Obtener la tabla y los botones de detalle
+const tabla = document.getElementById("tableSolicitudes");
+const botonesDetalle = tabla.getElementsByClassName("btnDetalle");
+
+// Asignar un controlador de eventos a cada botón de detalle
+for (let i = 0; i < botonesDetalle.length; i++) {
+  botonesDetalle[i].addEventListener("click", function() {
+    // Obtener la fila correspondiente a este botón de detalle
+    const fila = this.closest("tr");
+    
+    // Obtener los valores de las celdas de la fila
+    const codigo = fila.cells[0].textContent;
+    const nombres = fila.cells[1].textContent;
+    const apellidos = fila.cells[2].textContent;
+    const monto = fila.cells[3].textContent;
+    const interes = fila.cells[4].textContent;
+    const meses = fila.cells[5].textContent;
+    const fechaSolicitada = fila.cells[6].textContent;
+    const numCuenta = fila.cells[7].textContent;
+    
+    // Asignar los valores a los inputs del modal
+    document.getElementById("idCodigo").value = codigo;
+    document.getElementById("idNombres").value = nombres;
+    document.getElementById("idApellidos").value = apellidos;
+    document.getElementById("monto").value = monto;
+    document.getElementById("interes").value = interes;
+    document.getElementById("meses").value = meses;
+    document.getElementById("fechaSolicitada").value = fechaSolicitada;
+    document.getElementById("numCuenta").value = numCuenta;
+  });
+}
 
 </script>
-<!-- FIN DE Abrimos bloque Script para usar el GSON -->
+<!-- FIN PRUEBA DE COGE DE LA FILA A MOSTRAR EN MODAL -->
 </body>
 </html>

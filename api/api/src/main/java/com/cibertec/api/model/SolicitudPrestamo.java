@@ -42,7 +42,7 @@ public class SolicitudPrestamo {
 	private double monto;
 	private double interes;
 	private int cuotas;
-	private String motivo;
+	private String motivo
 	private String cuentaBancaria;
 
 	@Column(name="fecharegistro")
