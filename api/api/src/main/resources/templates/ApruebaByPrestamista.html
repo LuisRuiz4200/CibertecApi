@@ -126,6 +126,7 @@ box-shadow: 0 0 0 0.2rem rgba(250,16,0,0.18);
                 <th>Interés</th>
                 <th>Meses</th>
                 <th>Fecha Solicitada</th>
+				<th>Banco</th>
                 <th>N° Cuenta</th>
                 <!-- Agregamos nuevo th Condicion para la foranea -->
                 <th>Detalle</th>
@@ -158,15 +159,17 @@ box-shadow: 0 0 0 0.2rem rgba(250,16,0,0.18);
 							<td th:text="${solicitud.idSolicitudPrestamo}"></td>
 							<td th:text="${solicitud.prestatario.prestatario.nombres}"></td>
 							<td th:text="${solicitud.prestatario.prestatario.apellidos}"></td>
-							<td th:text="${solicitud.monto}"></td>
+							<td th:text="'S/ ' + ${solicitud.monto}"></td>
 							<!--OJO CAMPO NO REQUERIDO TOCA INTERES-->
-							<td th:text="${solicitud.motivo}"></td>
+							<td th:text="'S/ ' + ${solicitud.interes}"></td>
 							<!--OJO CAMPO NO REQUERIDO TOCA meses-->
-							<td th:text="${solicitud.motivo}"></td>
+							<td th:text="${solicitud.cuotas}"></td>
 								<!--OJO CAMPO NO REQUERIDO TOCA FECHAsolicitada-->
 							<td th:text="${solicitud.fechaRegistro}"></td>
+							<!-- Campo banco -->
+							<td th:text="${solicitud.cuentaSolicitud.idBancoCuenta.descripcion}"></td>
 							<!--OJO CAMPO NO REQUERIDO TOCA NUMERO CUENTA-->
-							<td th:text="${solicitud.cuentaBancaria}"></td>
+							<td th:text="${solicitud.cuentaSolicitud.numero}"></td>
 							<!--<td th:text="${solicitud.prestatario.cuentaList.numero}"></td>-->
 							<!--<td>
 						    <span th:each="cuenta : ${solicitud.prestatario.listaSolicitudPrestamo}">
@@ -214,29 +217,29 @@ box-shadow: 0 0 0 0.2rem rgba(250,16,0,0.18);
 		<input type="hidden" class="form-control" id="idCodigo" name="codigo">
 		<!-- FIN DE PARA CODIGO -->
 		  <div class="form-group">
-		    <label for="exampleInputNombre1">Nombre</label>
+		    <label for="exampleInputNombre1">Nombre del Prestatario</label>
 		    <!-- input type text por que sera una caja y asignamos name para reconocerlos en Servlet y para la validación  -->
 		    <input type="text" class="form-control" id="idNombres" name="nombre" placeholder="Ingresar nombre" readonly>
 		  </div>
 		  <div class="form-group">
-		    <label for="exampleInputPaterno1">Paterno</label>
-		    <input type="text" class="form-control" id="idApellidos" name="paterno" placeholder="Ingresar apellidos" readonly>
+		    <label for="exampleInputPaterno1">Monto del prestamo</label>
+		    <input type="text" class="form-control" id="monto" name="paterno" placeholder="Ingresar apellidos" readonly>
 		  </div>
 		   <div class="form-group">
-		    <label for="exampleInputMaterno1">Materno</label>
-		    <input type="text" class="form-control" id="monto"  name="materno" placeholder="Ingresar monto" readonly>
+		    <label for="exampleInputMaterno1">Interes total</label>
+		    <input type="text" class="form-control" id="interes"  name="materno" placeholder="Ingresar monto" readonly>
 		  </div>
 		   <div class="form-group">
-		    <label for="exampleInputHijos1">Hijos</label>
-		    <input type="text" class="form-control" id="interes"  name="hijos" placeholder="Ingresar interés" readonly>
-		  </div>
-		   <div class="form-group">
-		    <label for="exampleInputSueldo1">Sueldo</label>
-		    <input type="text" class="form-control" id="meses" name="sueldo" placeholder="Ingresar Sueldo" readonly>
+		    <label for="exampleInputHijos1">Meses</label>
+		    <input type="text" class="form-control" id="meses"  name="hijos" placeholder="Ingresar interés" readonly>
 		  </div>
 		   <div class="form-group">
 		    <label for="exampleInputSueldo1">Fecha Solicitada</label>
-		    <input type="text" class="form-control" id="fechaSolicitada" name="sueldo" placeholder="Ingresar fecha Solicitada" readonly>
+		    <input type="text" class="form-control" id="fechaSolicitada" name="sueldo" placeholder="Ingresar Sueldo" readonly>
+		  </div>
+		   <div class="form-group">
+		    <label for="exampleInputSueldo1">Banco</label>
+		    <input type="text" class="form-control" id="banco" name="sueldo" placeholder="Ingresar fecha Solicitada" readonly>
 		  </div>
 		   <div class="form-group">
 		    <label for="exampleInputSueldo1">N° Cuenta</label>
@@ -301,16 +304,17 @@ for (let i = 0; i < botonesDetalle.length; i++) {
     const interes = fila.cells[4].textContent;
     const meses = fila.cells[5].textContent;
     const fechaSolicitada = fila.cells[6].textContent;
-    const numCuenta = fila.cells[7].textContent;
+	const banco = fila.cells[7].textContent;
+    const numCuenta = fila.cells[8].textContent;
     
     // Asignar los valores a los inputs del modal
     document.getElementById("idCodigo").value = codigo;
-    document.getElementById("idNombres").value = nombres;
-    document.getElementById("idApellidos").value = apellidos;
+    document.getElementById("idNombres").value = nombres + " " + apellidos;
     document.getElementById("monto").value = monto;
     document.getElementById("interes").value = interes;
     document.getElementById("meses").value = meses;
     document.getElementById("fechaSolicitada").value = fechaSolicitada;
+	document.getElementById("banco").value = banco;
     document.getElementById("numCuenta").value = numCuenta;
   });
 }
