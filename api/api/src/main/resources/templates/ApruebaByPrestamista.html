@@ -12,21 +12,21 @@
 <style type="text/css">
 /*Aqui con este modal-header damos estilo al contenedor del titulo REGISTRAR DOCENTE */
 .modal-header{
-color:#fff;
-background:#428bca;
-display:flex;
-justify-content:center;
+	color:#fff;
+	background:#428bca;
+	display:flex;
+	justify-content:center;
 }
 /*Esto de aqui abajo son para el color de errores de validacion*/
 .help-block{
-color:red;
+	color:red;
 }
 .form-group.has-error .form-control-label{
-color:red;
+	color:red;
 }
 .form-group.has-error .form-control{
-border:1px solid red;
-box-shadow: 0 0 0 0.2rem rgba(250,16,0,0.18);
+	border:1px solid red;
+	box-shadow: 0 0 0 0.2rem rgba(250,16,0,0.18);
 }
 </style>
 <!-- FIN DEL CSS -->
@@ -78,7 +78,7 @@ box-shadow: 0 0 0 0.2rem rgba(250,16,0,0.18);
 		  
   		<div class="col-md-4">
 		  <div class="form-group">
-		    <input type="text" class="form-control" id="idCuentaBloqueada" name="fechaDesde">
+		    <input type="date" class="form-control" id="idCuentaBloqueada" name="fechaDesde">
 		  </div>
 		  </div>
 		  <!-- FECHA HASTA del combobox -->
@@ -92,7 +92,7 @@ box-shadow: 0 0 0 0.2rem rgba(250,16,0,0.18);
 		  
   		<div class="col-md-4">
 		  <div class="form-group">
-		    <input type="text" class="form-control" id="idCuentaBloqueada" name="fechaHasta">
+		    <input type="date" class="form-control" id="idCuentaBloqueada" name="fechaHasta">
 		  </div>
 		  </div>
 		  
@@ -108,6 +108,24 @@ box-shadow: 0 0 0 0.2rem rgba(250,16,0,0.18);
 		  </div>
 		</div>	<!--FIN Contenedor 10 + 1 del boton para que este a costado-->
 </form>
+
+<!-- GEORGE -->
+<script>
+        function validarFechas() {
+            var fechaDesde = document.getElementById("fechaDesde").value;
+            var fechaHasta = document.getElementById("fechaHasta").value;
+            var botonFiltrar = document.getElementById("btnFiltrar");
+
+            if (fechaDesde && fechaHasta) {
+                botonFiltrar.removeAttribute("disabled");
+            } else {
+                botonFiltrar.setAttribute("disabled", "disabled");
+            }
+        }
+    </script>
+
+<!-- GEORGE -->
+
 <!-- FIN DEL FORMULARIO -->
 
 <!-- INICIO DE DIV PARA SEPARACIÓN MT-4 -->
@@ -129,7 +147,7 @@ box-shadow: 0 0 0 0.2rem rgba(250,16,0,0.18);
 				<th>Banco</th>
                 <th>N° Cuenta</th>
                 <!-- Agregamos nuevo th Condicion para la foranea -->
-                <th>Detalle</th>
+                <th colspan="2">Detalle</th>
             </tr>
         </thead>
         <!-- Dentro del cuerpo creamos tr que es una fila y td es celda dentro de la fila -->
@@ -179,9 +197,15 @@ box-shadow: 0 0 0 0.2rem rgba(250,16,0,0.18);
 
 							<!-- <td th:text="${prestamista.prestamista.ruc}"></td> -->
 
-							<td><button type="button" class="btn btn-primary btnDetalle" id="idDetalle"  data-toggle="modal" data-target="#modalDetalle">
-				    			<i class="fa-solid fa-eye"></i>
-							  </button></td>
+							<td>
+								<button type="button" class="btn" data-btn="buttonState" th:text="${solicitud.estado}">
+							  	</button>
+							</td>
+							<td>
+								<button type="button" class="btn btn-primary btnDetalle" id="idDetalle"  data-toggle="modal" data-target="#modalDetalle">
+				    				<i class="fa-solid fa-eye"></i>
+							  	</button>
+							</td>
 							
 						</tr>
             
@@ -212,9 +236,10 @@ box-shadow: 0 0 0 0.2rem rgba(250,16,0,0.18);
       <!-- Creamos el formulario form y agregamos id o identificador con el nombre de idRegistrar 
       Para el validator del script del ultimo-->
       <!-- FORMULARIO -->
-		<form id="idRegistrar" action="" method="post">
+		<form id="idRegistrar" th:action="@{/aprobarPrestamo}" th:object="${solicitudDto}" method="post">
 		<!--Para codigo y no visualizar llamamos solo al input y, le pondremos hidden-->
-		<input type="hidden" class="form-control" id="idCodigo" name="codigo">
+		<input type="hidden" class="form-control" id="idCodigo" name="codigo" th:field="*{id}">
+		<input type="hidden" id="state" th:field="*{state}">
 		<!-- FIN DE PARA CODIGO -->
 		  <div class="form-group">
 		    <label for="exampleInputNombre1">Nombre del Prestatario</label>
@@ -249,9 +274,9 @@ box-shadow: 0 0 0 0.2rem rgba(250,16,0,0.18);
 		   <div class="modal-footer" style="display: flex; justify-content: center;">
 		   <!-- para grabar le ponemos type submit para que active al formulario y active la validación de abajo -->
 		   <!-- Cuando son varios como el boton editar y eliminar usar class , cuando es 1 o pocos usar id -->
-		    <button type="submit" class="btn btn-primary">APROBAR</button>
-		    <!-- Asignamos idcerrar al boton cerrar para resetear las validaciones de bootstrap -->
-	        <button type="button" class="btn btn-secondary" id="idCerrar"  data-dismiss="modal">RECHAZAR</button>
+		    <button type="submit" class="btn btn-primary" onclick="setModelState(1)">APROBAR</button>
+		    <!-- Asignamos idcerrar al boton cerrar para resetear las validaciones de bootstrap   /* data-dismiss="modal" */ -->
+	        <button type="submit" class="btn btn-secondary" id="idCerrar"  onclick="setModelState(2)">RECHAZAR</button>
      	  </div>
 		</form>
 		<!-- FIN DEL FORMULARIO FORM -->
@@ -289,6 +314,7 @@ box-shadow: 0 0 0 0.2rem rgba(250,16,0,0.18);
 // Obtener la tabla y los botones de detalle
 const tabla = document.getElementById("tableSolicitudes");
 const botonesDetalle = tabla.getElementsByClassName("btnDetalle");
+var status = "";
 
 // Asignar un controlador de eventos a cada botón de detalle
 for (let i = 0; i < botonesDetalle.length; i++) {
@@ -319,6 +345,27 @@ for (let i = 0; i < botonesDetalle.length; i++) {
   });
 }
 
+function setModelState(setState){
+	const state = document.getElementById("state");
+	state.value = setState;
+}
+
+function setButtonColor(button){
+	const state = button.textContent.trim();
+	if(state == "Aprobado")
+		button.classList.add("btn-success");
+	else if(state == "Rechazado")
+		button.classList.add("btn-danger");
+	else
+		button.classList.add("btn-warning");
+}
+
+window.onload = () => {
+	const buttons = document.querySelectorAll("[data-btn='buttonState']");
+	buttons.forEach((button) => {
+        setButtonColor(button);
+    });
+}
 </script>
 <!-- FIN PRUEBA DE COGE DE LA FILA A MOSTRAR EN MODAL -->
 </body>

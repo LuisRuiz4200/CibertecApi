@@ -150,7 +150,27 @@ public class UsuarioController {
 	                return "redirect:/listar";
 		} //fin de guardarUsuario
 		
-		
+		@GetMapping("/user/prestatario/{idPersona}")
+		public String addUserPrestatario(@PathVariable int idPersona, Model model){
+			Usuario usuario = new Usuario();
+			Persona persona = new Persona();
+			Rol rolPrestatario = new Rol();
+			rolPrestatario.setIdRol(4);
+			persona.setIdPersona(idPersona);
+			usuario.setPersona(persona);
+			usuario.setRol(rolPrestatario);
+			
+			model.addAttribute("usuario", usuario);
+			model.addAttribute("titulo", "Registrar Usuario del Prestatario");
+			return "userPrestatario";
+		}
+
+		@PostMapping("/user/prestatario")
+		public String addUserPrestatario(Usuario usuario){
+			serviceUsuario.guardarUsuario(usuario);
+			return "redirect:/prestatario/listarPresta";
+		}
+
 		//Metodo para actualizar
 			@GetMapping("/actualizarUsuario/{id}")
 			public String editarPrestamista(@PathVariable(name="id") int id,Model model,

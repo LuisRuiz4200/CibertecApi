@@ -1,16 +1,13 @@
 package com.cibertec.api.controller;
 
-import java.lang.ProcessBuilder.Redirect;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -21,11 +18,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.cibertec.api.model.Cuenta;
 import com.cibertec.api.model.Persona;
 import com.cibertec.api.model.Prestamista;
 import com.cibertec.api.model.Prestatario;
 import com.cibertec.api.model.Rol;
+import com.cibertec.api.model.SolicitudDto;
 import com.cibertec.api.model.SolicitudPrestamo;
 import com.cibertec.api.model.Usuario;
 import com.cibertec.api.service.PrestamistaService;
@@ -284,13 +281,23 @@ public class PrestamistaController {
 		List<SolicitudPrestamo> listaSolicitudes = solicitudService.listar();
 		model.addAttribute("listaSolicitudes",listaSolicitudes);
 		
+		SolicitudDto solicitudDto = new SolicitudDto();
+		model.addAttribute("solicitudDto", solicitudDto);
 		return "ApruebaByPrestamista";
 	}
+
 	@PostMapping("/aprobarPrestamo")
-	private String aprobarSolicitudes(Model model) {
+	private String aprobarSolicitudes(SolicitudDto solicitudDto, Model model) {
+		SolicitudPrestamo solicitud = solicitudService.buscarPorId(solicitudDto.getId());
+		int state = solicitudDto.getState();
+		if(state == 1)
+			solicitud.setEstado("Aprobado");
+		if(state == 2)
+			solicitud.setEstado("Rechazado");
+
+		solicitudService.guardar(solicitud);
 		
-		
-		return "ApruebaByPrestamista";
+		return "redirect:/aprobarPrestamo";
 	}//fin de aprobarSolicitudes
 	
 	//-------------------------
@@ -300,30 +307,34 @@ public class PrestamistaController {
 	                                  @RequestParam("fechaDesde")  String fechaDesde,
 	                                  @RequestParam("fechaHasta")  String fechaHasta,
 	                                  Model model) throws ParseException {
-		
-		if(idPrestamista == -1 || fechaDesde == null || fechaHasta== null  ) {
+		List<SolicitudPrestamo> listaSolicitudes = new ArrayList<SolicitudPrestamo>();
+		if(idPrestamista == -1 ) {
 			
 			return "redirect:/aprobarPrestamo";
 		}
 		
+		if(!fechaDesde.equals("") || !fechaHasta.equals("")){
+			
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		    Date fechaDesdeDate = formatter.parse(fechaDesde);
+		    Date fechaHastaDate = formatter.parse(fechaHasta);
+		    listaSolicitudes = solicitudService.filtrarSolicitudes(idPrestamista, fechaDesdeDate, fechaHastaDate);
+			
+		}else {
+			listaSolicitudes = solicitudService.listarPorPrestamista(idPrestamista);
+		}
+		
+		
 		
 		//filtra llena combobox
 		listarSolicitudes(model);
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-	    Date fechaDesdeDate = formatter.parse(fechaDesde);
-	    Date fechaHastaDate = formatter.parse(fechaHasta);
-	    List<SolicitudPrestamo> listaSolicitudes = solicitudService.filtrarSolicitudes(idPrestamista, fechaDesdeDate, fechaHastaDate);
+		
 	    model.addAttribute("listaSolicitudes", listaSolicitudes);
 	    
 	    
 	    return "ApruebaByPrestamista";
 	}
 
-
-
-	
-	
-	
 	
 
 } // Fin de PrestamistaController

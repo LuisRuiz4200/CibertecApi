@@ -1,7 +1,5 @@
 package com.cibertec.api.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.sql.Date;
 import java.util.List;
 
@@ -18,6 +16,7 @@ import com.cibertec.api.model.Banco;
 import com.cibertec.api.model.Cuenta;
 import com.cibertec.api.model.Persona;
 import com.cibertec.api.model.Prestatario;
+import com.cibertec.api.model.SolicitudDto;
 import com.cibertec.api.model.SolicitudPrestamo;
 import com.cibertec.api.model.Usuario;
 import com.cibertec.api.service.BancoService;
@@ -59,11 +58,14 @@ public class PrestatarioController {
 		
 		return "guardarPrestatatario";
 	}
+
 	@PostMapping("/registrarPrestatario") //localhost:9090/registrar
 	public String guardarPrestamista(Prestatario prestatario,BindingResult result,
 			Model model,RedirectAttributes flash,SessionStatus status) {
 		prestatario.setActivo(true);
 		prestatario.getPrestatario().setActivo(true);
+		prestatario.setFechaRegistro(new java.util.Date());
+		prestatario.setFechaEdicion(new java.util.Date());
 		if(result.hasErrors()) {
 			model.addAttribute("titulo","Registrar Prestatario");
 			return "guardarPrestatatario";
@@ -74,50 +76,81 @@ public class PrestatarioController {
 		  "El Prestamista se actualizó correctamente"; else mensaje =
 		  "El Prestamista se registró correctamente";
 		  
-		  prestatarioService.guardarPrestatario(prestatario); //Marca el status como completo.
+		  Prestatario newPrestatario = prestatarioService.guardarPrestatario(prestatario); //Marca el status como completo.
 		  status.setComplete();
 		  
 		  flash.addFlashAttribute("success", mensaje);
 		  
-		  return "redirect:/listar";
+		  return "redirect:/user/prestatario/" + newPrestatario.getIdPrestatario();
 		 
 	} //fin de guardarPrestamista
 	
 	@GetMapping("/solicitoPrestamo")
-	private String listar22(Model model) {
+	private String listar22(Model model, HttpSession session) {
+		Usuario user = (Usuario)session.getAttribute("UserLogged");
+		Persona persona = user.getPersona();
+
+		Prestatario prestatario = prestatarioService.listarPrestatarioPorId(user.getPersona().getIdPersona());
 		List<Banco> bancosList = bancoService.getAll();
-		SolicitudPrestamo solicitudPrestamo = new SolicitudPrestamo();
+		SolicitudDto solicitudPrestamo = new SolicitudDto();
 		solicitudPrestamo.setFechaRegistro(new Date(new java.util.Date().getTime()));
-		Prestatario prestatario = prestatarioService.listarPrestatarioPorId(32);
 		List<Cuenta> cuentas =  cuentaService.getAllByPrestatario(prestatario);
-		print(cuentas);
+		solicitudPrestamo.setNewBank(false);
 
 		model.addAttribute("bancos", bancosList);
 		model.addAttribute("solicitudPrestamo", solicitudPrestamo);
 		model.addAttribute("cuentas", cuentas);
+		model.addAttribute("persona", persona);
 		return "solicitudPrestamoByPrestatario";
 	}
 
 	@PostMapping("/solicitoPrestamo")
-	private String guardarSolicitud(SolicitudPrestamo solicitudPrestamo, HttpSession session){
+	private String guardarSolicitud(SolicitudDto solicitudPrestamo, HttpSession session, RedirectAttributes flash){
 		Usuario user = (Usuario)session.getAttribute("UserLogged");
-		// TODO: Usuario de prestatario
-		Prestatario prestatario = prestatarioService.listarPrestatarioPorId(32);
-		solicitudPrestamo.setPrestatario(prestatario);
-		solicitudPrestamo.setActivo(true);
-		solicitudPrestamo.setEstado("Pendiente");
+		Prestatario prestatario = prestatarioService.listarPrestatarioPorId(user.getPersona().getIdPersona());
 
-		print(solicitudPrestamo);
-		solicitudPrestamoService.guardar(solicitudPrestamo);
+		/* Se valida que no exista más de dos solicitudes al día */
+		List<SolicitudPrestamo> todayList = solicitudPrestamoService.filtrarSolicitudes(prestatario.getIdPrestatario(), solicitudPrestamo.getFechaRegistro(), solicitudPrestamo.getFechaRegistro());
+		if(todayList.size() >= 2){
+			flash.addFlashAttribute("errorMessage", true);
+			return "redirect:/prestatario/solicitoPrestamo";
+		}
 
-		// return "redirect:/intranet";
-		return "solicitudPrestamoByPrestatario";
+		/* Se ingresa el número de cuenta si no existe */
+		boolean newBank = solicitudPrestamo.isNewBank();
+		if(newBank){
+			Cuenta newCuenta = solicitudPrestamo.getCuentaSolicitud();
+			newCuenta.setNumero(solicitudPrestamo.getCuentaBancaria());
+			newCuenta.setIdPrestatarioCuenta(prestatario);
+			newCuenta.setActivo(true);
+			newCuenta.setFechaRegistro(new java.util.Date());
+			newCuenta.setFechaEdicion(new java.util.Date());
+			newCuenta.setUsuarioRegistro(prestatario.getIdPrestatario());
+			newCuenta.setUsuarioEdicion(prestatario.getIdPrestatario());
+			Cuenta cuenta = cuentaService.addOrUpdate(newCuenta);
+			solicitudPrestamo.setCuentaSolicitud(cuenta);
+		}
+
+		/* El prestatario Ingresa la solicitud */
+		SolicitudPrestamo newSolicitud = setDataFormDto(solicitudPrestamo);
+		newSolicitud.setPrestatario(prestatario);
+		solicitudPrestamoService.guardar(newSolicitud);
+
+		flash.addFlashAttribute("successMessage", true);
+		return "redirect:/prestatario/solicitoPrestamo";
 	}
 
-	private void print(Object object){
-		System.out.println("\n\n======================");
-		System.out.println(object);
-		System.out.println("======================\n\n");
+	private SolicitudPrestamo setDataFormDto(SolicitudDto solicitudDto) {
+		SolicitudPrestamo newSolicitud = new SolicitudPrestamo();
+		newSolicitud.setMonto(solicitudDto.getMonto());
+		newSolicitud.setCuotas(solicitudDto.getCuotas());
+		newSolicitud.setInteres(solicitudDto.getInteres());
+		newSolicitud.setFechaRegistro(solicitudDto.getFechaRegistro());
+		newSolicitud.setCuentaBancaria(solicitudDto.getCuentaBancaria());
+		newSolicitud.setCuentaSolicitud(solicitudDto.getCuentaSolicitud());
+		newSolicitud.setActivo(true);
+		newSolicitud.setEstado("Pendiente");
+		return  newSolicitud;
 	}
 
 }

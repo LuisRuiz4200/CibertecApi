@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+	<!--Para validacion 09-10-23 -->
+	<link rel="stylesheet" href="/css/toastr.min.css">
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+
+	<!--FIN para validacion -->
+	<div th:replace="~{static/head.html}"></div>
+</head>
+
+<body>
+	<div th:insert="~{plantilla/UITemplate.html::cabecera}"></div>
+	<!-- <header th:replace="layout/layout :: header"></header> -->
+
+	<br>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-6 col-md-6 col-sm-6 container justify-content-center card">
+				<h1 class="text-center" th:text="${titulo}"></h1>
+				<div class="card-body">
+					<form id="formularioUsuario" th:action="@{/user/prestatario}" th:object="${usuario}" method="post">
+						<!--OJO Agregamos id a todos los campos para validar con toastr  -->
+						<input type="hidden" th:field="*{idUsuario}" th:value="${usuario.idUsuario}" id="code" />
+
+						<!--OJO-->
+						<div class="form-group">
+							<label>Nombre de Usuario : </label>
+							<input type="text" th:field="*{nombreUsuario}" class="form-control"
+								th:errorclass="'form-control alert-danger'" id="nombre" />
+							<!--<small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.nombres')}" th:errors="*{prestamista.nombres}"></small>-->
+
+
+						</div>
+						<div class="form-group">
+							<label>Clave de Usuario : </label>
+							<input type="password" th:field="*{claveUsuario}" class="form-control"
+								th:errorclass="'form-control alert-danger'" id="clave" />
+							<!--<small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.apellidos')}" th:errors="*{prestamista.apellidos}"></small>-->
+						</div>
+
+						<!--Persona-->
+						<div class="form-group">
+							<input type="hidden" th:field="*{persona.idPersona}" class="form-control"
+								th:value="${usuario.persona.idPersona}" th:errorclass="'form-control alert-danger'" />
+							<!--<small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.nombres')}" th:errors="*{prestamista.nombres}"></small>-->
+						</div>
+
+						<!--Text for Rol-->
+						<div class="form-group">
+							<input type="hidden" th:field="*{rol.idRol}" class="form-control"
+								th:value="${usuario.rol.idRol}" th:errorclass="'form-control alert-danger'" />
+							<!--<small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.nombres')}" th:errors="*{prestamista.nombres}"></small>-->
+						</div>
+						<div class="box-footer">
+							<input type="submit" value="Guardar" class="btn btn-primary">
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--<footer th:replace="static/footer.html"></footer>-->
+
+
+
+</body>
+<!--Para validacion 09-10-23   -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="/js/toastr.min.js"></script>
+<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+<!-- Fin para validacion -->
+
+<!--   VALIDANDO 09-10-23-->
+<script src="/js/usuario/usuario.js"></script>
+<!--   VALIDANDO 09-10-23-->
+
+</html>
