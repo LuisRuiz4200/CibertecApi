@@ -275,10 +275,12 @@ public class PrestamistaController {
 	@GetMapping("/aprobarPrestamo")
 	private String listarSolicitudes(Model model) {
 		
-		List<Prestatario> listaPrestatario = prestatarioService.listarPrestatario();
+		List<Prestatario> listaPrestatario = new ArrayList<Prestatario>();
+		listaPrestatario = prestatarioService.listarPrestatario();
 		model.addAttribute("listaPrestatario",listaPrestatario);
 		
-		List<SolicitudPrestamo> listaSolicitudes = solicitudService.listar();
+		List<SolicitudPrestamo> listaSolicitudes = new ArrayList<SolicitudPrestamo>();
+		listaSolicitudes = solicitudService.listar();
 		model.addAttribute("listaSolicitudes",listaSolicitudes);
 		
 		SolicitudDto solicitudDto = new SolicitudDto();
