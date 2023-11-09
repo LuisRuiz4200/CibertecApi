@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.validation.BindingResult;
@@ -67,12 +68,14 @@ public class PrestatarioController {
 
 
 			/* Listado por Prestamista */
-			Rol rolPrestamista = new Rol();
-			rolPrestamista.setIdRol(3);
+//			Rol rolPrestamista = new Rol();
+//			rolPrestamista.setIdRol(3);
 				
 			List<Prestatario> PrestatariosList = new ArrayList<>();
 			
-			PrestatariosList = prestamista.getPrestatariosList();
+			//PrestatariosList = prestamista.getPrestatariosList();
+			
+			PrestatariosList = prestatarioService.listByPrestamistaAndActivo(prestamista, true);
 
 			//model.addAttribute("navbar", true);
 			titulo = "Lista de Prestatario";
@@ -195,5 +198,24 @@ public class PrestatarioController {
 		newSolicitud.setEstado("Pendiente");
 		return  newSolicitud;
 	}
-
+		//EDITAR
+	
+	
+	
+	
+	
+	//ELIMINAR
+	@GetMapping("/eliminarPrestata/{id}")
+	public String eliminarPrestatario(@PathVariable(name = "id") int id) {
+		// Valida que el id sea mayor a 0
+		if (id > 0) {
+			prestatarioService.eliminarPrestatario(id);	
+		} // fin de if
+		return "redirect:/prestatario/listarPresta";
+	} // fin de eliminarEmpleado
+	
+	
+	
+	
+	
 }

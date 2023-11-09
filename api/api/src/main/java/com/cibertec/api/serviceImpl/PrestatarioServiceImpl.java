@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.cibertec.api.model.Prestamista;
 //import com.cibertec.api.model.Prestamista;
 import com.cibertec.api.model.Prestatario;
 
@@ -55,6 +56,12 @@ public class PrestatarioServiceImpl implements PrestatarioService{
 	@Override
 	public Optional<Prestatario> getPrestatarioById(int id) {
 		return repo.findById(id);
+	}
+
+	@Override
+	public List<Prestatario> listByPrestamistaAndActivo(Prestamista Prestamista, boolean activo) {
+		return repo.findByPrestamistaPrestatarioAndActivo(Prestamista, activo);
+				
 	}
 
 
