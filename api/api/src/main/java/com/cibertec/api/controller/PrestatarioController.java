@@ -57,53 +57,31 @@ public class PrestatarioController {
 		//DESPUES CON FILTRO
 // Obtener al Prestamista desde la session de su Usuario, ROL 3 ES PRESTAMISTA, 4 PRESTATARIO
 		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
-		// obtener el rol que deberia ser el 3 osea el prestamista
-		int rolIngreso = userLogged.getRol().getIdRol();
 		// Listado declarado
 		List<Prestatario> lista = new ArrayList<>();
 		// for mensaje 
 		String titulo = "";
 		String txtButton = "";
-		switch (rolIngreso) {
-		// admin lista de jefes
-
-		case 1: {
 			// obtener id
-			int idPrestamista = userLogged.getPersona().getIdPersona();
+		Prestamista prestamista = prestamistaService.listarPrestamistaPorId(userLogged.getPersona().getIdPersona());
 
-			// Validación correspondiente
-			if (idPrestamista == -1)
-				return "redirect:/intranet";
 
 			/* Listado por Prestamista */
 			Rol rolPrestamista = new Rol();
 			rolPrestamista.setIdRol(3);
-			List<Usuario> users = userService.getUsuarioByRol(rolPrestamista);
 				
-			List<Prestatario> Prestamistas = new ArrayList<>();
-			Prestamistas = users.stream().map(usuario -> prestatarioService.getPrestatarioById(usuario.getPersona().getIdPersona()).orElse(null))
-			.collect(Collectors.toList());
+			List<Prestatario> PrestatariosList = new ArrayList<>();
 			
+			PrestatariosList = prestamista.getPrestatariosList();
 
-			if (Prestamistas != null) {
-				lista = Prestamistas.stream().filter(Objects::nonNull) // Filtrar
-// elementos
-// no
-// nulos
-						.collect(Collectors.toList());
-			}
 			//model.addAttribute("navbar", true);
 			titulo = "Lista de Prestatario";
 			txtButton = "Agregar Prestatario";
-			break;
-		}
-		default:
-			break;
 
-		} // fin de switch
-		model.addAttribute("lista", lista);
+		model.addAttribute("lista", PrestatariosList);
 		model.addAttribute("titulo", titulo);
 		model.addAttribute("txtButton", txtButton);
+		
 		return "listaPrestatario";
 	} //fin de listar
 	
