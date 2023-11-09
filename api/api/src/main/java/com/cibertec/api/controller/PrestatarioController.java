@@ -1,6 +1,7 @@
 package com.cibertec.api.controller;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -107,10 +108,12 @@ public class PrestatarioController {
 	@PostMapping("/solicitoPrestamo")
 	private String guardarSolicitud(SolicitudDto solicitudPrestamo, HttpSession session, RedirectAttributes flash){
 		Usuario user = (Usuario)session.getAttribute("UserLogged");
-		Prestatario prestatario = prestatarioService.listarPrestatarioPorId(user.getPersona().getIdPersona());
+		Prestatario prestatario = new Prestatario();
+		prestatario =prestatarioService.listarPrestatarioPorId(user.getPersona().getIdPersona());
 
 		/* Se valida que no exista más de dos solicitudes al día */
-		List<SolicitudPrestamo> todayList = solicitudPrestamoService.filtrarSolicitudes(prestatario.getIdPrestatario(), solicitudPrestamo.getFechaRegistro(), solicitudPrestamo.getFechaRegistro());
+		List<SolicitudPrestamo> todayList = new ArrayList<SolicitudPrestamo>();
+		todayList=solicitudPrestamoService.filtrarSolicitudes(prestatario.getIdPrestatario(), solicitudPrestamo.getFechaRegistro(), solicitudPrestamo.getFechaRegistro());
 		if(todayList.size() >= 2){
 			flash.addFlashAttribute("errorMessage", true);
 			return "redirect:/prestatario/solicitoPrestamo";
