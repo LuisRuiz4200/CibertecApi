@@ -122,6 +122,13 @@ public class PrestatarioController {
 		  "El Prestamista se actualizó correctamente"; else mensaje =
 		  "El Prestamista se registró correctamente";
 		  
+		  int idPersona = prestatario.getPrestatario().getIdPersona();
+		  if (idPersona != 0) {
+			  prestatarioService.guardarPrestatario(prestatario);
+				return "redirect:/prestatario/listarPresta";
+			}
+		  
+		  
 		  Prestatario newPrestatario = prestatarioService.guardarPrestatario(prestatario); //Marca el status como completo.
 		  status.setComplete();
 		  
@@ -200,10 +207,43 @@ public class PrestatarioController {
 	}
 		//EDITAR
 	
+	// Metodo para actualizar
+		@GetMapping("/actualizarPrestata/{id}")
+		public String editarPrestamista(@PathVariable(name = "id") int id, Model model, RedirectAttributes flash) {
+			// creamos objeto presta inicializado en null
+			Prestatario presta = null;
+			// Valida que el id sea mayor a 0
+			if (id > 0) {
+				// Si es válido, busca el presta en el servicio por id
+				presta = prestatarioService.listarPrestatarioPorId(id);
+				// Valida que existe, si no arroja error
+				if (Objects.isNull(presta)) {
+					flash.addFlashAttribute("error", "El ID de Prestatario no existe");
+					// Retorna un redirect a la URL /listar para mostrar la lista con el atributo
+					// error que almacena
+					// el mensaje
+					return "redirect:/prestatario/listarPresta";
+
+				} // fin de if
+			} else {
+				flash.addFlashAttribute("error", "El ID de Prestatario no puede ser menor a 1");
+				// Retorna un redirect a la URL /listar para mostrar la lista con el atributo
+				// error que almacena
+				// el mensaje
+				return "redirect:/prestatario/listarPresta";
+			}
+			// Si existe, agrega el empleado al modelo
+			// Si el empleado existe, la función lo agrega a un objeto llamado empleado
+			// y lo pasaremos a la vista por medio del atributo empleado
+			model.addAttribute("prestatario", presta);
+			// enviamos en atributo llamado titulo, un string que
+			// dice Detalle de Empleado concantenado el nombre
+			model.addAttribute("titulo", "Actualización");
+			// esta vista se usara para el agregar y actualizar reutilizando la vista
+			return "guardarPrestatatario";
+		} // fin de editarEmpleado
 	
-	
-	
-	
+
 	//ELIMINAR
 	@GetMapping("/eliminarPrestata/{id}")
 	public String eliminarPrestatario(@PathVariable(name = "id") int id) {
