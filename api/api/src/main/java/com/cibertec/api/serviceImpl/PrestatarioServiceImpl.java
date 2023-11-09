@@ -1,6 +1,7 @@
 package com.cibertec.api.serviceImpl;
 import lombok.AllArgsConstructor;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -49,6 +50,11 @@ public class PrestatarioServiceImpl implements PrestatarioService{
 		        repo.save(prestatario);
 		    }
 		
+	}
+
+	@Override
+	public Optional<Prestatario> getPrestatarioById(int id) {
+		return repo.findById(id);
 	}
 
 

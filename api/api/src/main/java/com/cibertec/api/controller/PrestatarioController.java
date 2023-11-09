@@ -1,7 +1,10 @@
 package com.cibertec.api.controller;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,11 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.support.SessionStatus;
-
 import com.cibertec.api.model.Banco;
 import com.cibertec.api.model.Cuenta;
 import com.cibertec.api.model.Persona;
 import com.cibertec.api.model.Prestatario;
+import com.cibertec.api.model.Rol;
 import com.cibertec.api.model.SolicitudDto;
 import com.cibertec.api.model.SolicitudPrestamo;
 import com.cibertec.api.model.Usuario;
@@ -23,6 +26,7 @@ import com.cibertec.api.service.BancoService;
 import com.cibertec.api.service.CuentaService;
 import com.cibertec.api.service.PrestatarioService;
 import com.cibertec.api.service.SolicitudPrestamoService;
+import com.cibertec.api.service.UService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
@@ -35,15 +39,70 @@ public class PrestatarioController {
 	PrestatarioService prestatarioService;
 	BancoService bancoService;
 	SolicitudPrestamoService solicitudPrestamoService;
+	private UService userService;
 	CuentaService cuentaService;
 
 	@GetMapping("/listarPresta")
-	private String listar(Model model) {
-		List<Prestatario> listaPrestatario = prestatarioService.listarPrestatario();
-		model.addAttribute("listaPrestatario",listaPrestatario);
+	private String listar(Model model, HttpSession session) {
 		
+		//ANTES
+//		List<Prestatario> listaPrestatario = prestatarioService.listarPrestatario();
+//		model.addAttribute("listaPrestatario",listaPrestatario);
+		
+//		return "listaPrestatario";
+		
+		//DESPUES CON FILTRO
+// Obtener al Prestamista desde la session de su Usuario, ROL 3 ES PRESTAMISTA, 4 PRESTATARIO
+		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
+		// obtener el rol que deberia ser el 3 osea el prestamista
+		int rolIngreso = userLogged.getRol().getIdRol();
+		// Listado declarado
+		List<Prestatario> lista = new ArrayList<>();
+		// for mensaje 
+		String titulo = "";
+		String txtButton = "";
+		switch (rolIngreso) {
+		// admin lista de jefes
+
+		case 1: {
+			// obtener id
+			int idPrestamista = userLogged.getPersona().getIdPersona();
+
+			// Validación correspondiente
+			if (idPrestamista == -1)
+				return "redirect:/intranet";
+
+			/* Listado por Prestamista */
+			Rol rolPrestamista = new Rol();
+			rolPrestamista.setIdRol(3);
+			List<Usuario> users = userService.getUsuarioByRol(rolPrestamista);
+				
+			List<Prestatario> Prestamistas = new ArrayList<>();
+			Prestamistas = users.stream().map(usuario -> prestatarioService.getPrestatarioById(usuario.getPersona().getIdPersona()).orElse(null))
+			.collect(Collectors.toList());
+			
+
+			if (Prestamistas != null) {
+				lista = Prestamistas.stream().filter(Objects::nonNull) // Filtrar
+// elementos
+// no
+// nulos
+						.collect(Collectors.toList());
+			}
+			//model.addAttribute("navbar", true);
+			titulo = "Lista de Prestatario";
+			txtButton = "Agregar Prestatario";
+			break;
+		}
+		default:
+			break;
+
+		} // fin de switch
+		model.addAttribute("lista", lista);
+		model.addAttribute("titulo", titulo);
+		model.addAttribute("txtButton", txtButton);
 		return "listaPrestatario";
-	}
+	} //fin de listar
 	
 	@GetMapping("/registrarPrestatario")
 	private String registrar(Model model) {
