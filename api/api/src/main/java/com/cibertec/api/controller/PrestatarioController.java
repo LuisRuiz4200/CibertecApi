@@ -1,28 +1,35 @@
 package com.cibertec.api.controller;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.support.SessionStatus;
-
 import com.cibertec.api.model.Banco;
 import com.cibertec.api.model.Cuenta;
 import com.cibertec.api.model.Persona;
+import com.cibertec.api.model.Prestamista;
 import com.cibertec.api.model.Prestatario;
+import com.cibertec.api.model.Rol;
 import com.cibertec.api.model.SolicitudDto;
 import com.cibertec.api.model.SolicitudPrestamo;
 import com.cibertec.api.model.Usuario;
 import com.cibertec.api.service.BancoService;
 import com.cibertec.api.service.CuentaService;
+import com.cibertec.api.service.PrestamistaService;
 import com.cibertec.api.service.PrestatarioService;
 import com.cibertec.api.service.SolicitudPrestamoService;
+import com.cibertec.api.service.UService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
@@ -35,15 +42,51 @@ public class PrestatarioController {
 	PrestatarioService prestatarioService;
 	BancoService bancoService;
 	SolicitudPrestamoService solicitudPrestamoService;
+	private UService userService;
 	CuentaService cuentaService;
+	PrestamistaService prestamistaService;
 
 	@GetMapping("/listarPresta")
-	private String listar(Model model) {
-		List<Prestatario> listaPrestatario = prestatarioService.listarPrestatario();
-		model.addAttribute("listaPrestatario",listaPrestatario);
+	private String listar(Model model, HttpSession session) {
+		
+		//ANTES
+//		List<Prestatario> listaPrestatario = prestatarioService.listarPrestatario();
+//		model.addAttribute("listaPrestatario",listaPrestatario);
+		
+//		return "listaPrestatario";
+		
+		//DESPUES CON FILTRO
+// Obtener al Prestamista desde la session de su Usuario, ROL 3 ES PRESTAMISTA, 4 PRESTATARIO
+		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
+		// Listado declarado
+		List<Prestatario> lista = new ArrayList<>();
+		// for mensaje 
+		String titulo = "";
+		String txtButton = "";
+			// obtener id
+		Prestamista prestamista = prestamistaService.listarPrestamistaPorId(userLogged.getPersona().getIdPersona());
+
+
+			/* Listado por Prestamista */
+//			Rol rolPrestamista = new Rol();
+//			rolPrestamista.setIdRol(3);
+				
+			List<Prestatario> PrestatariosList = new ArrayList<>();
+			
+			//PrestatariosList = prestamista.getPrestatariosList();
+			
+			PrestatariosList = prestatarioService.listByPrestamistaAndActivo(prestamista, true);
+
+			//model.addAttribute("navbar", true);
+			titulo = "Lista de Prestatario";
+			txtButton = "Agregar Prestatario";
+
+		model.addAttribute("lista", PrestatariosList);
+		model.addAttribute("titulo", titulo);
+		model.addAttribute("txtButton", txtButton);
 		
 		return "listaPrestatario";
-	}
+	} //fin de listar
 	
 	@GetMapping("/registrarPrestatario")
 	private String registrar(Model model) {
@@ -60,8 +103,11 @@ public class PrestatarioController {
 	}
 
 	@PostMapping("/registrarPrestatario") //localhost:9090/registrar
-	public String guardarPrestamista(Prestatario prestatario,BindingResult result,
-			Model model,RedirectAttributes flash,SessionStatus status) {
+	public String guardarPrestamista(Prestatario prestatario, BindingResult result,
+			Model model, RedirectAttributes flash, SessionStatus status, HttpSession session) {
+		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
+		Prestamista prestamista = prestamistaService.listarPrestamistaPorId(userLogged.getPersona().getIdPersona());
+		prestatario.setPrestamistaPrestatario(prestamista);
 		prestatario.setActivo(true);
 		prestatario.getPrestatario().setActivo(true);
 		prestatario.setFechaRegistro(new java.util.Date());
@@ -75,6 +121,13 @@ public class PrestatarioController {
 		  if(prestatario.getPrestatario().getIdPersona() != 0) mensaje =
 		  "El Prestamista se actualizó correctamente"; else mensaje =
 		  "El Prestamista se registró correctamente";
+		  
+		  int idPersona = prestatario.getPrestatario().getIdPersona();
+		  if (idPersona != 0) {
+			  prestatarioService.guardarPrestatario(prestatario);
+				return "redirect:/prestatario/listarPresta";
+			}
+		  
 		  
 		  Prestatario newPrestatario = prestatarioService.guardarPrestatario(prestatario); //Marca el status como completo.
 		  status.setComplete();
@@ -152,5 +205,57 @@ public class PrestatarioController {
 		newSolicitud.setEstado("Pendiente");
 		return  newSolicitud;
 	}
+		//EDITAR
+	
+	// Metodo para actualizar
+		@GetMapping("/actualizarPrestata/{id}")
+		public String editarPrestamista(@PathVariable(name = "id") int id, Model model, RedirectAttributes flash) {
+			// creamos objeto presta inicializado en null
+			Prestatario presta = null;
+			// Valida que el id sea mayor a 0
+			if (id > 0) {
+				// Si es válido, busca el presta en el servicio por id
+				presta = prestatarioService.listarPrestatarioPorId(id);
+				// Valida que existe, si no arroja error
+				if (Objects.isNull(presta)) {
+					flash.addFlashAttribute("error", "El ID de Prestatario no existe");
+					// Retorna un redirect a la URL /listar para mostrar la lista con el atributo
+					// error que almacena
+					// el mensaje
+					return "redirect:/prestatario/listarPresta";
 
+				} // fin de if
+			} else {
+				flash.addFlashAttribute("error", "El ID de Prestatario no puede ser menor a 1");
+				// Retorna un redirect a la URL /listar para mostrar la lista con el atributo
+				// error que almacena
+				// el mensaje
+				return "redirect:/prestatario/listarPresta";
+			}
+			// Si existe, agrega el empleado al modelo
+			// Si el empleado existe, la función lo agrega a un objeto llamado empleado
+			// y lo pasaremos a la vista por medio del atributo empleado
+			model.addAttribute("prestatario", presta);
+			// enviamos en atributo llamado titulo, un string que
+			// dice Detalle de Empleado concantenado el nombre
+			model.addAttribute("titulo", "Actualización");
+			// esta vista se usara para el agregar y actualizar reutilizando la vista
+			return "guardarPrestatatario";
+		} // fin de editarEmpleado
+	
+
+	//ELIMINAR
+	@GetMapping("/eliminarPrestata/{id}")
+	public String eliminarPrestatario(@PathVariable(name = "id") int id) {
+		// Valida que el id sea mayor a 0
+		if (id > 0) {
+			prestatarioService.eliminarPrestatario(id);	
+		} // fin de if
+		return "redirect:/prestatario/listarPresta";
+	} // fin de eliminarEmpleado
+	
+	
+	
+	
+	
 }
