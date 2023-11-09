@@ -273,14 +273,23 @@ public class PrestamistaController {
 	
 	
 	@GetMapping("/aprobarPrestamo")
-	private String listarSolicitudes(Model model) {
+	private String listarSolicitudes(Model model, HttpSession session) {
 		
-		List<Prestatario> listaPrestatario = new ArrayList<Prestatario>();
-		listaPrestatario = prestatarioService.listarPrestatario();
-		model.addAttribute("listaPrestatario",listaPrestatario);
-		
-		List<SolicitudPrestamo> listaSolicitudes = new ArrayList<SolicitudPrestamo>();
-		listaSolicitudes = solicitudService.listar();
+		//Antes
+//		List<Prestatario> listaPrestatario = new ArrayList<Prestatario>();
+//		listaPrestatario = prestatarioService.listarPrestatario();
+//		model.addAttribute("listaPrestatario",listaPrestatario);
+		//Despues
+		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
+		Prestamista prestamista = service.listarPrestamistaPorId(userLogged.getPersona().getIdPersona());
+		List<Prestatario> PrestatariosList = new ArrayList<>();
+					
+					PrestatariosList = prestamista.getPrestatariosList();
+					
+					model.addAttribute("listaPrestatario",PrestatariosList);
+					
+		//List<SolicitudPrestamo> listaSolicitudes = new ArrayList<SolicitudPrestamo>();
+		List<SolicitudPrestamo> listaSolicitudes = PrestatariosList.stream().flatMap(item -> solicitudService.listarPorPrestatario(item.getIdPrestatario()).stream()).collect(Collectors.toList());
 		model.addAttribute("listaSolicitudes",listaSolicitudes);
 		
 		SolicitudDto solicitudDto = new SolicitudDto();
@@ -308,7 +317,7 @@ public class PrestamistaController {
 	public String filtrarSolicitudes(@RequestParam("prestamista") int idPrestamista,
 	                                  @RequestParam("fechaDesde")  String fechaDesde,
 	                                  @RequestParam("fechaHasta")  String fechaHasta,
-	                                  Model model) throws ParseException {
+	                                  Model model, HttpSession session) throws ParseException {
 		List<SolicitudPrestamo> listaSolicitudes = new ArrayList<SolicitudPrestamo>();
 		if(idPrestamista == -1 ) {
 			
@@ -329,7 +338,7 @@ public class PrestamistaController {
 		
 		
 		//filtra llena combobox
-		listarSolicitudes(model);
+		listarSolicitudes(model,session);
 		
 	    model.addAttribute("listaSolicitudes", listaSolicitudes);
 	    
