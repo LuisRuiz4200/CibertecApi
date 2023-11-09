@@ -17,6 +17,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import com.cibertec.api.model.Banco;
 import com.cibertec.api.model.Cuenta;
 import com.cibertec.api.model.Persona;
+import com.cibertec.api.model.Prestamista;
 import com.cibertec.api.model.Prestatario;
 import com.cibertec.api.model.Rol;
 import com.cibertec.api.model.SolicitudDto;
@@ -24,6 +25,7 @@ import com.cibertec.api.model.SolicitudPrestamo;
 import com.cibertec.api.model.Usuario;
 import com.cibertec.api.service.BancoService;
 import com.cibertec.api.service.CuentaService;
+import com.cibertec.api.service.PrestamistaService;
 import com.cibertec.api.service.PrestatarioService;
 import com.cibertec.api.service.SolicitudPrestamoService;
 import com.cibertec.api.service.UService;
@@ -41,6 +43,7 @@ public class PrestatarioController {
 	SolicitudPrestamoService solicitudPrestamoService;
 	private UService userService;
 	CuentaService cuentaService;
+	PrestamistaService prestamistaService;
 
 	@GetMapping("/listarPresta")
 	private String listar(Model model, HttpSession session) {
@@ -119,8 +122,11 @@ public class PrestatarioController {
 	}
 
 	@PostMapping("/registrarPrestatario") //localhost:9090/registrar
-	public String guardarPrestamista(Prestatario prestatario,BindingResult result,
-			Model model,RedirectAttributes flash,SessionStatus status) {
+	public String guardarPrestamista(Prestatario prestatario, BindingResult result,
+			Model model, RedirectAttributes flash, SessionStatus status, HttpSession session) {
+		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
+		Prestamista prestamista = prestamistaService.listarPrestamistaPorId(userLogged.getPersona().getIdPersona());
+		prestatario.setPrestamistaPrestatario(prestamista);
 		prestatario.setActivo(true);
 		prestatario.getPrestatario().setActivo(true);
 		prestatario.setFechaRegistro(new java.util.Date());

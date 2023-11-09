@@ -59,4 +59,7 @@ public class Prestamista {
 
 	@OneToMany(mappedBy = "asesorPrestamista")
 	private List<GrupoPrestamista> asesorPrestamista;
+
+	@OneToMany(mappedBy = "prestamistaPrestatario")
+	private List<Prestatario> prestatariosList;
 }//fin de PrestamistaM
