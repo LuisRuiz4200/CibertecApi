@@ -19,7 +19,7 @@ import com.cibertec.api.service.PrestamoService;
 import jakarta.transaction.Transactional;
 
 @RestController
-@RequestMapping("/prestamo/api")
+@RequestMapping("/api/prestamo")
 public class PrestamoApiController {
 	
 	@Autowired
@@ -29,6 +29,7 @@ public class PrestamoApiController {
 	
 	@PostMapping("/guardarPrestamo")
 	@ResponseBody
+	@Transactional
 	private  Map<?, ?> guardarPrestamo(@RequestBody Prestamo prestamo) {
 		
 		Map<String, Object> response = new HashMap<>();
@@ -67,7 +68,7 @@ public class PrestamoApiController {
 					
 				}
 				
-				response.put("mensaje", "Prestamos generado");
+				response.put("mensaje", "Prestamo generado");
 				
 			}else {
 				response.put("mensaje", "Error durante la transacción");

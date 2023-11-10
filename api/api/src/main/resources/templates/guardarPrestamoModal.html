@@ -31,18 +31,14 @@
 								<form th:action="@{guardar}"  method="post">
 									<div class="row gap-4">
 										<div class="col-12">
-											<div class="row row-cols-3 g-auto">
-												<div>
+											<div class="row row-cols-2 g-auto">
+												<div >
 													<label>PRESTATARIO</label>
-													<input class="form-control" type="text">
+													<input id="prestatarioPrestamo" class="form-control" type="text">
 												</div>
 												<div>
 													<label>RUC</label>
-													<input class="form-control" type="text">
-												</div>
-												<div>
-													<label>FECHA REGISTRO</label>
-													<input class="form-control" type="date" >
+													<input id="rucPrestamo" class="form-control" type="text" >
 												</div>
 											</div>
 										</div>
@@ -51,24 +47,17 @@
 											<div class="row row-cols-auto g-auto">
 												<div>
 													<label>MONTO</label>
-													<input class="form-control" type="text">
+													<input id="montoPrestamo" class="form-control" type="text">
 												</div>
 
 												<div>
 													<label>CUOTAS</label>
-													<input class="form-control" type="text">
+													<input id="cuotaPrestamo" class="form-control" type="text">
 												</div>
 											</div>
 										</div>
 										
-										<div class="col-12">
-											<div>
-												<button class="btn btn-success btn-sm">GUARDAR</button>
-												<a href="#" class="btn btn-danger btn-sm" onclick="limpiarCuotas()">CANCELAR</a>
-
-												<a href="#" class="btn btn-warning btn-sm" onclick="cargarCuotas()">VALIDAR</a>
-											</div>
-										</div>
+										
 
 									</div>
 								</form>

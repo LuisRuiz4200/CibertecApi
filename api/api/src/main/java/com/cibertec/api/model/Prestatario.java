@@ -53,6 +53,7 @@ public class Prestatario {
 	private List<SolicitudPrestamo> listaSolicitudPrestamo;
 	
 	@OneToMany(mappedBy = "idPrestatarioCuenta")
+	@JsonIgnore
 	@ToString.Exclude
     private List<Cuenta> cuentaList;
 }
