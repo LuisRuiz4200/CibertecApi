@@ -379,7 +379,8 @@
 
 	<!--Para validacion 09-10-23   -->
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+	<!--Lo usuare para la validacion (alertas) -->
+	<script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script> 
 	<script src="/js/toastr.min.js"></script>
 	<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 	<!-- Fin para validacion -->
@@ -399,6 +400,15 @@
 	<script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-validator/0.5.3/js/bootstrapValidator.js"></script>
 	<!-- Para pasar dato de modal a caja -->
 	<script>
+		
+		//Solo Ingresar Numeros
+		document.getElementById("idCuentaLibre").addEventListener("input", function() {
+        var inputValue = this.value;
+        // Elimina todo lo que no sea un número
+        var numericValue = inputValue.replace(/\D/g, ''); 
+        this.value = numericValue;
+        });
+        
 		function agregarCuenta() {
 			// Obtener el valor ingresado en el input del modal
 			var numeroCuenta = document.getElementById("idCuentaLibre").value;
@@ -410,6 +420,50 @@
 			// Cerrar el modal
 			$('#modalCuenta').modal('hide');
 		}
+		
+		//Validamos numero de cuenta
+		function validarNuevaCuenta() {
+        var nuevaCuenta = document.getElementById("idCuentaLibre").value;
+        
+       
+        // Validar si la cuenta ya existe
+        var cuentasExistentes = document.querySelectorAll('#setCboCuentas option');
+        for (var i = 0; i < cuentasExistentes.length; i++) {
+            if (cuentasExistentes[i].getAttribute("data-numero") === nuevaCuenta) {
+                Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'La cuenta ya existe. Ingresa un número diferente.'
+            });
+                return false;
+            }
+        }
+
+        // Validar la longitud de caracteres
+        var longitudDeseada = 13; // Puedes cambiar este valor según tus necesidades
+        if (nuevaCuenta.length !== longitudDeseada) {
+            Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'La cuenta debe tener ' + longitudDeseada + ' caracteres.'
+        });
+            return false;
+        }
+
+        // Si pasa ambas validaciones, retorna true
+        return true;
+    }
+
+        function agregarCuenta() {
+        if (validarNuevaCuenta()) {
+            // Tu lógica para agregar la cuenta si la validación pasa
+            var numeroCuenta = document.getElementById("idCuentaLibre").value;
+            inputIsNewBank.value = true;
+            inputNewBank.value = selectNewBank.options[selectNewBank.selectedIndex].value;
+            document.getElementById("idObtenemosCuenta").value = numeroCuenta;
+            $('#modalCuenta').modal('hide');
+        }
+    }
 
 		//para cuando cierra modal
 		// Agregar evento al modal cuando se oculta, limpia cajas
@@ -468,6 +522,8 @@
 			inputIsNewBank.value = false;
 			$('#modalCuenta').modal('hide');
 		}
+		
+		
 
 	</script>
 
