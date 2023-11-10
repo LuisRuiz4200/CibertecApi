@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.ToString;
 
 @Entity
 @Table(name="tb_rol_menu")
@@ -17,10 +18,12 @@ public class RolMenu {
 	
 	@ManyToOne
 	@JoinColumn(name="idRol", insertable=false, updatable=false)
+	@ToString.Exclude
 	private Rol rol;
 	
 	@ManyToOne
 	@JoinColumn(name="idMenu", insertable=false, updatable=false)
+	@ToString.Exclude
 	private Menu menu;
 	
 	

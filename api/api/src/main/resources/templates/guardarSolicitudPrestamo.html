@@ -70,6 +70,49 @@
 									</div>
 								</div>
 							</div>
+
+							<div class="col-12">
+								<div class="row">
+									<label for="">Número de cuenta</label>
+								</div>
+								<div class="form-inline">
+									<input class="form-control" type="text"/>
+									<button id="myInput" type="button" class="btn btn-primary ml-2"  data-bs-toggle="modal" data-bs-target="#myModal">...</button>
+								</div>
+							</div>
+
+							<!-- Modal -->
+							<div class="modal fade" id="myModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h1 class="modal-title fs-5" id="staticBackdropLabel">Cuentas bancarias</h1>
+											<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+										</div>
+
+										<div class="modal-body">
+											<label for="">Número de cuenta</label>
+											<div>
+												<label for="">Banco</label>
+												<select name="bancoSelect" id="bancoSelect">
+													<option value="-1">[Seleccione...]</option>
+													<option th:each="item : ${bancos}" th:value="${item.idBanco}" th:utext="${item.descripcion}"></option>
+												</select>
+											</div>
+											<div>
+												<label for="">Número</label>
+												<input type="text">
+											</div>
+										</div>
+
+										<div class="modal-footer">
+											<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+											<button type="button" class="btn btn-primary">Understood</button>
+										</div>
+									</div>
+								</div>
+							</div>
+
 							<div class="col-12">
 
 								<hr>
@@ -89,6 +132,7 @@
 		</div>
 
 	</div>
+	<scripts th:replace="~{static/scripts.html}"></scripts>
 </body>
 
 </html>

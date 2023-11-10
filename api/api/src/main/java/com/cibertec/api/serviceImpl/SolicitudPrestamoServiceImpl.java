@@ -1,5 +1,8 @@
 package com.cibertec.api.serviceImpl;
 
+
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,13 +21,11 @@ public class SolicitudPrestamoServiceImpl implements SolicitudPrestamoService {
 	
 	@Override
 	public SolicitudPrestamo guardar(SolicitudPrestamo model) {
-		// TODO Auto-generated method stub
 		return solicitudPrestamisteRepository.save(model);
 	}
 
 	@Override
 	public List<SolicitudPrestamo> listar() {
-		// TODO Auto-generated method stub
 		return solicitudPrestamisteRepository.findAll();
 	}
 
@@ -41,13 +42,11 @@ public class SolicitudPrestamoServiceImpl implements SolicitudPrestamoService {
 
 	@Override
 	public SolicitudPrestamo buscarPorId(int id) {
-		// TODO Auto-generated method stub
 		return solicitudPrestamisteRepository.findById(id).get();
 	}
 
 	@Override
 	public List<SolicitudPrestamo> listarPorPrestatario(int idPrestatario) {
-		// TODO Auto-generated method stub
 		return solicitudPrestamisteRepository.findByPrestatarioIdPrestatario(idPrestatario);
 	}
 
@@ -55,6 +54,20 @@ public class SolicitudPrestamoServiceImpl implements SolicitudPrestamoService {
 	public List<SolicitudPrestamo> listarPorPrestamista(int idPrestamista) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	//FILTROOOOOO
+	@Override
+	public List<SolicitudPrestamo> filtrarSolicitudes(int idPrestamista, Date fechaDesde, Date fechaHasta) {
+		List<SolicitudPrestamo> listaSolicitudes = solicitudPrestamisteRepository.findAll();
+	    List<SolicitudPrestamo> listaFiltrada = new ArrayList<>();
+	    for (SolicitudPrestamo solicitud : listaSolicitudes) {
+	        if (solicitud.getPrestatario().getIdPrestatario() == idPrestamista
+	                && solicitud.getFechaRegistro().compareTo(fechaDesde) >= 0
+	                && solicitud.getFechaRegistro().compareTo(fechaHasta) <= 0) {
+	            listaFiltrada.add(solicitud);
+	        }
+	    }
+	    return listaFiltrada;
 	}
 
 }

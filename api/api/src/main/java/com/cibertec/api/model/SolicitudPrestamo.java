@@ -4,7 +4,6 @@ import java.sql.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,18 +26,30 @@ public class SolicitudPrestamo {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="idsolicitudprestamo")
 	private int idSolicitudPrestamo;
+
 	@ManyToOne
 	@JoinColumn(name="idprestatario")
 	private Prestatario prestatario;
+
 	@ManyToOne
 	@JoinColumn(name="idprestamista")
 	private Prestamista prestamista;
+
+	@ManyToOne
+	@JoinColumn(name="idCuenta")
+	private Cuenta cuentaSolicitud;
+
 	private double monto;
+	private double interes;
+	private int cuotas;
 	private String motivo;
+	private String cuentaBancaria;
+
 	@Column(name="fecharegistro")
 	@Temporal(TemporalType.DATE)
 	private Date fechaRegistro;
+
 	private String estado;
-	private int activo;
+	private boolean activo;
 
 }

@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.ToString;
 
 @Entity
 @Table(name="tb_menu")
@@ -23,6 +24,7 @@ public class Menu {
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "menu")
+	@ToString.Exclude
 	private List<RolMenu> listaRolMenu;
 
 	

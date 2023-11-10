@@ -26,7 +26,7 @@ public class PrestatatarioApiController {
 	
 	@GetMapping("/listar")
 	private ResponseEntity<List<Prestatario>> listar() {
-		List<Prestatario> response= prestatarioService.listar();
+		List<Prestatario> response= prestatarioService.listarPrestatario();
 		return ResponseEntity.ok(response);
 	}
 	
@@ -37,7 +37,7 @@ public class PrestatatarioApiController {
 		String response = "";
 		
 		try {
-			model = prestatarioService.guardar(model);
+			model = prestatarioService.guardarPrestatario(model);
 			response = "Se ha registrado el ID " + model.getIdPrestatario() + ".";
 		}catch(Exception ex){
 			response = ex.getMessage();
@@ -53,7 +53,7 @@ public class PrestatatarioApiController {
 		Map<String, Object> response = new HashMap<String,Object>();
 		
 		try {
-			model = prestatarioService.guardar(model);
+			model = prestatarioService.guardarPrestatario(model);
 			response.put("mensaje", "Se ha actualizado el ID " + model.getIdPrestatario() + " y el ID persona " + model.getPrestatario().getIdPersona() + " / " + model.getPrestatario().getNombres());
 		}catch(Exception ex){
 			response.put("mensaje",ex.getMessage());
