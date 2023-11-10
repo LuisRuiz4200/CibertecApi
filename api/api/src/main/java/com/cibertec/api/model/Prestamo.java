@@ -4,6 +4,10 @@ import java.sql.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.JsonAdapter;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,9 +28,12 @@ public class Prestamo {
 	private int idPrestamo;
 	@ManyToOne
 	@JoinColumn(name="idSolicitudPrestamo")
-	private SolicitudPrestamo solicitudPrestamo;
+	@JsonProperty("solicitudPrestamo")
+	private SolicitudPrestamo solicitudPrestamo ;
 	private double monto;
 	private int cuotas;
+	private double tea;
+	private double tem;
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "yyy-MM-dd hh:mm:ss")
 	private Date fechaRegistro;
