@@ -408,7 +408,7 @@
 			var numericValue = inputValue.replace(/\D/g, '');
 			this.value = numericValue;
 		});
-
+/*
 		function agregarCuenta() {
 			// Obtener el valor ingresado en el input del modal
 			var numeroCuenta = document.getElementById("idCuentaLibre").value;
@@ -420,6 +420,9 @@
 			// Cerrar el modal
 			$('#modalCuenta').modal('hide');
 		}
+*/
+
+	
 
 		//Validamos numero de cuenta
 		function validarNuevaCuenta() {
@@ -443,11 +446,14 @@
 				.then(data => {
 					console.log("La cuenta existe:", data);
 					if(data.exists){
+						//Limpia caja
+						document.getElementById("idObtenemosCuenta").value = "";
 						Swal.fire({
 							icon: 'error',
 							title: 'Error',
 							text: 'La cuenta ya existe. Ingresa un número diferente.'
 						});
+						
 						return false;
 					}
 				})
@@ -469,9 +475,8 @@
 			// Si pasa ambas validaciones, retorna true
 			return true;
 		}
-
-		function agregarCuenta() {
-			if (validarNuevaCuenta()) {
+	function agregarCuenta() {
+			if (validarNuevaCuenta() === true) {
 				// Tu lógica para agregar la cuenta si la validación pasa
 				var numeroCuenta = document.getElementById("idCuentaLibre").value;
 				inputIsNewBank.value = true;
@@ -480,7 +485,7 @@
 				$('#modalCuenta').modal('hide');
 			}
 		}
-
+		
 		//para cuando cierra modal
 		// Agregar evento al modal cuando se oculta, limpia cajas
 		$('#modalCuenta').on('hidden.bs.modal', function () {
