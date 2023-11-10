@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlsn:th="www.thymeleaf.org">
+
+<head>
+	<div th:replace="~{static/head.html}"></div>
+	<title>GRUPO 6</title>
+
+</head>
+
+<body>
+	<div>
+		<div th:insert="~{plantilla/UITemplate.html::cabecera}"></div>
+	</div>
+	<div class="container-sm vh-100">
+		<div class="mt-4">
+			<div class="card">
+				<div class="card-header">
+
+					<div class="col-12">
+						<div>
+							<h2>PRESTAMO</h2>
+						</div>
+					</div>
+				</div>
+				<div class="card-body">
+					<div th:fragment="formularioPrestamo" class="row">
+
+
+						<div class="col-6">
+							<div>
+								<form th:action="@{guardar}"  method="post">
+									<div class="row gap-4">
+										<div class="col-12">
+											<div class="row row-cols-2 g-auto">
+												<div >
+													<label>PRESTATARIO</label>
+													<input id="prestatarioPrestamo" class="form-control" type="text">
+												</div>
+												<div>
+													<label>RUC</label>
+													<input id="rucPrestamo" class="form-control" type="text" >
+												</div>
+											</div>
+										</div>
+
+										<div class="col-12">
+											<div class="row row-cols-auto g-auto">
+												<div>
+													<label>MONTO</label>
+													<input id="montoPrestamo" class="form-control" type="text">
+												</div>
+
+												<div>
+													<label>CUOTAS</label>
+													<input id="cuotaPrestamo" class="form-control" type="text">
+												</div>
+											</div>
+										</div>
+										
+										
+
+									</div>
+								</form>
+							</div>
+						</div>
+						<div class="col-6">
+
+							<div class="table-responsive">
+								<table class="table border" id="tbCuotas">
+									<thead>
+										<tr>
+											<th>NRO CUOTA</th>
+											<th>MONTO</th>
+											<th>FECHA A PAGAR</th>
+										</tr>
+									</thead>
+									<tbody>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+
+	</div>
+	
+	<footer th:replace="static/footer.html"></footer>
+	
+</body>
+
+<script src="/js/prestamo/prestamo.js"></script>
+
+</html>

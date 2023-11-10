@@ -3,6 +3,9 @@
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
+	<div th:replace="static/head.html"></div>
+
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
 		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -282,6 +285,8 @@
 								<!-- Cuando son varios como el boton editar y eliminar usar class , cuando es 1 o pocos usar id -->
 								<button type="submit" class="btn btn-primary btnAprobar"
 									onclick="setModelState(1)">APROBAR</button>
+								<button type="button" class="btn btn-primary btnAprobar"
+									onclick="setModelState(1)">PRESTAMO</button>
 								<!-- Asignamos idcerrar al boton cerrar para resetear las validaciones de bootstrap   /* data-dismiss="modal" */ -->
 								<button type="submit" class="btn btn-secondary btnCerrar" id="idCerrar"
 									onclick="setModelState(2)">RECHAZAR</button>
@@ -300,7 +305,31 @@
 
 
 
+		<div class="modal fade" id="modalPrestamo">
+			<div class="modal-dialog modal-dialog-centered modal-lg">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3>GENERACION DE PRESTAMOS</h3>
+					</div>
+					<div class="modal-body">
+						<div class="container">
+							<div th:replace="guardarPrestamoModal.html :: formularioPrestamo">
 
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<div >
+							<a href="#" class="btn btn-success btn-sm" onclick="guardarPrestamo()">GUARDAR</a>
+
+							<a href="#" class="btn btn-danger btn-sm" onclick="limpiarCuotas()">CANCELAR</a>
+
+							<a href="#" class="btn btn-warning btn-sm" onclick="cargarCuotas()">VALIDAR</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
 
 
@@ -309,19 +338,30 @@
 
 
 	</div>
-	<!-- FIN EL CONTAINER -->
 
+	<!-- FIN EL CONTAINER -->
+	<script src="js/prestamo/prestamo.js"></script>
+	<!--Para validacion 09-10-23   -->
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+	<script src="/js/toastr.min.js"></script>
+	<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+	<!-- Fin para validacion -->
+	<script src="/js/solicitudPrestamo/solicitudPrestamo.js"></script>
+	
 	<!-- Importamos más cosas que se necesitaran hasta mas campos para bootstrap esto sirve para paginacion y search y demás de la tabla junto a lo que esta en script -->
 	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-	<!-- Comentamos un JQUERY debido a que causa problemas para el GSON O JSON -->
-	<!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+		crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
 		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
 		crossorigin="anonymous"></script>
 	<script src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
 	<script src="https://cdn.datatables.net/1.13.2/js/dataTables.bootstrap4.min.js"></script>
-	<!-- FIN DE IMPORTAMOS MÁS COSAS -->
-	<!-- INICIO PRUEBA DE COGE DE LA FILA A MOSTRAR EN MODAL -->
+	<!-- script para validar las cajas de texto -->
+	<script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-validator/0.5.3/js/bootstrapValidator.js"></script>
+	<!-- Para pasar dato de modal a caja -->
 	<script>
 		// Obtener la tabla y los botones de detalle
 		const tabla = document.getElementById("tableSolicitudes");
@@ -343,7 +383,7 @@
 				} else {
 					state.value == 0;
 				}
-	
+
 
 				// Obtener los valores de las celdas de la fila
 				const codigo = fila.cells[0].textContent;
@@ -368,7 +408,7 @@
 				document.getElementById("numCuenta").value = numCuenta;
 
 
-			
+
 				let arregloEstado = [];
 				for (let i = 0; i < estado.length; i++) {
 					const hijo = estado[i];
@@ -385,6 +425,12 @@
 
 		function setModelState(setState) {
 			const state = document.getElementById("state");
+
+			if (setState == 1) {
+
+				$("#modalPrestamo").modal('show')
+			}
+
 			state.value = setState;
 
 		}
@@ -435,7 +481,7 @@
 				} else {
 					aprobarButton.style.display = "block";
 					rechazarButton.style.display = "block";
-					
+
 				}
 			});
 		});

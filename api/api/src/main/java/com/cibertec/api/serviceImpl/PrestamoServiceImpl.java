@@ -10,6 +10,7 @@ import com.cibertec.api.model.Prestamo;
 import com.cibertec.api.repository.PrestamoRepository;
 import com.cibertec.api.service.PrestamoService;
 
+
 @Service
 public class PrestamoServiceImpl implements PrestamoService {
 

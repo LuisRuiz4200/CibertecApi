@@ -2,6 +2,8 @@ package com.cibertec.api.model;
 
 import java.sql.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -37,6 +39,7 @@ public class SolicitudPrestamo {
 
 	@ManyToOne
 	@JoinColumn(name="idCuenta")
+	@JsonIgnore // NO QUITEN EL JSON IGNORE - EL JSON ESTA GENERANDO MUCHA DUPLICIDAD CON ESTE CAMPO
 	private Cuenta cuentaSolicitud;
 
 	private double monto;

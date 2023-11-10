@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -61,5 +62,18 @@ public class PrestatatarioApiController {
 		
 		return response;
 	}
+	
+	@GetMapping("/buscar/{id}")
+	@ResponseBody
+	private ResponseEntity<Prestatario> actualizar(@PathVariable int id) {
+		
+		Prestatario prestatario = new Prestatario();
+		
+		prestatario = prestatarioService.listarPrestatarioPorId(id);
+	
+		return ResponseEntity.ok(prestatario);
+	}
+	
+	
 	
 }
