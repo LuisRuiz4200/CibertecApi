@@ -12,5 +12,6 @@ public interface CuentaService {
     public abstract List<Cuenta> getAllByBanco(Banco banco);
     public abstract Optional<Cuenta> getById(int id);
     public abstract Cuenta addOrUpdate(Cuenta cuenta);
-    public abstract void delete(Cuenta cuenta); 
+    public abstract void delete(Cuenta cuenta);
+    public abstract Optional<Cuenta> getCuentaByBancoAndNumero(int idBanco, String numero);
 }

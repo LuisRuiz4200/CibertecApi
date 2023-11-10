@@ -3,9 +3,6 @@ package com.cibertec.api.model;
 import java.util.Date;
 import java.util.List;
 
-import org.hibernate.annotations.CollectionId;
-import org.hibernate.annotations.Comment;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;

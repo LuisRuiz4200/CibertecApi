@@ -2,16 +2,22 @@ package com.cibertec.api.controller;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.hibernate.mapping.Map;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.support.SessionStatus;
@@ -37,6 +43,7 @@ import lombok.AllArgsConstructor;
 @Controller
 @AllArgsConstructor
 @RequestMapping("/prestatario")
+@CrossOrigin(origins = "http://localhost:9090")
 public class PrestatarioController {
 
 	PrestatarioService prestatarioService;
@@ -60,7 +67,7 @@ public class PrestatarioController {
 		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
 		// Listado declarado
 		List<Prestatario> lista = new ArrayList<>();
-		// for mensaje 
+		// for mensaje
 		String titulo = "";
 		String txtButton = "";
 			// obtener id
@@ -251,13 +258,20 @@ public class PrestatarioController {
 	public String eliminarPrestatario(@PathVariable(name = "id") int id) {
 		// Valida que el id sea mayor a 0
 		if (id > 0) {
-			prestatarioService.eliminarPrestatario(id);	
+			prestatarioService.eliminarPrestatario(id);
 		} // fin de if
 		return "redirect:/prestatario/listarPresta";
 	} // fin de eliminarEmpleado
 	
 	
-	
+	@GetMapping("/buscaCuentaExistente/{idBanco}/{cuenta}")
+	@ResponseBody
+	public ResponseEntity<?> cuentaExistente(@PathVariable int idBanco, @PathVariable String cuenta){
+		Optional<Cuenta> cuentaInDataBase = cuentaService.getCuentaByBancoAndNumero(idBanco, cuenta);
+		HashMap<String, Boolean> response = new HashMap<>();
+		response.put("exists", cuentaInDataBase.isPresent());
+		return ResponseEntity.ok(response);
+	}
 	
 	
 }

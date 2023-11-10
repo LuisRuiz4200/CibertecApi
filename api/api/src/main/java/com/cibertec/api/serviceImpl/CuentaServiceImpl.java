@@ -42,4 +42,11 @@ public class CuentaServiceImpl implements CuentaService{
         cuenta.setActivo(false);
         repository.save(cuenta);
     }
+
+    @Override
+    public Optional<Cuenta> getCuentaByBancoAndNumero(int idBanco, String numero) {
+        Banco banco = new Banco();
+        banco.setIdBanco(idBanco);
+        return repository.findByIdBancoCuentaAndNumero(banco, numero);
+    }
 }
