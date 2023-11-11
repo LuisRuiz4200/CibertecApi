@@ -171,7 +171,7 @@
 					<tr th:each="solicitud : ${listaSolicitudes}">
 						<!--<td th:text="${prestamista.idPrestamista}"></td>-->
 						<!--Datos de persona-->
-						<td th:text="${solicitud.idSolicitudPrestamo}"></td>
+						<td  th:text="${solicitud.idSolicitudPrestamo}"></td>
 						<td th:text="${solicitud.prestatario.prestatario.nombres}"></td>
 						<td th:text="${solicitud.prestatario.prestatario.apellidos}"></td>
 						<td th:text="'S/ ' + ${solicitud.monto}"></td>
@@ -283,10 +283,8 @@
 							<div class="modal-footer" style="display: flex; justify-content: center;">
 								<!-- para grabar le ponemos type submit para que active al formulario y active la validación de abajo -->
 								<!-- Cuando son varios como el boton editar y eliminar usar class , cuando es 1 o pocos usar id -->
-								<button type="submit" class="btn btn-primary btnAprobar"
+								<button type="button" class="btn btn-primary btnAprobar" id="btnPrestamo"
 									onclick="setModelState(1)">APROBAR</button>
-								<button type="button" class="btn btn-primary btnAprobar"
-									onclick="setModelState(1)">PRESTAMO</button>
 								<!-- Asignamos idcerrar al boton cerrar para resetear las validaciones de bootstrap   /* data-dismiss="modal" */ -->
 								<button type="submit" class="btn btn-secondary btnCerrar" id="idCerrar"
 									onclick="setModelState(2)">RECHAZAR</button>
@@ -425,11 +423,6 @@
 
 		function setModelState(setState) {
 			const state = document.getElementById("state");
-
-			if (setState == 1) {
-
-				$("#modalPrestamo").modal('show')
-			}
 
 			state.value = setState;
 

@@ -30,7 +30,7 @@ public class PrestamoApiController {
 	@PostMapping("/guardarPrestamo")
 	@ResponseBody
 	@Transactional
-	private  Map<?, ?> guardarPrestamo(@RequestBody Prestamo prestamo) {
+	public  Map<?, ?> guardarPrestamo(@RequestBody Prestamo prestamo) {
 		
 		Map<String, Object> response = new HashMap<>();
 		
