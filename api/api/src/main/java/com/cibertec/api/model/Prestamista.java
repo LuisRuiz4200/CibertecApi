@@ -65,5 +65,6 @@ public class Prestamista {
 	private List<GrupoPrestamista> asesorPrestamista;
 
 	@OneToMany(mappedBy = "prestamistaPrestatario")
+	@JsonIgnore
 	private List<Prestatario> prestatariosList;
 }//fin de PrestamistaM

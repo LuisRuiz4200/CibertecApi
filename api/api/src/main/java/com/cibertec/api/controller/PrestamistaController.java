@@ -287,9 +287,9 @@ public class PrestamistaController {
 					PrestatariosList = prestamista.getPrestatariosList();
 					
 					model.addAttribute("listaPrestatario",PrestatariosList);
-					
-		//List<SolicitudPrestamo> listaSolicitudes = new ArrayList<SolicitudPrestamo>();
-		List<SolicitudPrestamo> listaSolicitudes = PrestatariosList.stream().flatMap(item -> solicitudService.listarPorPrestatario(item.getIdPrestatario()).stream()).collect(Collectors.toList());
+		// instancia la lista para evitar problemas de nullos			
+		List<SolicitudPrestamo> listaSolicitudes = new ArrayList<SolicitudPrestamo>();
+		listaSolicitudes = PrestatariosList.stream().flatMap(item -> solicitudService.listarPorPrestatario(item.getIdPrestatario()).stream()).collect(Collectors.toList());
 		model.addAttribute("listaSolicitudes",listaSolicitudes);
 		
 		SolicitudDto solicitudDto = new SolicitudDto();

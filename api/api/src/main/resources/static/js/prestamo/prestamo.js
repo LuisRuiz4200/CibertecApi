@@ -10,8 +10,15 @@ function cargarCuotas() {
 	var table = document.getElementById("tbCuotas").getElementsByTagName('tbody')[0];
 	var monto = document.getElementById("montoPrestamo").value;
 	var cuotas = document.getElementById("cuotaPrestamo").value;
-
-	var montoPorCuota = monto / cuotas;
+	
+	var montoInteresTotal = document.getElementById("interes").value;
+	
+	montoInteresTotal = montoInteresTotal.substring(3);
+	
+	var montoMensual = monto / cuotas;
+	var montoInteresMensual = montoInteresTotal / cuotas
+	
+	var montoCuota = montoMensual + montoInteresMensual
 
 	limpiarCuotas();
 
@@ -24,40 +31,60 @@ function cargarCuotas() {
 		var celdaFechaPago = nuevaFila.insertCell(2);
 
 		celdaCuota.innerHTML = i;
-		celdaMonto.innerHTML = montoPorCuota;
+		celdaMonto.innerHTML = montoCuota;
 		celdaFechaPago.innerHtml = "";
 
 	}
 }
 
-function buscarSolicitudPrestamo() {
+function formularioPrestamo() {
+
+	var btnPrestamo = document.getElementById("btnPrestamo");
+
+	btnPrestamo.addEventListener('click', function(event) {
+
+		limpiarCuotas();
+
+		$("#modalPrestamo").modal('show')
+
+		var id = document.getElementById("idCodigo").value;
+
+		toastr.warning("imprime: " + id);
+
+		var prestatarioPrestamo = document.getElementById("prestatarioPrestamo");
+		var rucPrestamo = document.getElementById("rucPrestamo");
+		var montoPrestamo = document.getElementById("montoPrestamo");
+		var cuotaPrestamo = document.getElementById("cuotaPrestamo");
+
+		fetch("/api/solicitudPrestamo/buscar/" + id)
+			.then(response => response.json())
+			.then(data => {
+				prestatarioPrestamo.value = data.prestatario.prestatario.nombres;
+				rucPrestamo.value = data.prestatario.prestatario.ruc;
+				montoPrestamo.value = data.monto;
+				cuotaPrestamo.value = data.cuotas;
+
+			});
 
 
-	var prestatarioPrestamo = document.getElementById("prestatarioPrestamo");
-	var rucPrestamo = document.getElementById("rucPrestamo");
-	var montoPrestamo = document.getElementById("montoPrestamo");
-	var cuotaPrestamo = document.getElementById("cuotaPrestamo");
 
-	var id = 1;
+	});
 
-	fetch("/api/solicitudPrestamo/buscar/" + id)
-		.then(response => response.json())
-		.then(data => {
-			prestatarioPrestamo.value = data.prestatario.prestatario.nombres;
-			rucPrestamo.value = data.prestatario.prestatario.ruc;
-			montoPrestamo.value = data.monto;
-			cuotaPrestamo.value = data.cuotas;
 
-		});
+
 }
 
-buscarSolicitudPrestamo();
+formularioPrestamo();
+
 
 
 function guardarPrestamo() {
 
 	var montoPrestamo = document.getElementById("montoPrestamo");
 	var cuotaPrestamo = document.getElementById("cuotaPrestamo");
+
+
+	var formularioSolicitud = document.getElementById("idRegistrar");
 
 	var requestBody = JSON.stringify({
 		"solicitudPrestamo": {
@@ -70,14 +97,29 @@ function guardarPrestamo() {
 	});
 
 
-	fetch("http://localhost:9090/api/prestamo/guardarPrestamo", 
+	fetch("http://localhost:9090/api/prestamo/guardarPrestamo",
 		{
-			method:'POST',
-			headers:{"Content-Type": "application/json"},
-			body:requestBody,
+			method: 'POST',
+			headers: { "Content-Type": "application/json" },
+			body: requestBody,
 		})
 		.then(response => response.json())
-		.then(result => toastr.success(result.mensaje))
+		.then(result => {
+			if (result.mensaje) {
+				toastr.success(result.mensaje);
+
+				formularioSolicitud.addEventListener('submit', function(event) {
+					event.defaultPrevented();
+				});
+				
+				formularioSolicitud.submit();
+				
+			}else{				
+				toastr.error(result.error);
+			}
+		})
 		.catch(error => toastr.error(error));
+
+
 
 }
