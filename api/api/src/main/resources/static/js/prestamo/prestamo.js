@@ -62,7 +62,6 @@ function formularioPrestamo() {
 
 		var id = document.getElementById("idCodigo").value;
 
-		toastr.warning("imprime: " + id);
 
 		var prestatarioPrestamo = document.getElementById("prestatarioPrestamo");
 		var rucPrestamo = document.getElementById("rucPrestamo");
