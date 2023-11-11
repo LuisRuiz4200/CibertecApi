@@ -18,7 +18,10 @@ function cargarCuotas() {
 	var montoMensual = monto / cuotas;
 	var montoInteresMensual = montoInteresTotal / cuotas
 	
-	var montoCuota = montoMensual + montoInteresMensual
+	var montoCuota = montoMensual + montoInteresMensual;
+	
+	var fechaPago = new Date(); // Fecha actual
+    fechaPago.setMonth(fechaPago.getMonth() + 1); // Sumar un mes
 
 	limpiarCuotas();
 
@@ -32,7 +35,17 @@ function cargarCuotas() {
 
 		celdaCuota.innerHTML = i;
 		celdaMonto.innerHTML = montoCuota;
-		celdaFechaPago.innerHtml = "";
+		
+		// Formatear el mes con dos dígitos
+        var mm = (fechaPago.getMonth() + 1).toString().padStart(2, '0');
+		
+		// Formatear la fecha como dd/mm/yyyy
+        var dd = fechaPago.getDate();
+        var yyyy = fechaPago.getFullYear();
+        celdaFechaPago.innerHTML = dd + '/' + mm + '/' + yyyy;
+
+        // Sumar un mes para la próxima cuota
+        fechaPago.setMonth(fechaPago.getMonth() + 1);
 
 	}
 }
