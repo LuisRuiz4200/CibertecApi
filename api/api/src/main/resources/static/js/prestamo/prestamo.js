@@ -34,7 +34,7 @@ function cargarCuotas() {
 		var celdaFechaPago = nuevaFila.insertCell(2);
 
 		celdaCuota.innerHTML = i;
-		celdaMonto.innerHTML = montoCuota;
+		celdaMonto.innerHTML = "S/" + montoCuota.toFixed(2);
 		
 		// Formatear el mes con dos dígitos
         var mm = (fechaPago.getMonth() + 1).toString().padStart(2, '0');
