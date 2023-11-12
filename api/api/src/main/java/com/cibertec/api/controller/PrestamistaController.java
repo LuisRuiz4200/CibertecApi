@@ -284,9 +284,8 @@ public class PrestamistaController {
 		Prestamista prestamista = service.listarPrestamistaPorId(userLogged.getPersona().getIdPersona());
 		List<Prestatario> PrestatariosList = new ArrayList<>();
 					
-					PrestatariosList = prestamista.getPrestatariosList();
-					
-					model.addAttribute("listaPrestatario",PrestatariosList);
+		PrestatariosList = prestamista.getPrestatariosList().stream().filter(item -> Boolean.TRUE.equals(item.isActivo())).collect(Collectors.toList());
+			model.addAttribute("listaPrestatario",PrestatariosList);
 		// instancia la lista para evitar problemas de nullos			
 		List<SolicitudPrestamo> listaSolicitudes = new ArrayList<SolicitudPrestamo>();
 		listaSolicitudes = PrestatariosList.stream().flatMap(item -> solicitudService.listarPorPrestatario(item.getIdPrestatario()).stream()).collect(Collectors.toList());

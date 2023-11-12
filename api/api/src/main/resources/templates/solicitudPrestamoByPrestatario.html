@@ -88,7 +88,7 @@
 								<div class="col-md-2">
 									<div class="form-group">
 										<!-- input type text por que sera una caja y asignamos name para reconocerlos en Servlet y para la validación  -->
-										<label for="exampleInputNombre1">Tasa 20% (MENSUAL)</label>
+											<label id="lblTasa" for="exampleInputNombre1">Tasa 0% (MENSUAL)</label>
 									</div>
 								</div>
 							</div>
@@ -421,12 +421,22 @@
 			$('#modalCuenta').modal('hide');
 		}
 
-		//Validamos numero de cuenta
-		function validarNuevaCuenta() {
-			const nuevaCuenta = document.getElementById("idCuentaLibre").value;
+		//Validamos numero de cuenta 
+			async function validarNuevaCuenta() {
+			const selectedOption = selectNewBank.options[selectNewBank.selectedIndex].value;
+			if(selectedOption < 0){
+				Swal.fire({
+					icon: 'error',
+					title: 'Error',
+					text: 'Debe seleccionar un banco.'
+				});
+				return false;
+			}
 
+			const nuevaCuenta = document.getElementById("idCuentaLibre").value;
 			// Validar la longitud de caracteres
 			const longitudDeseada = 13; // Puedes cambiar este valor según tus necesidades
+
 			if (nuevaCuenta.length !== longitudDeseada) {
 				Swal.fire({
 					icon: 'error',
@@ -436,24 +446,22 @@
 				return false;
 			}
 
-			const selectedOption = selectNewBank.options[selectNewBank.selectedIndex].value;
-
-			fetch('http://localhost:9090/prestatario/buscaCuentaExistente/' + selectedOption + "/" + nuevaCuenta)
-				.then(response => response.json())
-				.then(data => {
-					console.log("La cuenta existe:", data);
-					if(data.exists){
-						Swal.fire({
-							icon: 'error',
-							title: 'Error',
-							text: 'La cuenta ya existe. Ingresa un número diferente.'
-						});
-						return false;
-					}
-				})
-				.catch(error => console.error('Error:', error));
-
 			// Validar si la cuenta ya existe
+			try {
+				const response = await fetch(`http://localhost:9090/prestatario/buscaCuentaExistente/${selectedOption}/${nuevaCuenta}`);
+				const data = await response.json();
+
+				if(data.exists){
+					Swal.fire({
+						icon: 'error',
+						title: 'Error',
+						text: 'La cuenta ya existe. Ingresa un número diferente.'
+					});
+					return false;
+				}
+			}catch(error){
+				console.error('Error:', error);
+			}
 			// var cuentasExistentes = document.querySelectorAll('#setCboCuentas option');
 			// for (var i = 0; i < cuentasExistentes.length; i++) {
 			// 	if (cuentasExistentes[i].getAttribute("data-numero") === nuevaCuenta) {
@@ -471,16 +479,17 @@
 		}
 
 		function agregarCuenta() {
-			if (validarNuevaCuenta()) {
-				// Tu lógica para agregar la cuenta si la validación pasa
-				var numeroCuenta = document.getElementById("idCuentaLibre").value;
-				inputIsNewBank.value = true;
-				inputNewBank.value = selectNewBank.options[selectNewBank.selectedIndex].value;
-				document.getElementById("idObtenemosCuenta").value = numeroCuenta;
-				$('#modalCuenta').modal('hide');
-			}
+			validarNuevaCuenta().then(validForm => {
+				if (validForm) {
+					// Tu lógica para agregar la cuenta si la validación pasa
+					var numeroCuenta = document.getElementById("idCuentaLibre").value;
+					inputIsNewBank.value = true;
+					inputNewBank.value = selectNewBank.options[selectNewBank.selectedIndex].value;
+					document.getElementById("idObtenemosCuenta").value = numeroCuenta;
+					$('#modalCuenta').modal('hide');
+				}
+			});
 		}
-
 		//para cuando cierra modal
 		// Agregar evento al modal cuando se oculta, limpia cajas
 		$('#modalCuenta').on('hidden.bs.modal', function () {
@@ -504,21 +513,45 @@
 		const inputNewBank = document.getElementById("idBanco");
 		const bankNumber = document.getElementById("bankNumberSelected")
 		const inputCuentaForm = document.getElementById("idCuentaBancaria");
+		const lblTasa = document.getElementById("lblTasa");
 		var idCuenta = -1;
 
-		meses.addEventListener("keyup", () => {
-			let montoPrestamo = monto.value;
-			let teaAnual = 0.80;
-			let mesesPrestamo = meses.value;
+		
+		monto.addEventListener("input", () => {
+			monto.value = monto.value.replace(/[^\d.]+/g, '');
+			const parts = monto.value.split('.');
 
-			let base = (1 + teaAnual);
-			let exponente = (1 / 12);
-			let tasaMensual = Math.pow(base, exponente) - 1;
+			if (parts.length > 1)
+				monto.value = parts[0] + '.' + parts[1].slice(0, 2);
 
-			let interesPrestamo = montoPrestamo * tasaMensual * mesesPrestamo;
-
-			interes.value = interesPrestamo.toFixed(2);
+			if(monto.value > 0 && meses.value)
+				calcInteres();
 		});
+
+		meses.addEventListener("input", () => {
+			meses.value = meses.value.replace(/[^\d]+/g, '');
+			meses.value = meses.value.slice(0, 2);
+
+			if(meses.value > 0 && monto.value)
+				calcInteres();
+		});
+
+		function calcInteres(){
+			let montoPrestamo = monto.value;
+			let mesesPrestamo = meses.value;
+			let interesPrestamo = montoPrestamo * getAndShowTasaMensual() * mesesPrestamo;
+			interes.value = interesPrestamo.toFixed(2);
+		}
+
+		function getAndShowTasaMensual(){
+			const teaAnual = 0.80;
+			const base = (1 + teaAnual);
+			const exponente = (1 / 12);
+			const tasaMensual = Math.pow(base, exponente) - 1;
+			const textLabel = "Tasa " + (tasaMensual * 100).toFixed(3)  + "% (Mensual).";
+			lblTasa.textContent = textLabel;
+			return tasaMensual;
+		}
 
 		function showBankNumber() {
 			const selectedOption = selectElement.options[selectElement.selectedIndex];
@@ -538,7 +571,7 @@
 			inputIsNewBank.value = false;
 			$('#modalCuenta').modal('hide');
 		}
-
+		getAndShowTasaMensual();
 	</script>
 
 
