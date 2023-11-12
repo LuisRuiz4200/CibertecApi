@@ -302,7 +302,7 @@
 								<div class="col-md-1">
 									<div class="form-group">
 
-										<button type="button" class="btn btn-danger"
+										<button type="button" class="btn btn-success"
 											onclick="sendBankNumberToForm()">></button>
 									</div>
 								</div>
@@ -367,7 +367,7 @@
 								<div class="col-md-1">
 									<div class="form-group">
 										<!--ASIGNAMOS EVENTO -->
-										<button type="button" class="btn btn-danger"
+										<button type="button" class="btn btn-success"
 											onclick="agregarCuenta()">></button>
 									</div>
 								</div>
@@ -425,18 +425,6 @@
 			var numericValue = inputValue.replace(/\D/g, '');
 			this.value = numericValue;
 		});
-
-		function agregarCuenta() {
-			// Obtener el valor ingresado en el input del modal
-			var numeroCuenta = document.getElementById("idCuentaLibre").value;
-			inputIsNewBank.value = true;
-			inputNewBank.value = selectNewBank.options[selectNewBank.selectedIndex].value;
-			// Asignar el valor a la caja "idObtenemosCuenta"
-			document.getElementById("idObtenemosCuenta").value = numeroCuenta;
-
-			// Cerrar el modal
-			$('#modalCuenta').modal('hide');
-		}
 
 		//Validamos numero de cuenta 
 			async function validarNuevaCuenta() {
