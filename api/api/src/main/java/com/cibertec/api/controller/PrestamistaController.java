@@ -3,6 +3,7 @@ package com.cibertec.api.controller;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -289,6 +290,13 @@ public class PrestamistaController {
 		// instancia la lista para evitar problemas de nullos			
 		List<SolicitudPrestamo> listaSolicitudes = new ArrayList<SolicitudPrestamo>();
 		listaSolicitudes = PrestatariosList.stream().flatMap(item -> solicitudService.listarPorPrestatario(item.getIdPrestatario()).stream()).collect(Collectors.toList());
+		
+
+		// Ordenar la lista por codigo de solicitud
+		// Comparator<SolicitudPrestamo> reversedOrder = Comparator.comparingInt(SolicitudPrestamo::getIdSolicitudPrestamo).reversed();
+		// Collections.sort(listaSolicitudes, reversedOrder);
+		listaSolicitudes.sort(Comparator.comparingInt(SolicitudPrestamo::getIdSolicitudPrestamo).reversed());
+	
 		model.addAttribute("listaSolicitudes",listaSolicitudes);
 		
 		SolicitudDto solicitudDto = new SolicitudDto();
@@ -334,14 +342,11 @@ public class PrestamistaController {
 			listaSolicitudes = solicitudService.listarPorPrestamista(idPrestamista);
 		}
 		
+		listaSolicitudes.sort(Comparator.comparingInt(SolicitudPrestamo::getIdSolicitudPrestamo).reversed());
 		
-		
-		//filtra llena combobox
-		listarSolicitudes(model,session);
-		
-	    model.addAttribute("listaSolicitudes", listaSolicitudes);
-	    
-	    
+		//filtra llena combobox		
+		listarSolicitudes(model,session);		
+	    model.addAttribute("listaSolicitudes", listaSolicitudes);    
 	    return "ApruebaByPrestamista";
 	}
 
