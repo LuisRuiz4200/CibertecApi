@@ -1,5 +1,8 @@
 package com.cibertec.api.controllerrest;
 
+import java.sql.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,14 +45,19 @@ public class PrestamoApiController {
 		
 		try {
 			
+			prestamo.setActivo(true);
+			prestamo.setFechaRegistro(new Date(new java.util.Date().getTime()));
+			
 			cuotas = prestamo.getCuotas();
 			montoMensual = prestamo.getMonto() / prestamo.getCuotas();
 			interes = montoMensual * prestamo.getTem();
 			montoTotal = montoMensual + interes;
 			
+			
 			prestamo = prestamoService.guardar(prestamo);
 			
-			
+			Date fechaPago = new Date(new java.util.Date().getTime()); // Fecha actual
+		
 			
 			if(prestamo!=null) {
 				
@@ -62,9 +70,19 @@ public class PrestamoApiController {
 					cuotaPrestamo.setMonto(montoMensual);
 					cuotaPrestamo.setInteres(interes);
 					cuotaPrestamo.setMontoTotal(montoTotal);
+					
+					
 					cuotaPrestamo.setEstado("Por pagar");
 					
 					cuotaPrestamo = cuotaPrestamoService.guardar(cuotaPrestamo);
+					
+					// Aumentar la fecha para el siguiente mes
+                    Calendar calendar = new GregorianCalendar();
+                    calendar.setTime(fechaPago);
+                    calendar.add(Calendar.MONTH, 1);
+                    fechaPago = new Date(calendar.getTimeInMillis());
+                    
+                    cuotaPrestamo.setFechaPago(fechaPago);
 					
 				}
 				
