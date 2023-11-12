@@ -25,7 +25,7 @@
 			<div class="card-header h2 text-center" th:text="${titulo}"></div>
 			<div class="card-body">
 				<h4 class="card-title">
-					<a th:href="@{/prestatario/registrarPrestatario}" class="btn btn-primary" >AGREGAR</a>
+					<a th:href="@{/prestatario/registrarPrestatario}" class="btn btn-primary" th:text="${txtButton}">AGREGAR</a>
 
 					<!-- <a sec:authorize="hasRole('ADMIN')" th:href="@{/exportarPdf}"
 						class="btn btn-secondary">Exportar a PDF</a> <a
@@ -51,7 +51,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr th:each="prestatario : ${listaPrestatario}">
+						<tr th:each="prestatario : ${lista}">
 							<!--<td th:text="${prestamista.idPrestamista}"></td>-->
 							<!--Datos de persona-->
 							<td th:text="${prestatario.prestatario.idPersona}"></td>
@@ -63,10 +63,10 @@
 							<!-- <td th:text="${prestamista.prestamista.ruc}"></td> -->
 
 							<td><a class="btn btn-warning btn-sm"
-									th:href="@{/actualizar/} + ${prestatario.prestatario.idPersona}">Editar</a></td>
+									th:href="@{/prestatario/actualizarPrestata/} + ${prestatario.prestatario.idPersona}">Editar</a></td>
 							<td>
 								<a class="btn btn-danger btn-sm"
-									th:href="@{/eliminar/} + ${prestatario.prestatario.idPersona}"
+									th:href="@{/prestatario/eliminarPrestata/} + ${prestatario.prestatario.idPersona}"
 									onclick="confirmarEliminacion(event, this)">Eliminar</a>
 							</td>
 						</tr>
@@ -85,7 +85,28 @@
 <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 <!-- Fin para validacion -->
 <!--Para alerta de eliminacion-->
+<script>
 
+	function confirmarEliminacion(event, elemento) {
+		event.preventDefault();
+		Swal.fire({
+			title: '¿Estás seguro de eliminar?',
+			text: 'Esta acción no se puede deshacer',
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Sí, eliminar',
+			cancelButtonText: 'Cancelar'
+		}).then((result) => {
+			if (result.isConfirmed) {
+				window.location.href = elemento.href;
+			}
+		});
+	}
+
+
+</script>
 
 
 </html>

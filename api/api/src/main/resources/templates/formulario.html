@@ -45,7 +45,7 @@
 								th:errors="*{prestamista.apellidos}"></small>
 						</div>
 						<div class="form-group">
-							<label>Direccion : </label>
+							<label>Dirección : </label>
 							<input type="text" th:field="*{prestamista.direccion}" class="form-control"
 								th:errorclass="'form-control alert-danger'" id="direccion" />
 							<small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.direccion')}"

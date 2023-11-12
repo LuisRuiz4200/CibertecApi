@@ -9,11 +9,16 @@
 	<!--Importamos bootstrap-->
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-	<div th:replace="static/head.html">
-
+	<!-- <div th:replace="static/head.html"> -->
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<!-- Fin de Bootstrap -->
+	<!-- Estilo de la tabla -->
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.2/css/dataTables.bootstrap4.min.css">
 	</div>
 
-	<title>Docente</title>
+	<title>Solicitud de Préstamo</title>
 	<!-- Creamos style para css -->
 	<style type="text/css">
 		/*Aqui con este modal-header damos estilo al contenedor del titulo REGISTRAR DOCENTE */
@@ -83,7 +88,7 @@
 								<div class="col-md-2">
 									<div class="form-group">
 										<!-- input type text por que sera una caja y asignamos name para reconocerlos en Servlet y para la validación  -->
-										<label for="exampleInputNombre1">Tasa 20% (MENSUAL)</label>
+											<label id="lblTasa" for="exampleInputNombre1">Tasa 0% (MENSUAL)</label>
 									</div>
 								</div>
 							</div>
@@ -160,6 +165,23 @@
 									</div>
 								</div>
 							</div>
+							<!-- Nombre banco -->
+							<div class="row align-items-center">
+							  <div class="col-md-4">
+							    <div class="form-group mb-0">
+							      <label for="fecha">Banco</label>
+							    </div>
+							  </div>
+							
+							  <div class="col-md-8">
+							    <div class="form-group">
+							      <!-- input type text por que sera una caja y asignamos name para reconocerlos en Servlet y para la validación  -->
+							      <input type="text" class="form-control" id="nombreBanco" name="nombreBanco"
+							        placeholder="Nombre del banco" readonly>
+							
+							    </div>
+							  </div>
+							</div>						
 							<!-- -   -  - -Número de cuenta-->
 							<div class="row align-items-center">
 								<div class="col-md-4">
@@ -280,7 +302,7 @@
 								<div class="col-md-1">
 									<div class="form-group">
 
-										<button type="button" class="btn btn-danger"
+										<button type="button" class="btn btn-success"
 											onclick="sendBankNumberToForm()">></button>
 									</div>
 								</div>
@@ -335,7 +357,7 @@
 										<div class="col-md-9">
 											<div class="form-group">
 												<input type="text" class="form-control" id="idCuentaLibre"
-													name="nombre">
+													name="nombre" maxlength="13">
 											</div>
 										</div>
 									</div>
@@ -345,7 +367,7 @@
 								<div class="col-md-1">
 									<div class="form-group">
 										<!--ASIGNAMOS EVENTO -->
-										<button type="button" class="btn btn-danger"
+										<button type="button" class="btn btn-success"
 											onclick="agregarCuenta()">></button>
 									</div>
 								</div>
@@ -371,16 +393,16 @@
 		<!-- FIN DEL MODAL DE NUMERO DE CUENTA -->
 
 	</div>
-	
+
 	<!--Para validacion 09-10-23   -->
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<!--Lo usuare para la validacion (alertas) -->
-	<script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script> 
+	<script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 	<script src="/js/toastr.min.js"></script>
 	<script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 	<!-- Fin para validacion -->
 	<script src="/js/solicitudPrestamo/solicitudPrestamo.js"></script>
-	
+
 	<!-- Importamos más cosas que se necesitaran hasta mas campos para bootstrap esto sirve para paginacion y search y demás de la tabla junto a lo que esta en script -->
 	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
@@ -395,71 +417,86 @@
 	<script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-validator/0.5.3/js/bootstrapValidator.js"></script>
 	<!-- Para pasar dato de modal a caja -->
 	<script>
-		
+
 		//Solo Ingresar Numeros
-		document.getElementById("idCuentaLibre").addEventListener("input", function() {
-        var inputValue = this.value;
-        // Elimina todo lo que no sea un número
-        var numericValue = inputValue.replace(/\D/g, ''); 
-        this.value = numericValue;
-        });
-        
-		function agregarCuenta() {
-			// Obtener el valor ingresado en el input del modal
-			var numeroCuenta = document.getElementById("idCuentaLibre").value;
-			inputIsNewBank.value = true;
-			inputNewBank.value = selectNewBank.options[selectNewBank.selectedIndex].value;
-			// Asignar el valor a la caja "idObtenemosCuenta"
-			document.getElementById("idObtenemosCuenta").value = numeroCuenta;
+		document.getElementById("idCuentaLibre").addEventListener("input", function () {
+			var inputValue = this.value;
+			// Elimina todo lo que no sea un número
+			var numericValue = inputValue.replace(/\D/g, '');
+			this.value = numericValue;
+		});
 
-			// Cerrar el modal
-			$('#modalCuenta').modal('hide');
+		//Validamos numero de cuenta 
+			async function validarNuevaCuenta() {
+			const selectedOption = selectNewBank.options[selectNewBank.selectedIndex].value;
+			if(selectedOption < 0){
+				Swal.fire({
+					icon: 'error',
+					title: 'Error',
+					text: 'Debe seleccionar un banco.'
+				});
+				return false;
+			}
+
+			const nuevaCuenta = document.getElementById("idCuentaLibre").value;
+			// Validar la longitud de caracteres
+			const longitudDeseada = 13; // Puedes cambiar este valor según tus necesidades
+
+			if (nuevaCuenta.length !== longitudDeseada) {
+				Swal.fire({
+					icon: 'error',
+					title: 'Error',
+					text: 'La cuenta debe tener ' + longitudDeseada + ' dígitos.'
+				});
+				return false;
+			}
+
+			// Validar si la cuenta ya existe
+			try {
+				const response = await fetch(`http://localhost:9090/prestatario/buscaCuentaExistente/${selectedOption}/${nuevaCuenta}`);
+				const data = await response.json();
+
+				if(data.exists){
+					Swal.fire({
+						icon: 'error',
+						title: 'Error',
+						text: 'La cuenta ya existe. Ingresa un número diferente.'
+					});
+					return false;
+				}
+			}catch(error){
+				console.error('Error:', error);
+			}
+			// var cuentasExistentes = document.querySelectorAll('#setCboCuentas option');
+			// for (var i = 0; i < cuentasExistentes.length; i++) {
+			// 	if (cuentasExistentes[i].getAttribute("data-numero") === nuevaCuenta) {
+			// 		Swal.fire({
+			// 			icon: 'error',
+			// 			title: 'Error',
+			// 			text: 'La cuenta ya existe. Ingresa un número diferente.'
+			// 		});
+			// 		return false;
+			// 	}
+			// }
+			
+
+			// Si pasa ambas validaciones, retorna true
+			return true;
 		}
-		
-		//Validamos numero de cuenta
-		function validarNuevaCuenta() {
-        var nuevaCuenta = document.getElementById("idCuentaLibre").value;
-        
-       
-        // Validar si la cuenta ya existe
-        var cuentasExistentes = document.querySelectorAll('#setCboCuentas option');
-        for (var i = 0; i < cuentasExistentes.length; i++) {
-            if (cuentasExistentes[i].getAttribute("data-numero") === nuevaCuenta) {
-                Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'La cuenta ya existe. Ingresa un número diferente.'
-            });
-                return false;
-            }
-        }
 
-        // Validar la longitud de caracteres
-        var longitudDeseada = 13; // Puedes cambiar este valor según tus necesidades
-        if (nuevaCuenta.length !== longitudDeseada) {
-            Swal.fire({
-            icon: 'error',
-            title: 'Error',
-            text: 'La cuenta debe tener ' + longitudDeseada + ' caracteres.'
-        });
-            return false;
-        }
-
-        // Si pasa ambas validaciones, retorna true
-        return true;
-    }
-
-        function agregarCuenta() {
-        if (validarNuevaCuenta()) {
-            // Tu lógica para agregar la cuenta si la validación pasa
-            var numeroCuenta = document.getElementById("idCuentaLibre").value;
-            inputIsNewBank.value = true;
-            inputNewBank.value = selectNewBank.options[selectNewBank.selectedIndex].value;
-            document.getElementById("idObtenemosCuenta").value = numeroCuenta;
-            $('#modalCuenta').modal('hide');
-        }
-    }
-
+		function agregarCuenta() {
+			validarNuevaCuenta().then(validForm => {
+				if (validForm) {
+					// Tu lógica para agregar la cuenta si la validación pasa
+					var numeroCuenta = document.getElementById("idCuentaLibre").value;
+					inputIsNewBank.value = true;
+					inputNewBank.value = selectNewBank.options[selectNewBank.selectedIndex].value;
+					document.getElementById("idObtenemosCuenta").value = numeroCuenta;
+					inputNombreBanco.value = selectNewBank.options[selectNewBank.selectedIndex].textContent;
+					$('#modalCuenta').modal('hide');
+				}
+			});
+		}
 		//para cuando cierra modal
 		// Agregar evento al modal cuando se oculta, limpia cajas
 		$('#modalCuenta').on('hidden.bs.modal', function () {
@@ -483,21 +520,46 @@
 		const inputNewBank = document.getElementById("idBanco");
 		const bankNumber = document.getElementById("bankNumberSelected")
 		const inputCuentaForm = document.getElementById("idCuentaBancaria");
+		const lblTasa = document.getElementById("lblTasa");
+		const inputNombreBanco = document.getElementById("nombreBanco");
 		var idCuenta = -1;
 
-		meses.addEventListener("keyup", () => {
-			let montoPrestamo = monto.value;
-			let teaAnual = 0.80;
-			let mesesPrestamo = meses.value;
+		
+		monto.addEventListener("input", () => {
+			monto.value = monto.value.replace(/[^\d.]+/g, '');
+			const parts = monto.value.split('.');
 
-			let base = (1 + teaAnual);
-			let exponente = (1 / 12);
-			let tasaMensual = Math.pow(base, exponente) - 1;
+			if (parts.length > 1)
+				monto.value = parts[0] + '.' + parts[1].slice(0, 2);
 
-			let interesPrestamo = montoPrestamo * tasaMensual * mesesPrestamo;
-
-			interes.value = interesPrestamo.toFixed(2);
+			if(monto.value > 0 && meses.value)
+				calcInteres();
 		});
+
+		meses.addEventListener("input", () => {
+			meses.value = meses.value.replace(/[^\d]+/g, '');
+			meses.value = meses.value.slice(0, 2);
+
+			if(meses.value > 0 && monto.value)
+				calcInteres();
+		});
+
+		function calcInteres(){
+			let montoPrestamo = monto.value;
+			let mesesPrestamo = meses.value;
+			let interesPrestamo = montoPrestamo * getAndShowTasaMensual() * mesesPrestamo;
+			interes.value = interesPrestamo.toFixed(2);
+		}
+
+		function getAndShowTasaMensual(){
+			const teaAnual = 0.80;
+			const base = (1 + teaAnual);
+			const exponente = (1 / 12);
+			const tasaMensual = Math.pow(base, exponente) - 1;
+			const textLabel = "Tasa " + (tasaMensual * 100).toFixed(3)  + "% (Mensual).";
+			lblTasa.textContent = textLabel;
+			return tasaMensual;
+		}
 
 		function showBankNumber() {
 			const selectedOption = selectElement.options[selectElement.selectedIndex];
@@ -511,17 +573,33 @@
 		}
 
 		function sendBankNumberToForm() {
-			let number = bankNumber.value;
-			document.getElementById("idObtenemosCuenta").value = number;
-			inputCuentaForm.value = idCuenta;
-			inputIsNewBank.value = false;
-			$('#modalCuenta').modal('hide');
+		  if(validSelectBankAccount()){
+		    let number = bankNumber.value;
+		    document.getElementById("idObtenemosCuenta").value = number;
+			inputNombreBanco.value = selectElement.options[selectElement.selectedIndex].textContent;
+		    inputCuentaForm.value = idCuenta;
+		    inputIsNewBank.value = false;
+		    $('#modalCuenta').modal('hide');
+		  }
 		}
 		
+		const validSelectBankAccount = () => {
+		  const selectedOption = selectElement.options[selectElement.selectedIndex];
+		  if(selectedOption.value <= 0){
+		    Swal.fire({
+		      icon: 'error',
+		      title: 'Error',
+		      text: `Debe seleccionar un banco. De no tener alguna cuenta, debe agregarla en la parte inferior.`,
+		    });
+		    return false;
+		  }
+		  return true;
+		}
 		
-
+		getAndShowTasaMensual();
+		
 	</script>
-	
+
 
 </body>
 

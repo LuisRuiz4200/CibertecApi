@@ -10,6 +10,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
@@ -34,6 +35,10 @@ public class Prestatario {
 	@Id
     @Column(name = "idprestatario")
     private int idPrestatario;
+
+	@ManyToOne
+	@JoinColumn(name = "idPrestamista")
+	private Prestamista prestamistaPrestatario;
 	
 	@OneToOne(cascade = CascadeType.ALL)
 	@MapsId
@@ -53,6 +58,7 @@ public class Prestatario {
 	private List<SolicitudPrestamo> listaSolicitudPrestamo;
 	
 	@OneToMany(mappedBy = "idPrestatarioCuenta")
+	@JsonIgnore
 	@ToString.Exclude
     private List<Cuenta> cuentaList;
 }

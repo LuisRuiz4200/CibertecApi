@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cibertec.api.model.Prestamista;
 import com.cibertec.api.model.Prestatario;
 import com.cibertec.api.service.PrestatarioService;
 
@@ -61,5 +63,69 @@ public class PrestatatarioApiController {
 		
 		return response;
 	}
+	
+	@GetMapping("/buscar/{id}")
+	@ResponseBody
+	private ResponseEntity<Prestatario> actualizar(@PathVariable int id) {
+		
+		Prestatario prestatario = new Prestatario();
+		
+		prestatario = prestatarioService.listarPrestatarioPorId(id);
+	
+		return ResponseEntity.ok(prestatario);
+	}
+	
+	@GetMapping("/validarDniExiste/{dni}")
+	private Map<?,?> validarDniExiste(@PathVariable String dni){
+		
+		Map<String,Object> response = new HashMap<>();
+		
+		try {
+			
+			if (prestatarioService.buscarPorDni( dni)!=null) {
+				response.put("mensaje", "El dni " + dni + " ya existe");
+			}
+		}catch(Exception ex) {
+			response.put("error", ex.getMessage() );
+		}
+		
+		return response;
+	}
+	@GetMapping("/validarRucExiste/{ruc}")
+	private Map<?,?> validarRucExiste(@PathVariable String ruc){
+		
+		Map<String,Object> response = new HashMap<>();
+		
+		try {
+			
+			if(prestatarioService.buscarPorRuc(ruc)!=null) {
+				response.put("mensaje", "El ruc " + ruc + " ya existe");
+			}
+			
+		}catch(Exception ex) {
+			response.put("error", ex.getMessage() );
+		}
+		
+		return response;
+	}
+	
+	@GetMapping("/obtenerDni/{id}")
+	private Map<?,?> obtenerDni(@PathVariable int id){
+		
+		Map<String,Object> response = new HashMap<>();
+		Prestatario prestatario = prestatarioService.listarPrestatarioPorId(id);
+		try {
+			
+			if (prestatario!=null) {
+				response.put("mensaje", prestatario.getPrestatario().getDni() );
+			}
+		}catch(Exception ex) {
+			response.put("error", ex.getMessage() );
+		}
+		
+		return response;
+	}
+	
+	
 	
 }

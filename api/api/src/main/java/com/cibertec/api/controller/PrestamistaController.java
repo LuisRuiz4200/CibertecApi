@@ -3,6 +3,7 @@ package com.cibertec.api.controller;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -273,14 +274,29 @@ public class PrestamistaController {
 	
 	
 	@GetMapping("/aprobarPrestamo")
-	private String listarSolicitudes(Model model) {
+	private String listarSolicitudes(Model model, HttpSession session) {
 		
-		List<Prestatario> listaPrestatario = new ArrayList<Prestatario>();
-		listaPrestatario = prestatarioService.listarPrestatario();
-		model.addAttribute("listaPrestatario",listaPrestatario);
-		
+		//Antes
+//		List<Prestatario> listaPrestatario = new ArrayList<Prestatario>();
+//		listaPrestatario = prestatarioService.listarPrestatario();
+//		model.addAttribute("listaPrestatario",listaPrestatario);
+		//Despues
+		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
+		Prestamista prestamista = service.listarPrestamistaPorId(userLogged.getPersona().getIdPersona());
+		List<Prestatario> PrestatariosList = new ArrayList<>();
+					
+		PrestatariosList = prestamista.getPrestatariosList().stream().filter(item -> Boolean.TRUE.equals(item.isActivo())).collect(Collectors.toList());
+			model.addAttribute("listaPrestatario",PrestatariosList);
+		// instancia la lista para evitar problemas de nullos			
 		List<SolicitudPrestamo> listaSolicitudes = new ArrayList<SolicitudPrestamo>();
-		listaSolicitudes = solicitudService.listar();
+		listaSolicitudes = PrestatariosList.stream().flatMap(item -> solicitudService.listarPorPrestatario(item.getIdPrestatario()).stream()).collect(Collectors.toList());
+		
+
+		// Ordenar la lista por codigo de solicitud
+		// Comparator<SolicitudPrestamo> reversedOrder = Comparator.comparingInt(SolicitudPrestamo::getIdSolicitudPrestamo).reversed();
+		// Collections.sort(listaSolicitudes, reversedOrder);
+		listaSolicitudes.sort(Comparator.comparingInt(SolicitudPrestamo::getIdSolicitudPrestamo).reversed());
+	
 		model.addAttribute("listaSolicitudes",listaSolicitudes);
 		
 		SolicitudDto solicitudDto = new SolicitudDto();
@@ -308,7 +324,7 @@ public class PrestamistaController {
 	public String filtrarSolicitudes(@RequestParam("prestamista") int idPrestamista,
 	                                  @RequestParam("fechaDesde")  String fechaDesde,
 	                                  @RequestParam("fechaHasta")  String fechaHasta,
-	                                  Model model) throws ParseException {
+	                                  Model model, HttpSession session) throws ParseException {
 		List<SolicitudPrestamo> listaSolicitudes = new ArrayList<SolicitudPrestamo>();
 		if(idPrestamista == -1 ) {
 			
@@ -326,14 +342,11 @@ public class PrestamistaController {
 			listaSolicitudes = solicitudService.listarPorPrestamista(idPrestamista);
 		}
 		
+		listaSolicitudes.sort(Comparator.comparingInt(SolicitudPrestamo::getIdSolicitudPrestamo).reversed());
 		
-		
-		//filtra llena combobox
-		listarSolicitudes(model);
-		
-	    model.addAttribute("listaSolicitudes", listaSolicitudes);
-	    
-	    
+		//filtra llena combobox		
+		listarSolicitudes(model,session);		
+	    model.addAttribute("listaSolicitudes", listaSolicitudes);    
 	    return "ApruebaByPrestamista";
 	}
 
