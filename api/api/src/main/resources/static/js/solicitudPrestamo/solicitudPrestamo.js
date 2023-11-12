@@ -38,3 +38,30 @@ function validarFormulario() {
 }
 
 validarFormulario();
+
+function validarFiltrosBusquedaSolicitud() {
+
+	var formularioListaSolicitud = document.getElementById("formularioListaSolcitud");
+
+
+
+	formularioListaSolicitud.addEventListener('submit', function(event) {
+
+		var fechaDesde = document.getElementById("idFechaDesde").value;
+		var fechaHasta = document.getElementById("idFechaHasta").value;
+		var prestatario = document.getElementById("idFiltroPrestatario").value;
+
+		
+		if (prestatario > 0) {
+			if (!fechaDesde || !fechaHasta) {
+				toastr.warning("Debe incluir un rango de fechas");
+				event.preventDefault();
+				return;
+			}
+		}
+
+	});
+
+}
+
+validarFiltrosBusquedaSolicitud();
