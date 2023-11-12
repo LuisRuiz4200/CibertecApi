@@ -576,6 +576,7 @@
 		  if(validSelectBankAccount()){
 		    let number = bankNumber.value;
 		    document.getElementById("idObtenemosCuenta").value = number;
+			inputNombreBanco.value = selectElement.options[selectElement.selectedIndex].textContent;
 		    inputCuentaForm.value = idCuenta;
 		    inputIsNewBank.value = false;
 		    $('#modalCuenta').modal('hide');
