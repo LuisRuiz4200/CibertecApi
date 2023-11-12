@@ -51,7 +51,7 @@
 	<div class="container-fluid">
 		<!-- Inicio de FORMULARIO -->
 
-		<form class="form-inline" th:action="@{/filtrarSolicitudes}" method="get">
+		<form class="form-inline" th:action="@{/filtrarSolicitudes}" method="get" id="formularioListaSolcitud">
 
 			<!--Contenedor 10 + 1 del boton para que este a costado-->
 			<div class="row align-items-center" style="width: 100%;">
@@ -65,10 +65,10 @@
 							</div>
 						</div>
 
-						<div class="col-md-9">
+						<div class="col-md-3">
 							<div class="form-group">
 								<!-- Para despegable con bootstrap con SELECT y asignamos id =idSexo -->
-								<select class="form-control" id="idPrestamista" name="prestamista">
+								<select class="form-select" id="idFiltroPrestatario" name="prestamista">
 									<!-- donde para Seleccione su value es vacio(espacio) es empty y agarra para la validación, y para los otros si tienen value-->
 									<option value="-1">[Seleccione Prestatario...]</option>
 									<option th:each="prestatario : ${listaPrestatario}"
@@ -89,7 +89,7 @@
 
 						<div class="col-md-4">
 							<div class="form-group">
-								<input type="date" class="form-control" id="idCuentaBloqueada" name="fechaDesde">
+								<input type="date" class="form-control" id="idFechaDesde" name="fechaDesde">
 							</div>
 						</div>
 						<!-- FECHA HASTA del combobox -->
@@ -103,7 +103,7 @@
 
 						<div class="col-md-4">
 							<div class="form-group">
-								<input type="date" class="form-control" id="idCuentaBloqueada" name="fechaHasta">
+								<input type="date" class="form-control" id="idFechaHasta" name="fechaHasta">
 							</div>
 						</div>
 
