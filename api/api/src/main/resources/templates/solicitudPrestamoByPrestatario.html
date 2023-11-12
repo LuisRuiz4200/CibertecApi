@@ -165,6 +165,23 @@
 									</div>
 								</div>
 							</div>
+							<!-- Nombre banco -->
+							<div class="row align-items-center">
+							  <div class="col-md-4">
+							    <div class="form-group mb-0">
+							      <label for="fecha">Banco</label>
+							    </div>
+							  </div>
+							
+							  <div class="col-md-8">
+							    <div class="form-group">
+							      <!-- input type text por que sera una caja y asignamos name para reconocerlos en Servlet y para la validación  -->
+							      <input type="text" class="form-control" id="nombreBanco" name="nombreBanco"
+							        placeholder="Nombre del banco" readonly>
+							
+							    </div>
+							  </div>
+							</div>						
 							<!-- -   -  - -Número de cuenta-->
 							<div class="row align-items-center">
 								<div class="col-md-4">
@@ -473,6 +490,7 @@
 			// 		return false;
 			// 	}
 			// }
+			
 
 			// Si pasa ambas validaciones, retorna true
 			return true;
@@ -486,6 +504,7 @@
 					inputIsNewBank.value = true;
 					inputNewBank.value = selectNewBank.options[selectNewBank.selectedIndex].value;
 					document.getElementById("idObtenemosCuenta").value = numeroCuenta;
+					inputNombreBanco.value = selectNewBank.options[selectNewBank.selectedIndex].textContent;
 					$('#modalCuenta').modal('hide');
 				}
 			});
@@ -514,6 +533,7 @@
 		const bankNumber = document.getElementById("bankNumberSelected")
 		const inputCuentaForm = document.getElementById("idCuentaBancaria");
 		const lblTasa = document.getElementById("lblTasa");
+		const inputNombreBanco = document.getElementById("nombreBanco");
 		var idCuenta = -1;
 
 		
@@ -565,13 +585,30 @@
 		}
 
 		function sendBankNumberToForm() {
-			let number = bankNumber.value;
-			document.getElementById("idObtenemosCuenta").value = number;
-			inputCuentaForm.value = idCuenta;
-			inputIsNewBank.value = false;
-			$('#modalCuenta').modal('hide');
+		  if(validSelectBankAccount()){
+		    let number = bankNumber.value;
+		    document.getElementById("idObtenemosCuenta").value = number;
+		    inputCuentaForm.value = idCuenta;
+		    inputIsNewBank.value = false;
+		    $('#modalCuenta').modal('hide');
+		  }
 		}
+		
+		const validSelectBankAccount = () => {
+		  const selectedOption = selectElement.options[selectElement.selectedIndex];
+		  if(selectedOption.value <= 0){
+		    Swal.fire({
+		      icon: 'error',
+		      title: 'Error',
+		      text: `Debe seleccionar un banco. De no tener alguna cuenta, debe agregarla en la parte inferior.`,
+		    });
+		    return false;
+		  }
+		  return true;
+		}
+		
 		getAndShowTasaMensual();
+		
 	</script>
 
 
