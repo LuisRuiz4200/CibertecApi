@@ -34,11 +34,11 @@
 											<div class="row row-cols-2 g-auto">
 												<div >
 													<label>PRESTATARIO</label>
-													<input id="prestatarioPrestamo" class="form-control" type="text">
+													<input id="prestatarioPrestamo" class="form-control" type="text" readonly>
 												</div>
 												<div>
-													<label>RUC</label>
-													<input id="rucPrestamo" class="form-control" type="text" >
+													<label>DNI</label>
+													<input id="dniPrestamo" class="form-control" type="text" readonly>
 												</div>
 											</div>
 										</div>
@@ -47,12 +47,12 @@
 											<div class="row row-cols-auto g-auto">
 												<div>
 													<label>MONTO</label>
-													<input id="montoPrestamo" class="form-control" type="text">
+													<input id="montoPrestamo" class="form-control" type="text" readonly>
 												</div>
 
 												<div>
 													<label>CUOTAS</label>
-													<input id="cuotaPrestamo" class="form-control" type="text">
+													<input id="cuotaPrestamo" class="form-control" type="text" readonly>
 												</div>
 											</div>
 										</div>
@@ -65,7 +65,8 @@
 						</div>
 						<div class="col-6">
 
-							<div class="table-responsive">
+							<div class="table-responsive"  style="height: 400px; overflow-x: auto;">
+								
 								<table class="table border" id="tbCuotas">
 									<thead>
 										<tr>

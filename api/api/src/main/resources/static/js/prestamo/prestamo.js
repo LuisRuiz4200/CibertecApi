@@ -64,7 +64,7 @@ function formularioPrestamo() {
 
 
 		var prestatarioPrestamo = document.getElementById("prestatarioPrestamo");
-		var rucPrestamo = document.getElementById("rucPrestamo");
+		var dniPrestamo = document.getElementById("dniPrestamo");
 		var montoPrestamo = document.getElementById("montoPrestamo");
 		var cuotaPrestamo = document.getElementById("cuotaPrestamo");
 
@@ -72,7 +72,7 @@ function formularioPrestamo() {
 			.then(response => response.json())
 			.then(data => {
 				prestatarioPrestamo.value = data.prestatario.prestatario.nombres;
-				rucPrestamo.value = data.prestatario.prestatario.ruc;
+				dniPrestamo.value = data.prestatario.prestatario.dni;
 				montoPrestamo.value = data.monto;
 				cuotaPrestamo.value = data.cuotas;
 
@@ -94,18 +94,18 @@ function guardarPrestamo() {
 
 	var montoPrestamo = document.getElementById("montoPrestamo");
 	var cuotaPrestamo = document.getElementById("cuotaPrestamo");
-
+    var idSolicitudPrestamo = document.getElementById("idCodigo");
 
 	var formularioSolicitud = document.getElementById("idRegistrar");
 
 	var requestBody = JSON.stringify({
 		"solicitudPrestamo": {
-			"idSolicitudPrestamo": "1"
+			"idSolicitudPrestamo": idSolicitudPrestamo.value
 		},
 		"monto": montoPrestamo.value,
 		"cuotas": cuotaPrestamo.value,
-		"tea": "",
-		"tem": "0.20"
+		"tea": "0.8",
+		"tem": "0.05020"
 	});
 
 
