@@ -58,13 +58,16 @@ public class Prestamista {
 
 	@OneToMany(mappedBy = "jefePrestamista")
 	@JsonIgnore
+	@ToString.Exclude
 	private List<GrupoPrestamista> jefePrestamista;
 
 	@OneToMany(mappedBy = "asesorPrestamista")
 	@JsonIgnore
+	@ToString.Exclude
 	private List<GrupoPrestamista> asesorPrestamista;
 
 	@OneToMany(mappedBy = "prestamistaPrestatario")
 	@JsonIgnore
+	@ToString.Exclude
 	private List<Prestatario> prestatariosList;
 }//fin de PrestamistaM

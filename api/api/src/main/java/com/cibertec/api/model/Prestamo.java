@@ -4,9 +4,7 @@ import java.sql.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.gson.annotations.JsonAdapter;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
