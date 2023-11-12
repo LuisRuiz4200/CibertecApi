@@ -421,12 +421,22 @@
 			$('#modalCuenta').modal('hide');
 		}
 
-		//Validamos numero de cuenta
-		function validarNuevaCuenta() {
-			const nuevaCuenta = document.getElementById("idCuentaLibre").value;
+		//Validamos numero de cuenta 
+			async function validarNuevaCuenta() {
+			const selectedOption = selectNewBank.options[selectNewBank.selectedIndex].value;
+			if(selectedOption < 0){
+				Swal.fire({
+					icon: 'error',
+					title: 'Error',
+					text: 'Debe seleccionar un banco.'
+				});
+				return false;
+			}
 
+			const nuevaCuenta = document.getElementById("idCuentaLibre").value;
 			// Validar la longitud de caracteres
 			const longitudDeseada = 13; // Puedes cambiar este valor según tus necesidades
+
 			if (nuevaCuenta.length !== longitudDeseada) {
 				Swal.fire({
 					icon: 'error',
@@ -436,24 +446,22 @@
 				return false;
 			}
 
-			const selectedOption = selectNewBank.options[selectNewBank.selectedIndex].value;
-
-			fetch('http://localhost:9090/prestatario/buscaCuentaExistente/' + selectedOption + "/" + nuevaCuenta)
-				.then(response => response.json())
-				.then(data => {
-					console.log("La cuenta existe:", data);
-					if(data.exists){
-						Swal.fire({
-							icon: 'error',
-							title: 'Error',
-							text: 'La cuenta ya existe. Ingresa un número diferente.'
-						});
-						return false;
-					}
-				})
-				.catch(error => console.error('Error:', error));
-
 			// Validar si la cuenta ya existe
+			try {
+				const response = await fetch(`http://localhost:9090/prestatario/buscaCuentaExistente/${selectedOption}/${nuevaCuenta}`);
+				const data = await response.json();
+
+				if(data.exists){
+					Swal.fire({
+						icon: 'error',
+						title: 'Error',
+						text: 'La cuenta ya existe. Ingresa un número diferente.'
+					});
+					return false;
+				}
+			}catch(error){
+				console.error('Error:', error);
+			}
 			// var cuentasExistentes = document.querySelectorAll('#setCboCuentas option');
 			// for (var i = 0; i < cuentasExistentes.length; i++) {
 			// 	if (cuentasExistentes[i].getAttribute("data-numero") === nuevaCuenta) {
