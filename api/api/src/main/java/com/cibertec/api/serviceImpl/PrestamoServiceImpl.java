@@ -14,41 +14,32 @@ import com.cibertec.api.service.PrestamoService;
 @Service
 public class PrestamoServiceImpl implements PrestamoService {
 
-
 	@Autowired
 	private PrestamoRepository prestamoRepository;
 	
-	
 	@Override
 	public Prestamo guardar(Prestamo model) {
-		// TODO Auto-generated method stub
 		return prestamoRepository.save(model);
 	}
 
 	@Override
 	public List<Prestamo> listar() {
-		// TODO Auto-generated method stub
 		return prestamoRepository.findAll();
 	}
 
 	@Override
 	public void eliminar(int id) {
-		// TODO Auto-generated method stub
 		prestamoRepository.deleteById(id);
 	}
 
 	@Override
 	public List<Prestamo> listarPorId(int id) {
-		// TODO Auto-generated method stub
 		return prestamoRepository.findById(id).stream().collect(Collectors.toList());
 	}
 
 	@Override
 	public Prestamo buscarPorId(int id) {
-		// TODO Auto-generated method stub
-		return prestamoRepository.findById(id).get();
+		return prestamoRepository.findById(id).orElse(null);
 	}
-
-	
 
 }
