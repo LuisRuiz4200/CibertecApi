@@ -21,13 +21,11 @@ public class CuotaPrestamoServiceImpl implements CuotaPrestamoService{
 	
 	@Override
 	public CuotaPrestamo guardar(CuotaPrestamo model) {
-		// TODO Auto-generated method stub
 		return cuotaPrestamoRepository.save(model);
 	}
 
 	@Override
 	public List<CuotaPrestamo> listar() {
-		// TODO Auto-generated method stub
 		return cuotaPrestamoRepository.findAll();
 	}
 
@@ -45,14 +43,12 @@ public class CuotaPrestamoServiceImpl implements CuotaPrestamoService{
 
 	@Override
 	public List<CuotaPrestamo> listarPorId(int id) {
-		// TODO Auto-generated method stub
 		return cuotaPrestamoRepository.findByCuotaPrestamoPkIdPrestamo(id);
 	}
 	
 
 	@Override
 	public CuotaPrestamo buscarPorId(int id) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	@Override

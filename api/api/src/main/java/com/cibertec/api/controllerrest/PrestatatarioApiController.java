@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cibertec.api.model.Prestamista;
 import com.cibertec.api.model.Prestatario;
 import com.cibertec.api.service.PrestatarioService;
 
