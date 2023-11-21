@@ -40,12 +40,12 @@
 					</thead>
 					<tbody>
 						<tr th:each=" prestamo : ${listaPrestamo}">
-							<td th:text="${prestamo.idPrestatario}"></td>
-							<td th:text="${prestamo.prestatario.nombres}"></td>
-							<td th:text="${prestamo.prestatario.apellidos}"></td>
-							<td th:text="${prestamo.prestatario.dni}"></td>
-							<td th:text="${prestamo.fechaRegistro}"></td>
-							<td th:text="${prestamo.activo}"></td>						
+							<td th:text="${prestamo.idPrestamo}"></td>
+							<td th:text="${prestamo.solicitudPrestamo.idSolicitudPrestamo}"></td>
+							<td th:text="${prestamo.monto}"></td>
+							<td th:text="${prestamo.cuotas}"></td>
+							<td th:text="${prestamo.tea}"></td>
+							<td th:text="${prestamo.tem}"></td>
 						</tr>
 						  
 						
