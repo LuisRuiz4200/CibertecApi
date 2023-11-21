@@ -63,7 +63,21 @@ public class PrestatarioServiceImpl implements PrestatarioService{
 		return repo.findByPrestamistaPrestatarioAndActivo(Prestamista, activo);
 				
 	}
-
+	@Override
+	public Prestatario buscarPorDni(String dni) {
+		// TODO Auto-generated method stub
+		return repo.findByPrestatarioDni(dni);
+	}
+	@Override
+	public Prestatario buscarPorRuc(String ruc) {
+		// TODO Auto-generated method stub
+		return repo.findByPrestatarioRuc(ruc);
+	}
+	@Override
+	public Prestatario buscarPorDniOPorRuc(String dni,String ruc) {
+		// TODO Auto-generated method stub
+		return repo.findByPrestatarioDniOrPrestatarioRuc(dni,ruc);
+	}
 
 	
 

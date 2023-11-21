@@ -18,7 +18,7 @@
 	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.2/css/dataTables.bootstrap4.min.css">
 	</div>
 
-	<title>Docente</title>
+	<title>Solicitud de Préstamo</title>
 	<!-- Creamos style para css -->
 	<style type="text/css">
 		/*Aqui con este modal-header damos estilo al contenedor del titulo REGISTRAR DOCENTE */
@@ -576,6 +576,7 @@
 		  if(validSelectBankAccount()){
 		    let number = bankNumber.value;
 		    document.getElementById("idObtenemosCuenta").value = number;
+			inputNombreBanco.value = selectElement.options[selectElement.selectedIndex].textContent;
 		    inputCuentaForm.value = idCuenta;
 		    inputIsNewBank.value = false;
 		    $('#modalCuenta').modal('hide');

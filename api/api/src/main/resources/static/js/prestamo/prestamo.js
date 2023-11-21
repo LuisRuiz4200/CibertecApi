@@ -119,7 +119,7 @@ function guardarPrestamo() {
 		.then(result => {
 			if (result.mensaje) {
 				toastr.success(result.mensaje);
-
+				/*esto validar y quitarlo*/ 
 				formularioSolicitud.addEventListener('submit', function(event) {
 					event.defaultPrevented();
 				});

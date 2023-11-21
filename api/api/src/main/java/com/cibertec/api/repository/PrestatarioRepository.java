@@ -11,4 +11,8 @@ import com.cibertec.api.model.Prestatario;
 @Repository
 public interface PrestatarioRepository extends JpaRepository<Prestatario, Integer>{
 	List<Prestatario> findByPrestamistaPrestatarioAndActivo(Prestamista Prestamista, boolean activo);
+	Prestatario findByPrestatarioDni(String dni);
+	Prestatario findByPrestatarioRuc(String ruc);
+	Prestatario findByPrestatarioDniOrPrestatarioRuc(String dni, String ruc);
+	
 }
