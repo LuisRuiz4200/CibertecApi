@@ -19,36 +19,31 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="tb_solicitud_prestamo")
+@Table(name = "tb_solicitud_prestamo")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class SolicitudPrestamo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name="idsolicitudprestamo")
+	@Column(name = "idsolicitudprestamo")
 	private int idSolicitudPrestamo;
 
 	@ManyToOne
-	@JoinColumn(name="idprestatario")
+	@JoinColumn(name = "idprestatario")
 	private Prestatario prestatario;
 
 	@ManyToOne
-	@JoinColumn(name="idprestamista")
-	private Prestamista prestamista;
-
-	@ManyToOne
-	@JoinColumn(name="idCuenta")
-	@JsonIgnore // NO QUITEN EL JSON IGNORE - EL JSON ESTA GENERANDO MUCHA DUPLICIDAD CON ESTE CAMPO
+	@JoinColumn(name = "idCuenta")
+	@JsonIgnore // NO QUITEN EL JSON IGNORE - EL JSON ESTA GENERANDO MUCHA DUPLICIDAD
 	private Cuenta cuentaSolicitud;
 
 	private double monto;
 	private double interes;
 	private int cuotas;
-	private String motivo;
 	private String cuentaBancaria;
 
-	@Column(name="fecharegistro")
+	@Column(name = "fecharegistro")
 	@Temporal(TemporalType.DATE)
 	private Date fechaRegistro;
 
