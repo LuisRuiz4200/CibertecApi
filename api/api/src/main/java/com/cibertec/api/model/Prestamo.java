@@ -39,7 +39,7 @@ public class Prestamo {
 	private Date fechaRegistro;
 	private boolean activo;
 	
-	@OneToMany(mappedBy = "cuotaPrestamoPk.prestamo")
+	@OneToMany(mappedBy = "prestamo")
 	private List<CuotaPrestamo> listaCuotaPrestamo;
 	
 }
