@@ -7,16 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cibertec.api.model.Prestamo;
+import com.cibertec.api.model.SolicitudPrestamo;
 import com.cibertec.api.repository.PrestamoRepository;
 import com.cibertec.api.service.PrestamoService;
-
 
 @Service
 public class PrestamoServiceImpl implements PrestamoService {
 
 	@Autowired
 	private PrestamoRepository prestamoRepository;
-	
+
 	@Override
 	public Prestamo guardar(Prestamo model) {
 		return prestamoRepository.save(model);
@@ -40,6 +40,11 @@ public class PrestamoServiceImpl implements PrestamoService {
 	@Override
 	public Prestamo buscarPorId(int id) {
 		return prestamoRepository.findById(id).orElse(null);
+	}
+
+	@Override
+	public Prestamo getBySolicitud(SolicitudPrestamo solicitudPrestamo) {
+		return prestamoRepository.findBySolicitudPrestamo(solicitudPrestamo);
 	}
 
 }
