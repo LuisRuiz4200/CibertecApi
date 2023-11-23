@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.ui.Model;
 import org.springframework.security.core.Authentication;
+
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -80,7 +82,7 @@ public class UsuarioController {
 		public String listarUsuario(Model model) {
 			
 			List<Usuario> lista =serviceUsuario.listarUsuario();
-		
+			lista.sort(Comparator.comparingInt(usuario -> usuario.getRol().getIdRol()));
 			model.addAttribute("lista",lista);
 		
 			model.addAttribute("titulo","Lista de Usuarios");

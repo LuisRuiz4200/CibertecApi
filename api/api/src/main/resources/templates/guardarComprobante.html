@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+
+<head>
+	<div th:replace="static/head.html"></div>
+</head>
+
+
+<body>
+
+	<div th:replace="static/navbar.html"></div>
+
+	<div class="container mt-4">
+
+		<div class="card">
+
+			<div class="card-header">
+				<h3>COMPROBANTE DE PAGO</h3>
+			</div>
+
+			<div class="card-body position-relative">
+
+				<div class="position-absolute top-0 end-0">
+					<img src="https://cdn-icons-png.flaticon.com/512/2463/2463731.png" width="300px" height="300px">
+				</div>
+
+				<form id="formularioComprobante">
+					<div class="row gap-4">
+						<div class="col-12">
+							<div class="row">
+								<div class="col-3">
+									<label>TIPO COMPROBANTE</label>
+									<select id="idTipoComprobante" class="form-select">
+										<option th:each="tipoComprobante : ${listaTipoComprobante}"
+											th:value="*{tipoComprobante.idTipoComprobante}"
+											th:text="*{tipoComprobante.descripcion}"></option>
+									</select>
+								</div>
+								<div class="col-2">
+									<label>SERIE</label>
+									<input id="serie" class="form-control" />
+								</div>
+								<div class="col-2">
+									<label>CORRELATIVO</label>
+									<input id="correlativo" class="form-control" />
+								</div>
+							</div>
+						</div>
+						<div class="col-12">
+							<div class="row gap-4">
+								<div class="col-12">
+									<div class="row">
+										<div class="col-3">
+											<label>RUC EMISOR</label>
+											<input id="rucEmisor" class="form-control" />
+										</div>
+										<div class="col-5">
+											<label>NOMBRE EMISOR</label>
+											<input id="nomEmisor" class="form-control" />
+										</div>
+									</div>
+								</div>
+								<div class="col-12">
+									<div class="row">
+										<div class="col-2">
+											<label>TIPO DOCUMENTO</label>
+											<select id="idTipoDocumento" class="form-select">
+												<option th:each="tipoDocumento : ${listaTipoDocumento}"
+													th:value="*{tipoDocumento.idTipoDocumento}"
+													th:text="*{tipoDocumento.descripcion}"></option>
+											</select>
+										</div>
+										<div class="col-3">
+											<label id="lblTipoDocumento">DOCUMENTO RECEPTOR</label>
+											<input id="numDocReceptor" class="form-control" />
+										</div>
+										<div class="col-5">
+											<label>NOMBRE RECEPTOR</label>
+											<input id="nomReceptor" class="form-control" />
+										</div>
+									</div>
+								</div>
+								<div class="col-12">
+									<div>
+										<div class="responsive position-relativo">
+											<table id="tbItem" class="table">
+												<thead>
+													<th class="col-1">NRO</th>
+													<th class="col-2">COD. ITEM</th>
+													<th class="col-4">DESCRIPCION</th>
+													<th class="col-1">CANT.</th>
+													<th class="col-2">MONTO ITEM</th>
+													<th class="col-2">MONTO TOTAL</th>
+												</thead>
+												<tbody>
+												</tbody>
+											</table>
+											<div class="position-absolute end-0 bottom-0">
+												<a onclick="mostrarModalNuevoItem()" href="#">
+													<img src="https://png.pngtree.com/png-vector/20230410/ourmid/pngtree-add-button-vector-png-image_6697932.png"
+														width="40px" height="40px" />
+												</a>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</div>
+
+
+						</div>
+						<div class=" col-12">
+							<div>
+								<button onclick="guardarComprobante()" type="submit" class="btn-success">AGREGAR</button>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+
+		<div id="modalNuevoItem" class="modal fade">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<div class="modal-title">
+							<h4>NUEVO ITEM</h4>
+						</div>
+					</div>
+					<div class="modal-body">
+						<div class="row gap-4">
+							<div class="col-4">
+								<div>
+									<label>COD. ITEM</label>
+									<input id="idModalCodItem" class="form-control" />
+								</div>
+							</div>
+							<div class="col-10">
+								<div>
+									<label>DESCRIPCION</label>
+									<input id="idModalDescripcion" class="form-control" />
+								</div>
+							</div>
+							<div class="col-12">
+								<div class="row">
+									<div class="col-4">
+										<label>CANT</label>
+										<input id="idModalCantidadItem" class="form-control" type="number"/>
+									</div>
+									<div class="col-4">
+										<label>MONTO</label>
+										<input id="idModalMontoItem" class="form-control" type="number"/>
+									</div>
+
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="modal-footer">
+						<div>
+							<button onclick="agregarItem()" class="btn-success">AGREGAR</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	<script src="/js/comprobante/comprobante.js"></script>
+	<script th:replace="static/scripts.html"></script>
+</body>
+
+</html>

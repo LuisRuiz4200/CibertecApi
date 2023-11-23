@@ -6,9 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import org.hibernate.mapping.Map;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,7 +24,6 @@ import com.cibertec.api.model.Cuenta;
 import com.cibertec.api.model.Persona;
 import com.cibertec.api.model.Prestamista;
 import com.cibertec.api.model.Prestatario;
-import com.cibertec.api.model.Rol;
 import com.cibertec.api.model.SolicitudDto;
 import com.cibertec.api.model.SolicitudPrestamo;
 import com.cibertec.api.model.Usuario;
@@ -35,7 +32,6 @@ import com.cibertec.api.service.CuentaService;
 import com.cibertec.api.service.PrestamistaService;
 import com.cibertec.api.service.PrestatarioService;
 import com.cibertec.api.service.SolicitudPrestamoService;
-import com.cibertec.api.service.UService;
 
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
@@ -49,7 +45,6 @@ public class PrestatarioController {
 	PrestatarioService prestatarioService;
 	BancoService bancoService;
 	SolicitudPrestamoService solicitudPrestamoService;
-	private UService userService;
 	CuentaService cuentaService;
 	PrestamistaService prestamistaService;
 
@@ -65,28 +60,18 @@ public class PrestatarioController {
 		//DESPUES CON FILTRO
 // Obtener al Prestamista desde la session de su Usuario, ROL 3 ES PRESTAMISTA, 4 PRESTATARIO
 		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
-		// Listado declarado
-		List<Prestatario> lista = new ArrayList<>();
 		// for mensaje
 		String titulo = "";
 		String txtButton = "";
 			// obtener id
 		Prestamista prestamista = prestamistaService.listarPrestamistaPorId(userLogged.getPersona().getIdPersona());
 
+		List<Prestatario> PrestatariosList = new ArrayList<>();
+		PrestatariosList = prestatarioService.listByPrestamistaAndActivo(prestamista, true);
 
-			/* Listado por Prestamista */
-//			Rol rolPrestamista = new Rol();
-//			rolPrestamista.setIdRol(3);
-				
-			List<Prestatario> PrestatariosList = new ArrayList<>();
-			
-			//PrestatariosList = prestamista.getPrestatariosList();
-			
-			PrestatariosList = prestatarioService.listByPrestamistaAndActivo(prestamista, true);
-
-			//model.addAttribute("navbar", true);
-			titulo = "Lista de Prestatario";
-			txtButton = "Agregar Prestatario";
+		//model.addAttribute("navbar", true);
+		titulo = "Lista de Prestatario";
+		txtButton = "Agregar Prestatario";
 
 		model.addAttribute("lista", PrestatariosList);
 		model.addAttribute("titulo", titulo);

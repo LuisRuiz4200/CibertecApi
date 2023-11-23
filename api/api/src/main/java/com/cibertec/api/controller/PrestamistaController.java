@@ -3,6 +3,7 @@ package com.cibertec.api.controller;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -284,12 +285,18 @@ public class PrestamistaController {
 		Prestamista prestamista = service.listarPrestamistaPorId(userLogged.getPersona().getIdPersona());
 		List<Prestatario> PrestatariosList = new ArrayList<>();
 					
-					PrestatariosList = prestamista.getPrestatariosList();
-					
-					model.addAttribute("listaPrestatario",PrestatariosList);
-					
-		//List<SolicitudPrestamo> listaSolicitudes = new ArrayList<SolicitudPrestamo>();
-		List<SolicitudPrestamo> listaSolicitudes = PrestatariosList.stream().flatMap(item -> solicitudService.listarPorPrestatario(item.getIdPrestatario()).stream()).collect(Collectors.toList());
+		PrestatariosList = prestamista.getPrestatariosList().stream().filter(item -> Boolean.TRUE.equals(item.isActivo())).collect(Collectors.toList());
+			model.addAttribute("listaPrestatario",PrestatariosList);
+		// instancia la lista para evitar problemas de nullos			
+		List<SolicitudPrestamo> listaSolicitudes = new ArrayList<SolicitudPrestamo>();
+		listaSolicitudes = PrestatariosList.stream().flatMap(item -> solicitudService.listarPorPrestatario(item.getIdPrestatario()).stream()).collect(Collectors.toList());
+		
+
+		// Ordenar la lista por codigo de solicitud
+		// Comparator<SolicitudPrestamo> reversedOrder = Comparator.comparingInt(SolicitudPrestamo::getIdSolicitudPrestamo).reversed();
+		// Collections.sort(listaSolicitudes, reversedOrder);
+		listaSolicitudes.sort(Comparator.comparingInt(SolicitudPrestamo::getIdSolicitudPrestamo).reversed());
+	
 		model.addAttribute("listaSolicitudes",listaSolicitudes);
 		
 		SolicitudDto solicitudDto = new SolicitudDto();
@@ -335,14 +342,11 @@ public class PrestamistaController {
 			listaSolicitudes = solicitudService.listarPorPrestamista(idPrestamista);
 		}
 		
+		listaSolicitudes.sort(Comparator.comparingInt(SolicitudPrestamo::getIdSolicitudPrestamo).reversed());
 		
-		
-		//filtra llena combobox
-		listarSolicitudes(model,session);
-		
-	    model.addAttribute("listaSolicitudes", listaSolicitudes);
-	    
-	    
+		//filtra llena combobox		
+		listarSolicitudes(model,session);		
+	    model.addAttribute("listaSolicitudes", listaSolicitudes);    
 	    return "ApruebaByPrestamista";
 	}
 	

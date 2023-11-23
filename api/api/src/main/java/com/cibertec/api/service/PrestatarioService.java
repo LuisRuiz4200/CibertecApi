@@ -20,6 +20,12 @@ public interface PrestatarioService {
 	
 	public void eliminarPrestatario(int id);
     List<Prestatario> listByPrestamistaAndActivo(Prestamista Prestamista, boolean activo);
-	Optional<Prestatario> getPrestatarioById(int id);	
+	Optional<Prestatario> getPrestatarioById(int id);
+
+	Prestatario buscarPorDni(String dni);
+
+	Prestatario buscarPorRuc(String ruc);
+
+	Prestatario buscarPorDniOPorRuc(String dni, String ruc);	
 	
 }
