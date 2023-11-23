@@ -65,7 +65,7 @@ public class PrestamoApiController {
 
 					CuotaPrestamo cuotaPrestamo = new CuotaPrestamo();
 					
-					cuotaPrestamo.getCuotaPrestamoPk().setIdPrestamo(prestamo.getIdPrestamo());
+					cuotaPrestamo.getCuotaPrestamoPk().getPrestamo().setIdPrestamo(prestamo.getIdPrestamo());
 					cuotaPrestamo.getCuotaPrestamoPk().setIdCuotaPrestamo(i+1);
 					cuotaPrestamo.setMonto(montoMensual);
 					cuotaPrestamo.setInteres(interes);

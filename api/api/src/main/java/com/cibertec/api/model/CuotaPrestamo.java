@@ -15,7 +15,7 @@ import lombok.Data;
 public class CuotaPrestamo {
 	
 	@EmbeddedId
-	private CuotaPrestamoPK cuotaPrestamoPk = new CuotaPrestamoPK();
+	private CuotaPrestamoPK cuotaPrestamoPk;
 	
 	private double monto;
 	private double interes;

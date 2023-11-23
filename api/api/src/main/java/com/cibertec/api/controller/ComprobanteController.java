@@ -57,24 +57,6 @@ public class ComprobanteController {
 		
 		return "guardarComprobante";
 	}
-	@GetMapping("/actualizar/{id}")
-	private String actualizar(@PathVariable int id, Model model) {
-		
-		Comprobante comprobante = new Comprobante();
-		String mensaje = "";
-		
-		try {
-			comprobante = comprobanteService.buscarPorId(id);
-		}catch(Exception ex) {
-			mensaje = ex.getMessage();
-		}
-		
-		model.addAttribute("mensaje",mensaje);
-		model.addAttribute("comprobante",comprobante);
-		
-		
-		return "guardarComprobante";
-	}
 	
 	@PostMapping("/guardar")
 	private String guardar(@ModelAttribute Comprobante comprobante,Model model) {

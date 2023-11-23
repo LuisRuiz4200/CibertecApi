@@ -46,7 +46,7 @@ public class CuotaPrestamoServiceImpl implements CuotaPrestamoService{
 	@Override
 	public List<CuotaPrestamo> listarPorId(int id) {
 		// TODO Auto-generated method stub
-		return cuotaPrestamoRepository.findByCuotaPrestamoPkIdPrestamo(id);
+		return cuotaPrestamoRepository.findByCuotaPrestamoPkPrestamoIdPrestamo(id);
 	}
 	
 
