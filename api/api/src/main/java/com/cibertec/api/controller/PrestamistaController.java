@@ -345,6 +345,28 @@ public class PrestamistaController {
 	    
 	    return "ApruebaByPrestamista";
 	}
+	
+	//------------
+	
+		@GetMapping("/revisarEstadoPrestamoByJefePrestamista")
+		private String listarPrestamoRevisarByBoss(Model model) {
+			
+			return "ChiefRevisaPrestamo";
+		}
+		
+		//----------------
+		
+		//------------
+		
+			@GetMapping("/revisarRendimientoByAdmin")
+			private String LookRendiByAdmin(Model model) {
+				
+				return "AdminRevisaRendimiento";
+			}
+			
+			//----------------
+	
+	
 
 	
 
