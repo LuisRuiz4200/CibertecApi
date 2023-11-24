@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
+	<div th:replace="static/head.html"></div>
+
+	<!-- Bootstrap CSS -->
+	<!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
+	<!--FONT AWESOME-->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+		integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<!-- Fin de Bootstrap -->
+	 <!-- Estilo de la tabla -->
+   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.2/css/dataTables.bootstrap4.min.css">
+   <!-- Fin del estilo de tabla -->
+	<title>Consulta de cuotas por Prestatario</title>
+	<!-- Creamos style para css -->
+	<style type="text/css">
+		/*Aqui con este modal-header damos estilo al contenedor del titulo REGISTRAR DOCENTE */
+		.modal-header {
+			color: #fff;
+			background: #428bca;
+			display: flex;
+			justify-content: center;
+		}
+
+		/*Esto de aqui abajo son para el color de errores de validacion*/
+		.help-block {
+			color: red;
+		}
+
+		.form-group.has-error .form-control-label {
+			color: red;
+		}
+
+		.form-group.has-error .form-control {
+			border: 1px solid red;
+			box-shadow: 0 0 0 0.2rem rgba(250, 16, 0, 0.18);
+		}
+	</style>
+	<!-- FIN DEL CSS -->
+</head>
+
+<body>
+	<div th:insert="~{plantilla/UITemplate.html::cabecera}"></div>
+	</br>
+	</br>
+	<h1 class="text-center">Consulta de Cuotas</h1>
+	<!-- Contenido centrado y con margens con container -->
+	<!-- INICIO EL CONTAINER -->
+	<div class="container-fluid">
+		<!-- Inicio de FORMULARIO -->
+
+		<form class="form-inline" th:action="@{/}" method="get" id="formularioListaSolcitud">
+
+			<!--Contenedor 10 + 1 del boton para que este a costado-->
+			<div class="row align-items-center" style="width: 100%;">
+				<div class="col-md-10">
+
+					<!-- Banco combobox -->
+					<div class="row align-items-center">
+						<div class="col-lg-2">
+							<div class="form-group mb-0">
+								<label for="exampleInputNombre1">Estado de prestamo: </label>
+							</div>
+						</div>
+
+						<div class="col-lg-2">
+							<div class="form-group">
+								<!-- Para despegable con bootstrap con SELECT y asignamos id =idSexo -->
+								<select class="form-select" id="idFiltroPrestatario" name="prestamista">
+									<!-- donde para Seleccione su value es vacio(espacio) es empty y agarra para la validación, y para los otros si tienen value-->
+									<option value="-1">[Seleccione Estado...]</option>
+									<option value="-1">[Pagado]</option>
+									<option value="-1">[Parcial]</option>
+									<option value="-1">[Pendiente]</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					</br>
+					<!-- FECHA DESDE del combobox -->
+					<div class="row align-items-center">
+						<div class="col-md-2">
+							<div class="form-group mb-0">
+								<label for="exampleInputNombre1">Fecha (Desde): </label>
+							</div>
+						</div>
+
+						<div class="col-md-4">
+							<div class="form-group">
+								<input type="date" class="form-control" id="idFechaDesde" name="fechaDesde">
+							</div>
+						</div>
+						<!-- FECHA HASTA del combobox -->
+
+
+						<div class="col-md-2">
+							<div class="form-group mb-0">
+								<label for="exampleInputNombre1">Fecha (Hasta): </label>
+							</div>
+						</div>
+
+						<div class="col-md-4">
+							<div class="form-group">
+								<input type="date" class="form-control" id="idFechaHasta" name="fechaHasta">
+							</div>
+						</div>
+
+					</div>
+
+				</div>
+				<!--BOTON ROJO > -->
+				<div class="col-md-2">
+					<div class="form-group">
+
+						<button type="submit" class="btn btn-success w-100" id="btnFiltrar"
+							style="margin-left: 120px;">Buscar</button>
+					</div>
+				</div>
+			</div> <!--FIN Contenedor 10 + 1 del boton para que este a costado-->
+		</form>
+
+		
+
+		<!-- FIN DEL FORMULARIO -->
+
+		<!-- INICIO DE DIV PARA SEPARACIÓN MT-4 -->
+		<!-- ESPACIADO  class mt-4 es margen superior de 4 para toda la tabla -->
+		<div class="mt-4">
+			</br>
+			</br>
+			<!-- INICIO DE LA TABLA y asignamos id tableDocentes -->
+			<table id="tableRevisaPrestamo" class="table table-striped table-bordered" style="width:100%">
+				<!-- thead seria para el nombre de las columnas o encabezado -->
+				<thead  class="text-center">
+					<tr>
+						<!-- Aqui se ponen el nombre de los encabezados de la tabla -->
+						<th class="text-center">Código Prestamo</th>
+						<th class="text-center">Monto</th>
+						<th class="text-center">Estado</th>
+						<th class="text-center">Fecha Prestamo</th>
+						<!-- Agregamos nuevo th Condicion para la foranea -->
+						<th class="text-center">Detalle</th>
+					</tr>
+				</thead>
+				<!-- Dentro del cuerpo creamos tr que es una fila y td es celda dentro de la fila -->
+				<tbody class="text-center">
+					<!-- SI USAMOS JSTL, LA PÁGINA VA A REFRESCAR O ACTUALIZAR -->
+					<tr>
+<!--             Aca creamos las celdas que tendran los registros, si hay 8 encabezados arriba de la tabla abra 8 td aca -->
+            
+                <td>7477</td>
+                <td>1500</td>
+                <td>Pendiente</td>
+                <td>2023-11-10</td>
+                <td>
+				  <button type="button" class="btn btn-primary btnDetalle" id="idDetalle"  data-toggle="modal" data-target="#modalDetalle">
+				    <i class="fa-solid fa-eye"></i> Ver Cuotas
+				  </button>
+				</td>
+            </tr>
+				</tbody>
+				<!--FIN de tbody  -->
+			</table>
+			<!-- FIN DE LA TABLA -->
+		</div>
+
+
+		<!-- INICIO Modal para que al darle nuevo docente aparezca campos a rellenar -->
+		<!-- el id es el identificador del div , le ponemos nombre modalDocente -->
+		<div class="modal fade" id="modalDetalle" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+			aria-hidden="true">
+			<!-- Agregamos para que este centrado el modal el modal-dialog centered -->
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<!-- Nombre del detalle  -->
+						<h5 class="modal-title" id="exampleModalLabel">Detalle</h5>
+
+					</div>
+					<!-- Dentro del div class modal-body ponemos el formulario -->
+					<div class="modal-body">
+						<!-- Creamos el formulario form y agregamos id o identificador con el nombre de idRegistrar 
+      Para el validator del script del ultimo-->
+						<!-- FORMULARIO -->
+						<form id="idRegistrar"
+							method="post">
+							<!--Para codigo y no visualizar llamamos solo al input y, le pondremos hidden-->
+							<input type="hidden" class="form-control" id="idCodigo" name="codigo">
+							<input type="hidden" id="state" >
+							<input type="hidden" id="estado">
+							<!-- FIN DE PARA CODIGO -->
+							<div class="form-group">
+								<label for="exampleInputNombre1">Prestamos</label>
+								<!-- input type text por que sera una caja y asignamos name para reconocerlos en Servlet y para la validación  -->
+								<input type="text" class="form-control" id="idNombres" name="nombre"
+									placeholder="Ingresar Prestamo" readonly>
+							</div>
+							<div class="form-group">
+								<label for="exampleInputPaterno1">Cuota</label>
+								<input type="text" class="form-control" id="monto" name="paterno"
+									placeholder="Ingresar cuota" readonly>
+							</div>
+							<div class="form-group">
+								<label for="exampleInputMaterno1">Monto</label>
+								<input type="text" class="form-control" id="interes" name="materno"
+									placeholder="Ingresar monto" readonly>
+							</div>
+							<div class="form-group">
+								<label for="exampleInputHijos1">Fecha Vencimiento</label>
+								<input type="text" class="form-control" id="meses" name="hijos"
+									placeholder="Ingresar fecha vencimiento" readonly>
+							</div>
+							<div class="form-group">
+								<label for="exampleInputSueldo1">Estado</label>
+								<input type="text" class="form-control" id="fechaSolicitada" name="sueldo"
+									placeholder="Ingresar Estado" readonly>
+							</div>
+							<div class="form-group">
+								<label for="exampleInputSueldo1">Deuda</label>
+								<input type="text" class="form-control" id="banco" name="sueldo"
+									placeholder="Ingresar deuda" readonly>
+							</div>
+						</form>
+
+						<!-- FIN DEL FORMULARIO FORM -->
+					</div>
+					<!-- FIN del div class modal-body -->
+
+				</div>
+			</div>
+		</div>
+		<!-- FIN DEL MODAL -->
+</div><!-- FIN EL CONTAINER FLUID-->
+
+<!-- Importamos más cosas que se necesitaran hasta mas campos para bootstrap esto sirve para paginacion y search y demás de la tabla junto a lo que esta en script -->
+	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+	<!--<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+		crossorigin="anonymous"></script>-->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.13.2/js/dataTables.bootstrap4.min.js"></script>
+	<!-- script para validar las cajas de texto -->
+	<script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-validator/0.5.3/js/bootstrapValidator.js"></script>
+	<!--DataTable -->
+	<script src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.13.2/js/dataTables.bootstrap4.min.js"></script>
+	
+	<script>
+		$(document).ready(function () {
+    $('#tableRevisaPrestamo').DataTable();
+		});
+		
+	</script>
+	</body>
+
+</html>

@@ -2,9 +2,13 @@ package com.cibertec.api.model;
 
 import java.sql.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -15,7 +19,7 @@ import lombok.Data;
 public class CuotaPrestamo {
 	
 	@EmbeddedId
-	private CuotaPrestamoPK cuotaPrestamoPk = new CuotaPrestamoPK();
+	private CuotaPrestamoPK cuotaPrestamoPk;
 	
 	private double monto;
 	private double interes;
@@ -24,4 +28,9 @@ public class CuotaPrestamo {
 	@Column(name="fechapago")
 	private Date fechaPago;
 	private String estado;
+	
+	@ManyToOne
+	@JoinColumn(name= "idPrestamo",insertable=false,updatable=false)
+	@JsonIgnore
+	private Prestamo prestamo;
 }

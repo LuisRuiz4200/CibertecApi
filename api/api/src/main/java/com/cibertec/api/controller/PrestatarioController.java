@@ -258,5 +258,16 @@ public class PrestatarioController {
 		return ResponseEntity.ok(response);
 	}
 	
+	//------------
+	
+	@GetMapping("/revisarEstadoPrestamo")
+	private String listarPrestamoRevisar(Model model) {
+		
+		return "prestatarioRevisaPrestamo";
+	}
+	
+	//----------------
+	
+	
 	
 }
