@@ -84,7 +84,6 @@ public class UserServiceImpl implements UService {
 	//}
 	@Override
 	public void eliminarUsuario(int id) {
-		// TODO Auto-generated method stub
 		Usuario usua = repo.findById(id).orElse(null);
 	    if (usua != null) {
 	        //al  campo usua de tipo tbusuario lo cambia a false osea de eliminado(1)

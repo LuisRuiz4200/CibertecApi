@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cibertec.api.model.CuotaPrestamo;
-import com.cibertec.api.model.CuotaPrestamoPK;
 import com.cibertec.api.model.Prestamo;
 import com.cibertec.api.service.CuotaPrestamoService;
 import com.cibertec.api.service.PrestamoService;
