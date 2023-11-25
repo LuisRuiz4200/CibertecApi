@@ -1,10 +1,13 @@
 package com.cibertec.api.modelDTO;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 
 @Data
 public class ComprobanteDetalleDTO {
 	
+	@JsonIgnore
 	private int idComprobante;
 	private int idComprobanteDetalle;
 	

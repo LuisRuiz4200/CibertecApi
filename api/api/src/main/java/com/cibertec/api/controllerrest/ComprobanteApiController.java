@@ -45,12 +45,18 @@ public class ComprobanteApiController {
 			comprobante = modelMapper.map(comprobanteDTO, Comprobante.class);
 			comprobante = comprobanteService.guardar(comprobante);
 			
-			int idDetalleComprobante = 1;
-			
 			for (ComprobanteDetalleDTO cpeDTO : comprobanteDTO.getListaComprobanteDetalle()) {
-				comprobanteDetalle = modelMapper.map(cpeDTO, ComprobanteDetalle.class);
+				
+				comprobanteDetalle = new ComprobanteDetalle();
+				
 				comprobanteDetalle.getComprobanteDetallePK().setIdComprobante(comprobante.getIdComprobante());
-				comprobanteDetalle.getComprobanteDetallePK().setIdComprobanteDetalle(idDetalleComprobante ++);
+				comprobanteDetalle.getComprobanteDetallePK().setIdComprobanteDetalle(cpeDTO.getIdComprobanteDetalle());
+				comprobanteDetalle.setCodItem(cpeDTO.getCodItem());
+				comprobanteDetalle.setDescripcion(cpeDTO.getDescripcion());
+				comprobanteDetalle.setCantidadItem(cpeDTO.getCantidadItem());
+				comprobanteDetalle.setMontoItem(cpeDTO.getMontoItem());
+				comprobanteDetalle.setMontoTotal(cpeDTO.getMontoTotal());
+				
 				comprobanteDetalle = comprobanteDetalleService.guardar(comprobanteDetalle);
 			}
 			
