@@ -20,13 +20,31 @@ async function apiGuardarComprobante() {
 	var correlativoRef = document.getElementById("correlativoRef");
 	var fechaRegistro = document.getElementById("fechaRegistro");
 	var estado = document.getElementById("estado");
+	
 	var listaComprobanteDetalle = document.getElementById("tbItem");
+	var filas = listaComprobanteDetalle.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+
+	var listaDetalles = [];
+
+	for (var i = 0; i < filas.length; i++) {
+		var fila = filas[i];
+		var celdas = fila.getElementsByTagName("td");
+
+		var item = {
+			"idComprobanteDetalle": celdas[0].innerText,
+			"codItem": celdas[1].innerText,
+			"descripcion": celdas[2].innerText
+		};
+
+		listaDetalles.push(item);
+	}
+
 
 	var comprobante = {
 		"idTipoComprobante": idTipoComprobante.value,
 		"serie": serie.value,
 		"correlativo": correlativo.value,
-		"fechaEmision":"2023-11-23",
+		"fechaEmision": "2023-11-23",
 		"rucEmisor": rucEmisor.value,
 		"nomEmisor": nomEmisor.value,
 		"idTipoDocumento": idTipoDocumento.value,
@@ -37,7 +55,7 @@ async function apiGuardarComprobante() {
 		"correlativoRef": "",
 		"fechaRegistro": "2023-11-23",
 		"estado": "Pendiente de Pago",
-		"listaComprobanteDetalle": []
+		"listaComprobanteDetalle": listaDetalles
 	};
 
 
@@ -45,7 +63,7 @@ async function apiGuardarComprobante() {
 
 	await fetch("http://localhost:9090/api/comprobante/registrar", {
 		method: 'post',
-		headers: {"content-type":'application/json'},
+		headers: { "content-type": 'application/json' },
 		body: jsonBody
 	})
 		.then(response => response.json())
@@ -63,60 +81,52 @@ async function apiGuardarComprobante() {
 
 function guardarComprobante() {
 
+
 	var formularioComprobante = document.getElementById("formularioComprobante");
-	
+
 	var idTipoComprobante = document.getElementById("idTipoComprobante");
 	var serie = document.getElementById("serie");
 	var correlativo = document.getElementById("correlativo");
-	var fechaEmision = document.getElementById("fechaEmision");
 	var rucEmisor = document.getElementById("rucEmisor");
 	var nomEmisor = document.getElementById("nomEmisor");
 	var idTipoDocumento = document.getElementById("idTipoDocumento");
-	var idPrestatario = document.getElementById("idPrestatario");
 	var numDocReceptor = document.getElementById("numDocReceptor");
 	var nomReceptor = document.getElementById("nomReceptor");
 
-	formularioComprobante.addEventListener('submit', function(event) {
+	if (!idTipoComprobante.value) {
+		toastr.error('Debe pertenecer a un tipo de comprobante');
+		return;
+	}
+	if (!serie.value) {
+		toastr.error('Debe pertenecer a una serie');
+		return;
+	}
+	if (!correlativo.value) {
+		toastr.error('Debe tener un correlativo');
+		return;
+	}
+	if (!rucEmisor.value) {
+		toastr.error('Debe consignar el ruc del emisor');
+		return;
+	}
+	if (!nomEmisor.value) {
+		toastr.error('Debe consignar el nombre del emisor');
+		return;
+	}
+	if (!idTipoDocumento.value) {
+		toastr.error('Debe especificar el tipo de documento del receptor');
+		return;
+	}
+	if (!numDocReceptor.value) {
+		toastr.error('Debe consignar el número de documento del receptor');
+		return;
+	}
+	if (!nomReceptor.value) {
+		toastr.error('Debe consignar el nombre del receptor');
+		return;
+	}
 
-
-		if (!idTipoComprobante.value) {
-			toastr.error('Debe pertenecer a un tipo de comprobante');
-			return;
-		}
-		if (!serie.value) {
-			toastr.error('Debe pertenecer a una serie');
-			return;
-		}
-		if (!correlativo.value) {
-			toastr.error('Debe tener un correlativo');
-			return;
-		}
-		if (!rucEmisor.value) {
-			toastr.error('Debe consignar el ruc del emisor');
-			return;
-		}
-		if (!nomEmisor.value) {
-			toastr.error('Debe consignar el nombre del emisor');
-			return;
-		}
-		if (!idTipoDocumento.value) {
-			toastr.error('Debe especificar el tipo de documento del receptor');
-			return;
-		}
-		if (!numDocReceptor.value) {
-			toastr.error('Debe consignar el número de documento del receptor');
-			return;
-		}
-		if (!nomReceptor.value) {
-			toastr.error('Debe consignar el nombre del receptor');
-			return;
-		}
-		
-		
-		apiGuardarComprobante();
-		
-	});
-
+	formularioComprobante.onsubmit();
 
 }
 
@@ -213,7 +223,7 @@ function agregarItem() {
 	modalCantidadItem.value = '';
 	modalMontoItem.value = '';
 
-
+	$("#modalNuevoItem").modal('hide');
 }
 
 
