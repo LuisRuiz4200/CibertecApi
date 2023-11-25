@@ -21,9 +21,11 @@ public class PrestamoDto {
 
     private String estadoPrestamo;
     private String estadoUltimaCuota;
+
     private int nroCuotaActual;
     private int cantCuotasPagadas;
     private int cantCuotasPendientes;
+
     private double montosPagados;
     private double montosPendientes;
 

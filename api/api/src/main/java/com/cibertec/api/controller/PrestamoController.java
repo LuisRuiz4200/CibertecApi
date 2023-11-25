@@ -158,6 +158,7 @@ public class PrestamoController {
 				itemDto.setEstadoUltimaCuota(cuotas.stream()
 						.filter(cuota -> cuota.getCuotaPrestamoPk().getIdCuotaPrestamo() == finalNroCuotaActual)
 						.findFirst().orElseThrow().getEstado());
+				nroCuotaActual = finalNroCuotaActual;
 			}
 
 			itemDto.setIdPrestamo(prestamo.getIdPrestamo());
