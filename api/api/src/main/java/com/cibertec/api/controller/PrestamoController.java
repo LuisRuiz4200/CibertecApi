@@ -119,6 +119,10 @@ public class PrestamoController {
 			listaPrestamo.sort(Comparator.comparingInt(Prestamo::getIdPrestamo).reversed());
 
 		model.addAttribute("listaPrestamo", listaPrestamo);
+
+		if (rol == Utils.ROL_PRESTATARIO)
+			return "prestatarioRevisaPrestamo";
+
 		return "listaPrestamo";
 	}
 
