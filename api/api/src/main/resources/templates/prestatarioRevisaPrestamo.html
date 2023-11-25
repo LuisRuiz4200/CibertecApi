@@ -55,7 +55,7 @@
 	<div class="container-fluid">
 		<!-- Inicio de FORMULARIO -->
 
-		<form class="form-inline" th:action="@{/}" method="get" id="formularioListaSolcitud">
+		<form class="form-inline" th:action="@{/prestamos/}" method="get" id="formularioListaSolcitud">
 
 			<!--Contenedor 10 + 1 del boton para que este a costado-->
 			<div class="row align-items-center" style="width: 100%;">
@@ -72,19 +72,18 @@
 						<div class="col-lg-2">
 							<div class="form-group">
 								<!-- Para despegable con bootstrap con SELECT y asignamos id =idSexo -->
-								<select class="form-select" id="idFiltroPrestatario" name="prestamista">
+								<select class="form-select" id="idFiltroPrestatario" name="estado">
 									<!-- donde para Seleccione su value es vacio(espacio) es empty y agarra para la validación, y para los otros si tienen value-->
-									<option value="-1">[Seleccione Estado...]</option>
-									<option value="-1">[Pagado]</option>
-									<option value="-1">[Parcial]</option>
-									<option value="-1">[Pendiente]</option>
+									<option value="-1">[Seleccione Estado ...]</option>
+									<option value="1">Pendiente</option>
+									<option value="2">Pagado</option>
 								</select>
 							</div>
 						</div>
 					</div>
 					</br>
-					<!-- FECHA DESDE del combobox -->
 					<div class="row align-items-center">
+						<!-- FECHA DESDE del combobox -->
 						<div class="col-md-2">
 							<div class="form-group mb-0">
 								<label for="exampleInputNombre1">Fecha (Desde): </label>
@@ -96,9 +95,8 @@
 								<input type="date" class="form-control" id="idFechaDesde" name="fechaDesde">
 							</div>
 						</div>
+
 						<!-- FECHA HASTA del combobox -->
-
-
 						<div class="col-md-2">
 							<div class="form-group mb-0">
 								<label for="exampleInputNombre1">Fecha (Hasta): </label>
@@ -110,7 +108,6 @@
 								<input type="date" class="form-control" id="idFechaHasta" name="fechaHasta">
 							</div>
 						</div>
-
 					</div>
 
 				</div>

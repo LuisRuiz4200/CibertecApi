@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.cibertec.api.model.CuotaPrestamo;
 import com.cibertec.api.model.GrupoPrestamista;
@@ -44,13 +45,21 @@ public class PrestamoController {
 	CuotaPrestamoService cuotaService;
 
 	@GetMapping({ "", "/", "listar" })
-	private String listar(Model model, HttpSession session) {
+	private String listar(Model model, HttpSession session,
+			@RequestParam(name = "estado", required = false, defaultValue = "-1") int estado,
+			@RequestParam(name = "fechaDesde", required = false, defaultValue = "") String fechaDesde,
+			@RequestParam(name = "fechaHasta", required = false, defaultValue = "") String fechaHasta) {
+
 		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
 		if (userLogged == null)
 			return "redirect:/login";
 
 		int rol = userLogged.getRol().getIdRol();
 		List<PrestamoDto> listaPrestamo = new ArrayList<PrestamoDto>();
+		String estadoPrestamo = "";
+		if (estado > 0)
+			estadoPrestamo = (estado == 1) ? Utils.PAGO_PENDIENTE : Utils.PAGO_PAGADO;
+		final String estadoPrestamoFinal = estadoPrestamo;
 
 		if (rol == Utils.ROL_ADMINISTRADOR)
 			// listaPrestamo = prestamoService.listar();
@@ -64,7 +73,8 @@ public class PrestamoController {
 						.map(GrupoPrestamista::getAsesorPrestamista)
 						.flatMap(asesor -> asesor.getPrestatariosList().stream()
 								.flatMap(prestatario -> prestatario.getListaSolicitudPrestamo().stream()
-										.filter(solicitud -> "Aprobado".equalsIgnoreCase(solicitud.getEstado()))
+										.filter(solicitud -> Utils.PRESTAMO_APROBADO
+												.equalsIgnoreCase(solicitud.getEstado()))
 										.map(solicitud -> prestamoService.getBySolicitud(solicitud))
 										.filter(Objects::nonNull)))
 						.collect(Collectors.toList());
@@ -77,7 +87,7 @@ public class PrestamoController {
 					.orElseThrow();
 			List<Prestamo> prestamos = asesorPrestamista.getPrestatariosList().stream()
 					.flatMap(prestatario -> prestatario.getListaSolicitudPrestamo().stream()
-							.filter(solicitud -> "Aprobado".equalsIgnoreCase(solicitud.getEstado()))
+							.filter(solicitud -> Utils.PRESTAMO_APROBADO.equalsIgnoreCase(solicitud.getEstado()))
 							.map(solicitud -> prestamoService.getBySolicitud(solicitud))
 							.filter(Objects::nonNull))
 					.collect(Collectors.toList());
@@ -88,11 +98,31 @@ public class PrestamoController {
 			Prestatario prestatario = prestatarioService.getPrestatarioById(userLogged.getPersona().getIdPersona())
 					.orElseThrow();
 			List<Prestamo> prestamos = prestatario.getListaSolicitudPrestamo().stream()
-					.filter(solicitud -> "Aprobado".equalsIgnoreCase(solicitud.getEstado()))
+					.filter(solicitud -> Utils.PRESTAMO_APROBADO.equalsIgnoreCase(solicitud.getEstado()))
 					.map(solicitud -> prestamoService.getBySolicitud(solicitud))
 					.filter(Objects::nonNull)
 					.collect(Collectors.toList());
+
 			// listaPrestamo = prestamos;
+
+			if (!estadoPrestamoFinal.isEmpty())
+				prestamos = prestamos.stream().filter(prestamo -> {
+					String estadoUltimaCuota = prestamo.getListaCuotaPrestamo().get(prestamo.getCuotas() - 1)
+							.getEstado();
+					if (estadoUltimaCuota.equals(Utils.PAGO_PARCIAL))
+						estadoUltimaCuota = Utils.PAGO_PENDIENTE;
+					return (estadoUltimaCuota.equals(estadoPrestamoFinal));
+				}).collect(Collectors.toList());
+
+			if (!fechaDesde.isEmpty())
+				prestamos = prestamos.stream().filter(prestamo -> {
+					return prestamo.getFechaRegistro().toString().compareTo(fechaDesde) >= 0;
+				}).collect(Collectors.toList());
+
+			if (!fechaHasta.isEmpty())
+				prestamos = prestamos.stream().filter(prestamo -> {
+					return prestamo.getFechaRegistro().toString().compareTo(fechaHasta) <= 0;
+				}).collect(Collectors.toList());
 
 			listaPrestamo = prestamosToDto(prestamos);
 		}
@@ -139,7 +169,7 @@ public class PrestamoController {
 			int nroCuotaActual = 0;
 
 			for (CuotaPrestamo cuota : cuotas) {
-				if ("Cancelado".equals(cuota.getEstado())) {
+				if (Utils.PAGO_PAGADO.equals(cuota.getEstado())) {
 					montosPagados += cuota.getMontoTotal();
 					cantCuotasPagadas++;
 				} else {
@@ -150,11 +180,11 @@ public class PrestamoController {
 
 			if (cantCuotasPagadas == prestamo.getCuotas()) {
 				nroCuotaActual = 0;
-				itemDto.setEstadoPrestamo("Cancelado");
-				itemDto.setEstadoUltimaCuota("Cancelado");
+				itemDto.setEstadoPrestamo(Utils.PAGO_PAGADO);
+				itemDto.setEstadoUltimaCuota(Utils.PAGO_PAGADO);
 			} else {
 				final int finalNroCuotaActual = cantCuotasPagadas + 1;
-				itemDto.setEstadoPrestamo("Pendiente");
+				itemDto.setEstadoPrestamo(Utils.PAGO_PENDIENTE);
 				itemDto.setEstadoUltimaCuota(cuotas.stream()
 						.filter(cuota -> cuota.getCuotaPrestamoPk().getIdCuotaPrestamo() == finalNroCuotaActual)
 						.findFirst().orElseThrow().getEstado());
