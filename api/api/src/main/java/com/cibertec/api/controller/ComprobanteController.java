@@ -42,6 +42,9 @@ public class ComprobanteController {
 		
 		try {
 			
+			comprobante.setRucEmisor("20759630049");
+			comprobante.setNomEmisor("TE PRESTO SAC");
+			
 			listaTipoComprobante = tipoComprobanteService.listar().stream().filter(tipo->!tipo.getDescripcion().equals("FACTURA")).toList();
 			listaTipoDocumento = tipoDocumentoService.listar();
 			
