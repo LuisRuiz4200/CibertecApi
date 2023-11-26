@@ -247,21 +247,16 @@
 			$('#tableRevisaPrestamo').DataTable();
 		});
 
-		$(document).ready(function () {
-			$('#tableDetalle').DataTable();
-		});
-
 		const setModalDetalleData = async (event) => {
 			const idPrestamo = event.target.getAttribute("data-prestamo");
 			const data = await fetch(`http://localhost:9090/prestamos/detalle/${idPrestamo}`)
 				.then((response) => response.json())
 				.then((data) => data);
 
-			console.log("prestamo", data);
+			// console.log("prestamo", data);
 
 			const modalTableBody = document.getElementById("modalTableBody");
 			for (let i = 0; i < data.cuotas.length; i++) {
-				// for (let i = 0; i < 1; i++) {
 				const row = document.createElement('tr');
 
 				const cuota = data.cuotas[i];
@@ -292,6 +287,10 @@
 				row.appendChild(estadoCell);
 				row.appendChild(deudaCell);
 				modalTableBody.appendChild(row);
+
+				$(document).ready(function () {
+					$('#tableDetalle').DataTable();
+				});
 			}
 		}
 
