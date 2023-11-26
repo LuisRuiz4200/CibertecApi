@@ -157,7 +157,8 @@
 						<td th:text="${item.fechaRegistro}"></td>
 						<td>
 							<button type="button" class="btn btn-primary btnDetalle" id="idDetalle" data-toggle="modal"
-								data-target="#modalDetalle">
+								data-target="#modalDetalle" th:attr="data-prestamo = ${item.idPrestamo}"
+								onclick="setModalDetalleData(event)">
 								<i class="fa-solid fa-eye"></i> Ver Cuotas
 							</button>
 						</td>
@@ -206,34 +207,10 @@
 									</tr>
 								</thead>
 								<!-- Dentro del cuerpo creamos tr que es una fila y td es celda dentro de la fila -->
-								<tbody class="text-center">
-									<!--      Aca creamos las celdas que tendran los registros, si hay 6 encabezados arriba de la tabla abra 6 td aca -->
-									<tr>
-										<td>7477</td>
-										<td>2</td>
-										<td>150.0</td>
-										<td>16-11-2023</td>
-										<td>PENDIENTE</td>
-										<td>150.0</td>
-									</tr>
+								<tbody class="text-center" id="modalTableBody">
 
-									<tr>
-										<td>7477</td>
-										<td>3</td>
-										<td>150.0</td>
-										<td>17-11-2023</td>
-										<td>PAGADO</td>
-										<td>0</td>
-									</tr>
+									<!-- JS: Se llenarán segun las cuotas que se encuentren setModalDetalleData() -->
 
-									<tr>
-										<td>7477</td>
-										<td>4</td>
-										<td>150.0</td>
-										<td>18-11-2023</td>
-										<td>PARCIALMENTE</td>
-										<td>80.0</td>
-									</tr>
 								</tbody>
 								<!--FIN de tbody  -->
 							</table>
@@ -274,6 +251,49 @@
 			$('#tableDetalle').DataTable();
 		});
 
+		const setModalDetalleData = async (event) => {
+			const idPrestamo = event.target.getAttribute("data-prestamo");
+			const data = await fetch(`http://localhost:9090/prestamos/detalle/${idPrestamo}`)
+				.then((response) => response.json())
+				.then((data) => data);
+
+			console.log("prestamo", data);
+
+			const modalTableBody = document.getElementById("modalTableBody");
+			for (let i = 0; i < data.cuotas.length; i++) {
+				// for (let i = 0; i < 1; i++) {
+				const row = document.createElement('tr');
+
+				const cuota = data.cuotas[i];
+
+				const codigoCell = document.createElement('td');
+				codigoCell.textContent = data.prestamo.idPrestamo;
+
+				const cuotaCell = document.createElement('td');
+				cuotaCell.textContent = cuota.cuotaPrestamoPk.idCuotaPrestamo;
+
+				const montoCell = document.createElement('td');
+				montoCell.textContent = cuota.monto;
+
+				const fechaCell = document.createElement('td');
+				fechaCell.textContent = cuota.fechaPago;
+
+				const estadoCell = document.createElement('td');
+				estadoCell.textContent = cuota.estado;
+
+				// TODO: Editar por calculo
+				const deudaCell = document.createElement('td');
+				deudaCell.textContent = cuota.monto;
+
+				row.appendChild(codigoCell);
+				row.appendChild(cuotaCell);
+				row.appendChild(montoCell);
+				row.appendChild(fechaCell);
+				row.appendChild(estadoCell);
+				row.appendChild(deudaCell);
+				modalTableBody.appendChild(row);
+			}
+		}
 
 	</script>
 </body>
