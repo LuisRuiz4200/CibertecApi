@@ -1,7 +1,62 @@
 function init() {
 	asignarSerie();
+	consultaDni();
 }
 init();
+
+async function apiConsultaDocumentoIdentidad(numDocumento) {
+
+	var nomReceptor = document.getElementById("nomReceptor");
+	var idTipoDocumento = document.getElementById("idTipoDocumento");
+
+
+	switch (idTipoDocumento.value) {
+		case "1":
+			await fetch("http://localhost:9090/api/reuzable/consulta/ruc/" + numDocumento)
+				.then(response => response.json())
+				.then(data => {
+					toastr.warning(data.razonSocial);
+					nomReceptor.value = data.razonSocial
+				});
+			break;
+		case "2":
+			await fetch("http://localhost:9090/api/reuzable/consulta/dni/" + numDocumento)
+				.then(response => response.json())
+				.then(data => {
+					toastr.warning(data.nombres);
+					nomReceptor.value = data.nombres + ' ' + data.apellidoPaterno + ' ' + data.apellidoMaterno
+				});
+			break;
+	}
+
+
+
+}
+
+function consultaDni() {
+
+	var numDocReceptor = document.getElementById("numDocReceptor");
+	var idTipoDocumento = document.getElementById("idTipoDocumento");
+
+	numDocReceptor.addEventListener('input', function(event) {
+
+
+
+		switch (idTipoDocumento.value) {
+			case "1":
+				if (event.target.value.length === 11) {
+					apiConsultaDocumentoIdentidad(numDocReceptor.value);
+				}
+				break;
+			case "2":
+				if (event.target.value.length === 8) {
+					apiConsultaDocumentoIdentidad(numDocReceptor.value);
+				}
+				break;
+		}
+
+	});
+}
 
 async function apiGuardarComprobante() {
 
@@ -118,6 +173,20 @@ function validarFormularioComprobante() {
 		toastr.error('Debe especificar el tipo de documento del receptor');
 		return false;
 	}
+
+	if (idTipoDocumento.value === "1") {
+		if (numDocReceptor.value.length != 11) {
+			toastr.error('El RUC debe contener 11 digitos');
+			return false;
+		}
+	}
+	if (idTipoDocumento.value === "2") {
+		if (numDocReceptor.value.length != 8) {
+			toastr.error('El DNI debe contener 8 digitos');
+			return false;
+		}
+	}
+
 	if (!numDocReceptor.value) {
 		toastr.error('Debe consignar el número de documento del receptor');
 		return false;
