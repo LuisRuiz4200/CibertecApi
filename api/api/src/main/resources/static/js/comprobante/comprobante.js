@@ -20,9 +20,9 @@ async function apiGuardarComprobante() {
 	var correlativoRef = document.getElementById("correlativoRef");
 	var fechaRegistro = document.getElementById("fechaRegistro");
 	var estado = document.getElementById("estado");
-	
-	var listaComprobanteDetalle = document.getElementById("tbItem");
-	var filas = listaComprobanteDetalle.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+
+	var listaComprobanteDetalle = document.getElementById("tbItem").getElementsByTagName("tbody")[0];
+	var filas = listaComprobanteDetalle.getElementsByTagName("tr");
 
 	var listaDetalles = [];
 
@@ -69,20 +69,18 @@ async function apiGuardarComprobante() {
 		.then(response => response.json())
 		.then(data => {
 			if (data.mensaje) {
-				toastr.success(data.mensaje)
+				toastr.success(data.mensaje);
+				location.reload();
 				return;
 			}
 			if (data.error) {
-				toastr.error(data.error)
+				toastr.error(data.error);
 				return;
 			}
 		});
 }
 
-function guardarComprobante() {
-
-
-	var formularioComprobante = document.getElementById("formularioComprobante");
+function validarFormularioComprobante() {
 
 	var idTipoComprobante = document.getElementById("idTipoComprobante");
 	var serie = document.getElementById("serie");
@@ -92,51 +90,71 @@ function guardarComprobante() {
 	var idTipoDocumento = document.getElementById("idTipoDocumento");
 	var numDocReceptor = document.getElementById("numDocReceptor");
 	var nomReceptor = document.getElementById("nomReceptor");
+	var listaComprobanteDetalle = document.getElementById("tbItem").getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+
+
 
 	if (!idTipoComprobante.value) {
 		toastr.error('Debe pertenecer a un tipo de comprobante');
-		return;
+		return false;
 	}
 	if (!serie.value) {
 		toastr.error('Debe pertenecer a una serie');
-		return;
+		return false;
 	}
 	if (!correlativo.value) {
 		toastr.error('Debe tener un correlativo');
-		return;
+		return false;
 	}
 	if (!rucEmisor.value) {
 		toastr.error('Debe consignar el ruc del emisor');
-		return;
+		return false;
 	}
 	if (!nomEmisor.value) {
 		toastr.error('Debe consignar el nombre del emisor');
-		return;
+		return false;
 	}
 	if (!idTipoDocumento.value) {
 		toastr.error('Debe especificar el tipo de documento del receptor');
-		return;
+		return false;
 	}
 	if (!numDocReceptor.value) {
 		toastr.error('Debe consignar el número de documento del receptor');
-		return;
+		return false;
 	}
 	if (!nomReceptor.value) {
 		toastr.error('Debe consignar el nombre del receptor');
-		return;
+		return false;
+	}
+	if (listaComprobanteDetalle.length <= 0) {
+		toastr.error('Debe registrar alemnos un item');
+		return false;
 	}
 
-	formularioComprobante.onsubmit();
-
+	return true;
 }
 
+function guardarComprobante() {
+
+
+	const formularioComprobante = document.getElementById("formularioComprobante");
+
+
+	if (validarFormularioComprobante()) {
+		formularioComprobante.onsubmit();
+	}
+
+
+}
 
 function asignarSerie() {
 	var tipoComprobante = document.getElementById("idTipoComprobante");
 	var tipoDocumento = document.getElementById("idTipoDocumento");
+	var numDocReceptor = document.getElementById("numDocReceptor")
 	var lblTipoDocumento = document.getElementById("lblTipoDocumento");
 	var serie = document.getElementById("serie");
 
+	numDocReceptor.disabled = true;
 	serie.disabled = true;
 
 	tipoComprobante.addEventListener('change', function(event) {
@@ -159,9 +177,11 @@ function asignarSerie() {
 		switch (tipoDocumento.value) {
 			case "1":
 				lblTipoDocumento.innerHTML = 'RUC DEL RECEPTOR';
+				numDocReceptor.disabled = false;
 				break;
 			case "2":
 				lblTipoDocumento.innerHTML = 'DNI DEL RECEPTOR';
+				numDocReceptor.disabled = false;
 				break;
 		}
 	});
