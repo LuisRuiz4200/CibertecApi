@@ -2,6 +2,7 @@ package com.cibertec.api.controller;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.cibertec.api.model.CuotaPrestamo;
 import com.cibertec.api.model.GrupoPrestamista;
@@ -136,6 +138,47 @@ public class PrestamoController {
 			return "prestatarioRevisaPrestamo";
 
 		return "listaPrestamo";
+	}
+
+	@GetMapping("detalle/{id}")
+	@ResponseBody
+	private HashMap<?, ?> detalle(@PathVariable int id, Model model) {
+
+		Prestamo prestamo = prestamoService.buscarPorId(id);
+		List<CuotaPrestamo> cuotas = cuotaService.listarPorId(id);
+
+		double montosPagados = 0;
+		double montosPendientes = 0;
+		int cantCuotasPagadas = 0;
+		int cantCuotasPendientes = 0;
+		int nroCuotaActual = 0;
+
+		for (CuotaPrestamo cuota : cuotas) {
+			if (Utils.PAGO_PAGADO.equals(cuota.getEstado())) {
+				montosPagados += cuota.getMontoTotal();
+				cantCuotasPagadas++;
+			} else {
+				montosPendientes += cuota.getMontoTotal();
+				cantCuotasPendientes++;
+			}
+		}
+
+		if (cantCuotasPagadas == prestamo.getCuotas()) {
+			nroCuotaActual = 0;
+		} else {
+			final int finalNroCuotaActual = cantCuotasPagadas + 1;
+			nroCuotaActual = finalNroCuotaActual;
+		}
+
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("prestamo", prestamo);
+		map.put("cuotas", cuotas);
+		map.put("nroCuotaActual", nroCuotaActual);
+		map.put("cantCuotasPagadas", cantCuotasPagadas);
+		map.put("cantCuotasPendientes", cantCuotasPendientes);
+		map.put("montosPagados", montosPagados);
+		map.put("montosPendientes", montosPendientes);
+		return map;
 	}
 
 	@GetMapping("/registrar/{id}")
