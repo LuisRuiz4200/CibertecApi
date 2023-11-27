@@ -4,30 +4,31 @@ function init() {
 }
 init();
 
-async function apiConsultaDocumentoIdentidad(numDocumento) {
+async function apiConsultaDocumentoIdentidad(tipoDocumento, numDocumento) {
 
 	var nomReceptor = document.getElementById("nomReceptor");
-	var idTipoDocumento = document.getElementById("idTipoDocumento");
 
 
-	switch (idTipoDocumento.value) {
-		case "1":
-			await fetch("http://localhost:9090/api/reuzable/consulta/ruc/" + numDocumento)
-				.then(response => response.json())
-				.then(data => {
-					toastr.warning(data.razonSocial);
-					nomReceptor.value = data.razonSocial
-				});
-			break;
-		case "2":
-			await fetch("http://localhost:9090/api/reuzable/consulta/dni/" + numDocumento)
-				.then(response => response.json())
-				.then(data => {
-					toastr.warning(data.nombres);
-					nomReceptor.value = data.nombres + ' ' + data.apellidoPaterno + ' ' + data.apellidoMaterno
-				});
-			break;
-	}
+	await fetch("http://localhost:9090/api/reuzable/consulta/" + tipoDocumento + "/" + numDocumento)
+		.then(response => response.json())
+		.then(data => {
+			if (data.razonSocial) {
+				toastr.warning(data.razonSocial);
+				nomReceptor.value = data.razonSocial;
+				return;
+			}
+			if (data.nombres) {
+				toastr.warning(data.nombres);
+				nomReceptor.value = data.nombres + ' ' + data.apellidoPaterno + ' ' + data.apellidoMaterno
+				return;
+			}
+			if (!data.success) {
+				toastr.warning(data.message);
+				nomReceptor.value = '';
+				return;
+			}
+
+		});
 
 
 
@@ -45,12 +46,12 @@ function consultaDni() {
 		switch (idTipoDocumento.value) {
 			case "1":
 				if (event.target.value.length === 11) {
-					apiConsultaDocumentoIdentidad(numDocReceptor.value);
+					apiConsultaDocumentoIdentidad("ruc", numDocReceptor.value);
 				}
 				break;
 			case "2":
 				if (event.target.value.length === 8) {
-					apiConsultaDocumentoIdentidad(numDocReceptor.value);
+					apiConsultaDocumentoIdentidad("dni", numDocReceptor.value);
 				}
 				break;
 		}
@@ -74,7 +75,6 @@ async function apiGuardarComprobante() {
 	var serieRef = document.getElementById("serieRef");
 	var correlativoRef = document.getElementById("correlativoRef");
 	var fechaRegistro = document.getElementById("fechaRegistro");
-	var estado = document.getElementById("estado");
 
 	var listaComprobanteDetalle = document.getElementById("tbItem").getElementsByTagName("tbody")[0];
 	var filas = listaComprobanteDetalle.getElementsByTagName("tr");
@@ -88,7 +88,10 @@ async function apiGuardarComprobante() {
 		var item = {
 			"idComprobanteDetalle": celdas[0].innerText,
 			"codItem": celdas[1].innerText,
-			"descripcion": celdas[2].innerText
+			"descripcion": celdas[2].innerText,
+			"cantidadItem": celdas[3].innerText,
+			"montoItem": celdas[4].innerText,
+			"montoTotal": celdas[5].innerText
 		};
 
 		listaDetalles.push(item);
@@ -99,7 +102,7 @@ async function apiGuardarComprobante() {
 		"idTipoComprobante": idTipoComprobante.value,
 		"serie": serie.value,
 		"correlativo": correlativo.value,
-		"fechaEmision": "2023-11-23",
+		"fechaEmision": new Date(),
 		"rucEmisor": rucEmisor.value,
 		"nomEmisor": nomEmisor.value,
 		"idTipoDocumento": idTipoDocumento.value,
@@ -108,7 +111,7 @@ async function apiGuardarComprobante() {
 		"nomReceptor": nomReceptor.value,
 		"serieRef": "",
 		"correlativoRef": "",
-		"fechaRegistro": "2023-11-23",
+		"fechaRegistro": new Date(),
 		"estado": "Pendiente de Pago",
 		"listaComprobanteDetalle": listaDetalles
 	};

@@ -22,7 +22,7 @@ public class ComprobanteDetalle {
 	@JsonIgnore
 	private Comprobante comprobante;
 
-	private int codItem;
+	private String codItem;
 	private String descripcion;
 	private int cantidadItem;
 	private double montoItem;
