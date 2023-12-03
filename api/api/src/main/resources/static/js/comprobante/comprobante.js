@@ -46,11 +46,13 @@ function consultaDni() {
 		switch (idTipoDocumento.value) {
 			case "1":
 				if (event.target.value.length === 11) {
+					event.target.maxLength = 11;
 					apiConsultaDocumentoIdentidad("ruc", numDocReceptor.value);
 				}
 				break;
 			case "2":
 				if (event.target.value.length === 8) {
+					event.target.maxLength = 8;
 					apiConsultaDocumentoIdentidad("dni", numDocReceptor.value);
 				}
 				break;
