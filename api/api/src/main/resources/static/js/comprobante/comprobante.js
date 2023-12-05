@@ -221,6 +221,22 @@ function guardarComprobante() {
 
 }
 
+function limpiarFormularioComprobante(){
+	
+	var numDocReceptor = document.getElementById("numDocReceptor");
+	var nomReceptor = document.getElementById("nomReceptor");
+	var lblTipoDocumento = document.getElementById("lblTipoDocumento");
+	var correlativo = document.getElementById("correlativo");
+	
+	
+	numDocReceptor.value='';
+	nomReceptor.value ='';
+	correlativo.value='';
+	lblTipoDocumento.innerHTML='DOCUMENTO RECEPTOR';
+	
+	
+}
+
 function asignarSerie() {
 	var tipoComprobante = document.getElementById("idTipoComprobante");
 	var tipoDocumento = document.getElementById("idTipoDocumento");
@@ -234,16 +250,24 @@ function asignarSerie() {
 	tipoComprobante.addEventListener('change', function(event) {
 		switch (tipoComprobante.value) {
 			case "1":
+				limpiarFormularioComprobante();
+				limpiarTablaItem();
 				serie.value = 'B001';
 				break;
 			case "2":
+				limpiarFormularioComprobante();
+				limpiarTablaItem();
 				serie.value = 'F001';
 				break;
 			case "3":
-				serie.value = 'NC01';
+				limpiarFormularioComprobante();
+				limpiarTablaItem();
+				serie.value = 'ND01';
 				break;
 			case "4":
-				serie.value = 'ND01';
+				limpiarFormularioComprobante();
+				limpiarTablaItem();
+				serie.value = 'NC01';
 				break;
 		}
 	});
@@ -310,7 +334,7 @@ function agregarItem() {
 	celdaDescripcion.innerHTML = modalDescripcion.value;
 	celdaCantidad.innerHTML = modalCantidadItem.value;
 	celdaMontoItem.innerHTML = modalMontoItem.value;
-	celdaMontoTotal.innerHTML = modalCantidadItem.value + modalMontoItem.value;
+	celdaMontoTotal.innerHTML = modalCantidadItem.value * modalMontoItem.value;
 
 	modalCodItem.value = '';
 	modalDescripcion.value = '';
