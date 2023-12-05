@@ -179,11 +179,24 @@ public class PrestatarioController {
 		}
 
 		/* El prestatario Ingresa la solicitud */
-		SolicitudPrestamo newSolicitud = setDataFormDto(solicitudPrestamo);
+		/*SolicitudPrestamo newSolicitud = setDataFormDto(solicitudPrestamo);
 		newSolicitud.setPrestatario(prestatario);
 		solicitudPrestamoService.guardar(newSolicitud);
 
 		flash.addFlashAttribute("successMessage", true);
+		return "redirect:/prestatario/solicitoPrestamo";*/
+		
+		SolicitudPrestamo newSolicitud = setDataFormDto(solicitudPrestamo);
+		newSolicitud.setPrestatario(prestatario);
+		 // Guardar la solicitud y obtener el ID
+		//solicitudPrestamoService.guardar(newSolicitud);
+		SolicitudPrestamo solicitudGuardada = solicitudPrestamoService.guardar(newSolicitud);
+		int idSolicitud = solicitudGuardada.getIdSolicitudPrestamo();
+		//Almacenamos en una variable para acceder por idSolicitud
+		
+		flash.addFlashAttribute("idSolicitud", idSolicitud);
+		flash.addFlashAttribute("successMessage", true);
+		//flash.addFlashAttribute("successMessage", "Solicitud generada con éxito. Número de Solicitud: ");
 		return "redirect:/prestatario/solicitoPrestamo";
 	}
 
