@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -43,7 +44,7 @@ public class Prestamo {
 	
 	private boolean activo;
 	
-	@OneToMany(mappedBy = "prestamo")
+	@OneToMany(mappedBy = "prestamo",cascade = CascadeType.ALL)
 	private List<CuotaPrestamo> listaCuotaPrestamo;
 	
 }

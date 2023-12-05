@@ -20,7 +20,7 @@ import lombok.ToString;
 public class CuotaPrestamo {
 
 	@EmbeddedId
-	private CuotaPrestamoPK cuotaPrestamoPk;
+	private CuotaPrestamoPK cuotaPrestamoPk = new CuotaPrestamoPK();
 
 	private double monto;
 	private double interes;
@@ -36,6 +36,5 @@ public class CuotaPrestamo {
 	@ManyToOne
 	@JoinColumn(name = "idPrestamo", insertable = false, updatable = false)
 	@JsonIgnore
-	@ToString.Exclude
 	private Prestamo prestamo;
 }
