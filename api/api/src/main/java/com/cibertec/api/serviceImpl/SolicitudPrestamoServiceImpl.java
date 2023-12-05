@@ -21,8 +21,17 @@ public class SolicitudPrestamoServiceImpl implements SolicitudPrestamoService {
 	
 	@Override
 	public SolicitudPrestamo guardar(SolicitudPrestamo model) {
-		return solicitudPrestamisteRepository.save(model);
+		//return solicitudPrestamisteRepository.save(model);
+		SolicitudPrestamo solicitudGuardada = solicitudPrestamisteRepository.save(model);
+		  // Obtener el ID después de guardar
+		int idSolicitud = solicitudGuardada.getIdSolicitudPrestamo();
+		// Puedes imprimir el ID o realizar otras acciones con él si es necesario
+	    System.out.println("ID de la solicitud guardada: " + idSolicitud);
+	   
+	    return solicitudGuardada;
 	}
+	
+	
 
 	@Override
 	public List<SolicitudPrestamo> listar() {
