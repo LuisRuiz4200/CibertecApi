@@ -44,7 +44,7 @@ public class Prestamo {
 	
 	private boolean activo;
 	
-	@OneToMany(mappedBy = "prestamo",cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "prestamo",cascade = CascadeType.PERSIST)
 	private List<CuotaPrestamo> listaCuotaPrestamo;
 	
 }

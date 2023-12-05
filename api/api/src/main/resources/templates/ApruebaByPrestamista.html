@@ -283,11 +283,16 @@
 							<div class="modal-footer" style="display: flex; justify-content: center;">
 								<!-- para grabar le ponemos type submit para que active al formulario y active la validación de abajo -->
 								<!-- Cuando son varios como el boton editar y eliminar usar class , cuando es 1 o pocos usar id -->
-								<button type="button" class="btn btn-primary btnAprobar" id="btnPrestamo"
-									onclick="setModelState(1)">APROBAR</button>
+								
+								<!--<button type="button" class="btn btn-primary btnAprobar" id="btnPrestamo"
+									onclick="setModelState(1)">APROBAR</button>-->
+									
+									<button type="button" class="btn btn-primary btnAprobar" id="btnPrestamo" onclick="setModelState(1); setTimeout(cargarCuotas, 1000);">APROBAR</button>
+									
 								<!-- Asignamos idcerrar al boton cerrar para resetear las validaciones de bootstrap   /* data-dismiss="modal" */ -->
-								<button type="submit" class="btn btn-secondary btnCerrar" id="idCerrar"
+							<button type="submit" class="btn btn-secondary btnCerrar" id="idCerrar"
 									onclick="setModelState(2)">RECHAZAR</button>
+								
 							</div>
 
 						</form>
@@ -320,9 +325,10 @@
 						<div >
 							<a href="#" class="btn btn-success btn-sm" onclick="guardarPrestamo()">GUARDAR</a>
 
-							<a href="#" class="btn btn-danger btn-sm" onclick="limpiarCuotas()">CANCELAR</a>
-
-							<a href="#" class="btn btn-warning btn-sm" onclick="cargarCuotas()">VALIDAR</a>
+							<!--<a href="#" class="btn btn-danger btn-sm" data-dismiss="modal" onclick="limpiarCuotas()">CANCELAR</a>-->
+							<a href="#" class="btn btn-danger btn-sm" data-dismiss="modal" onclick="limpiarCuotas(); $('#modalPrestamo').modal('hide');">CANCELAR</a>
+							
+							<!--<a href="#" class="btn btn-warning btn-sm" onclick="cargarCuotas()">VALIDAR</a>-->
 						</div>
 					</div>
 				</div>
