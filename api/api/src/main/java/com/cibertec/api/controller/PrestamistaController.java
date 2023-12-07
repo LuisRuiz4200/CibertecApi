@@ -45,11 +45,12 @@ public class PrestamistaController {
 	private UService userService;
 	PrestatarioService prestatarioService;
 	private SolicitudPrestamoService solicitudService;
+
 	@GetMapping({ "/listar", "/", "" }) // localhost:9090 /
 	public String listarPrestamista(Model model, HttpSession session) {
 		// Obtener al JefePrestamista desde la session de su Usuario
 		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
-		if(userLogged == null)
+		if (userLogged == null)
 			return "redirect:/login";
 
 		// obtener el rol
@@ -61,55 +62,54 @@ public class PrestamistaController {
 		String titulo = "";
 		String txtButton = "";
 		switch (rolIngreso) {
-		// admin lista de jefes
+			// admin lista de jefes
 
-		case 1: {
-			// obtener id
-			int idAdministrador = userLogged.getPersona().getIdPersona();
+			case 1: {
+				// obtener id
+				int idAdministrador = userLogged.getPersona().getIdPersona();
 
-			// Validación correspondiente
-			if (idAdministrador == -1)
-				return "redirect:/intranet";
+				// Validación correspondiente
+				if (idAdministrador == -1)
+					return "redirect:/intranet";
 
-			/* Listado por Jefes */
-			Rol rolJefes = new Rol();
-			rolJefes.setIdRol(2);
-			List<Usuario> users = userService.getUsuarioByRol(rolJefes);
+				/* Listado por Jefes */
+				Rol rolJefes = new Rol();
+				rolJefes.setIdRol(2);
+				List<Usuario> users = userService.getUsuarioByRol(rolJefes);
 
-			List<Prestamista> jefesPrestamistas = new ArrayList<>();
-			jefesPrestamistas = users.stream()
-					.map(usuario -> service.getByIdPrestamistaActivo(usuario.getPersona().getIdPersona()))
-					.collect(Collectors.toList());
-			
-
-			if (jefesPrestamistas != null) {
-				lista = jefesPrestamistas.stream().filter(Objects::nonNull) // Filtrar
-																															// elementos
-																															// no
-																															// nulos
+				List<Prestamista> jefesPrestamistas = new ArrayList<>();
+				jefesPrestamistas = users.stream()
+						.map(usuario -> service.getByIdPrestamistaActivo(usuario.getPersona().getIdPersona()))
 						.collect(Collectors.toList());
+
+				if (jefesPrestamistas != null) {
+					lista = jefesPrestamistas.stream().filter(Objects::nonNull) // Filtrar
+																				// elementos
+																				// no
+																				// nulos
+							.collect(Collectors.toList());
+				}
+				model.addAttribute("navbar", true);
+				titulo = "Lista de Jefes de Prestamista";
+				txtButton = "Agregar Jefe Prestamista";
+				break;
 			}
-			model.addAttribute("navbar", true);
-			titulo = "Lista de Jefes de Prestamista";
-			txtButton = "Agregar Jefe Prestamista";
-			break;
-		}
-		// jefe de prestamista, lista de prestamistas
-		case 2: {
-			int idJefePrestamista = userLogged.getPersona().getIdPersona();
-			Prestamista jefePrestamista = service.getPrestamistaById(idJefePrestamista).orElse(null);
-			// Validación correspondiente
-			if (jefePrestamista == null)
-				return "redirect:/intranet";
-			// Obtener la lista de prestamistas asociado al Jefe y que estén Activos
-			lista = grupoController.listGrupoByJefePrestamistaAndActivo(jefePrestamista);
-			titulo = "Lista de Prestamistas";
-			model.addAttribute("navbar", false);
-			txtButton = "Agregar Prestamista";
-			break;
-		}
-		default:
-			break;
+			// jefe de prestamista, lista de prestamistas
+			case 2: {
+				int idJefePrestamista = userLogged.getPersona().getIdPersona();
+				Prestamista jefePrestamista = service.getPrestamistaById(idJefePrestamista).orElse(null);
+				// Validación correspondiente
+				if (jefePrestamista == null)
+					return "redirect:/intranet";
+				// Obtener la lista de prestamistas asociado al Jefe y que estén Activos
+				lista = grupoController.listGrupoByJefePrestamistaAndActivo(jefePrestamista);
+				titulo = "Lista de Prestamistas";
+				model.addAttribute("navbar", false);
+				txtButton = "Agregar Prestamista";
+				break;
+			}
+			default:
+				break;
 
 		} // fin de switch
 		model.addAttribute("lista", lista);
@@ -273,34 +273,36 @@ public class PrestamistaController {
 		} // fin de if
 		return "redirect:/listar";
 	} // fin de eliminarEmpleado
-	
-	
+
 	@GetMapping("/aprobarPrestamo")
 	private String listarSolicitudes(Model model, HttpSession session) {
-		
-		//Antes
-//		List<Prestatario> listaPrestatario = new ArrayList<Prestatario>();
-//		listaPrestatario = prestatarioService.listarPrestatario();
-//		model.addAttribute("listaPrestatario",listaPrestatario);
-		//Despues
+
+		// Antes
+		// List<Prestatario> listaPrestatario = new ArrayList<Prestatario>();
+		// listaPrestatario = prestatarioService.listarPrestatario();
+		// model.addAttribute("listaPrestatario",listaPrestatario);
+		// Despues
 		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
 		Prestamista prestamista = service.listarPrestamistaPorId(userLogged.getPersona().getIdPersona());
 		List<Prestatario> PrestatariosList = new ArrayList<>();
-					
-		PrestatariosList = prestamista.getPrestatariosList().stream().filter(item -> Boolean.TRUE.equals(item.isActivo())).collect(Collectors.toList());
-			model.addAttribute("listaPrestatario",PrestatariosList);
-		// instancia la lista para evitar problemas de nullos			
+
+		PrestatariosList = prestamista.getPrestatariosList().stream()
+				.filter(item -> Boolean.TRUE.equals(item.isActivo())).collect(Collectors.toList());
+		model.addAttribute("listaPrestatario", PrestatariosList);
+		// instancia la lista para evitar problemas de nullos
 		List<SolicitudPrestamo> listaSolicitudes = new ArrayList<SolicitudPrestamo>();
-		listaSolicitudes = PrestatariosList.stream().flatMap(item -> solicitudService.listarPorPrestatario(item.getIdPrestatario()).stream()).collect(Collectors.toList());
-		
+		listaSolicitudes = PrestatariosList.stream()
+				.flatMap(item -> solicitudService.listarPorPrestatario(item.getIdPrestatario()).stream())
+				.collect(Collectors.toList());
 
 		// Ordenar la lista por codigo de solicitud
-		// Comparator<SolicitudPrestamo> reversedOrder = Comparator.comparingInt(SolicitudPrestamo::getIdSolicitudPrestamo).reversed();
+		// Comparator<SolicitudPrestamo> reversedOrder =
+		// Comparator.comparingInt(SolicitudPrestamo::getIdSolicitudPrestamo).reversed();
 		// Collections.sort(listaSolicitudes, reversedOrder);
 		listaSolicitudes.sort(Comparator.comparingInt(SolicitudPrestamo::getIdSolicitudPrestamo).reversed());
-	
-		model.addAttribute("listaSolicitudes",listaSolicitudes);
-		
+
+		model.addAttribute("listaSolicitudes", listaSolicitudes);
+
 		SolicitudDto solicitudDto = new SolicitudDto();
 		model.addAttribute("solicitudDto", solicitudDto);
 		return "ApruebaByPrestamista";
@@ -310,70 +312,66 @@ public class PrestamistaController {
 	private String aprobarSolicitudes(SolicitudDto solicitudDto, Model model) {
 		SolicitudPrestamo solicitud = solicitudService.buscarPorId(solicitudDto.getId());
 		int state = solicitudDto.getState();
-		if(state == 1)
+		if (state == 1)
 			solicitud.setEstado("Aprobado");
-		if(state == 2)
+		if (state == 2)
 			solicitud.setEstado("Rechazado");
 
 		solicitudService.guardar(solicitud);
-		
+
 		return "redirect:/aprobarPrestamo";
-	}//fin de aprobarSolicitudes
-	
-	//-------------------------
-	
+	}// fin de aprobarSolicitudes
+
+	// -------------------------
+
 	@GetMapping("/filtrarSolicitudes")
 	public String filtrarSolicitudes(@RequestParam("prestamista") int idPrestamista,
-	                                  @RequestParam("fechaDesde")  String fechaDesde,
-	                                  @RequestParam("fechaHasta")  String fechaHasta,
-	                                  Model model, HttpSession session) throws ParseException {
+			@RequestParam("fechaDesde") String fechaDesde,
+			@RequestParam("fechaHasta") String fechaHasta,
+			Model model, HttpSession session) throws ParseException {
 		List<SolicitudPrestamo> listaSolicitudes = new ArrayList<SolicitudPrestamo>();
-		if(idPrestamista == -1 ) {
-			
+		if (idPrestamista == -1) {
+
 			return "redirect:/aprobarPrestamo";
 		}
-		
-		if(!fechaDesde.equals("") || !fechaHasta.equals("")){
-			
+
+		if (!fechaDesde.equals("") || !fechaHasta.equals("")) {
+
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-		    Date fechaDesdeDate = formatter.parse(fechaDesde);
-		    Date fechaHastaDate = formatter.parse(fechaHasta);
-		    listaSolicitudes = solicitudService.filtrarSolicitudes(idPrestamista, fechaDesdeDate, fechaHastaDate);
-			
-		}else {
+			Date fechaDesdeDate = formatter.parse(fechaDesde);
+			Date fechaHastaDate = formatter.parse(fechaHasta);
+			listaSolicitudes = solicitudService.filtrarSolicitudes(idPrestamista, fechaDesdeDate, fechaHastaDate);
+
+		} else {
 			listaSolicitudes = solicitudService.listarPorPrestamista(idPrestamista);
 		}
-		
-		listaSolicitudes.sort(Comparator.comparingInt(SolicitudPrestamo::getIdSolicitudPrestamo).reversed());
-		
-		//filtra llena combobox		
-		listarSolicitudes(model,session);		
-	    model.addAttribute("listaSolicitudes", listaSolicitudes);    
-	    return "ApruebaByPrestamista";
-	}
-	
-	//------------
-	
-		@GetMapping("/revisarEstadoPrestamoByJefePrestamista")
-		private String listarPrestamoRevisarByBoss(Model model) {
-			
-			return "ChiefRevisaPrestamo";
-		}
-		
-		//----------------
-		
-		//------------
-		
-			@GetMapping("/revisarRendimientoByAdmin")
-			private String LookRendiByAdmin(Model model) {
-				
-				return "AdminRevisaRendimiento";
-			}
-			
-			//----------------
-	
-	
 
-	
+		listaSolicitudes.sort(Comparator.comparingInt(SolicitudPrestamo::getIdSolicitudPrestamo).reversed());
+
+		// filtra llena combobox
+		listarSolicitudes(model, session);
+		model.addAttribute("listaSolicitudes", listaSolicitudes);
+		return "ApruebaByPrestamista";
+	}
+
+	// ------------
+
+	@GetMapping("/revisarEstadoPrestamoByJefePrestamista")
+	private String listarPrestamoRevisarByBoss(Model model) {
+
+		return "ChiefRevisaPrestamo";
+	}
+
+	// ----------------
+
+	// ------------
+
+	@GetMapping("/revisarRendimientoByAdmin")
+	private String LookRendiByAdmin(Model model) {
+
+		return "AdminRevisaRendimiento";
+	}
+
+	// ----------------
 
 } // Fin de PrestamistaController
