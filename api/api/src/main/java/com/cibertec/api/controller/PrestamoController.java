@@ -137,7 +137,7 @@ public class PrestamoController {
 		if (rol == Utils.ROL_PRESTATARIO)
 			return "prestatarioRevisaPrestamo";
 
-		return "listaPrestamo";
+		return "prestatarioRevisaPrestamo";
 	}
 
 	@GetMapping("detalle/{id}")
@@ -253,5 +253,18 @@ public class PrestamoController {
 		}
 		return prestamosDto;
 	}
+	
+	//Jean PI tu papa
+	
+	@GetMapping("/revisarEstadoPrestamoByJefePrestamista")
+	private String consultarPrestamistas(Model model) {
+	    List<GrupoPrestamista> listPrestamista = new ArrayList<GrupoPrestamista>();
+		listPrestamista = grupoService.listar().stream()
+				.filter(c->c.getJefePrestamista().getPrestamista().getIdPersona()==10)
+				.toList();
+		model.addAttribute("listaPrestamista", listPrestamista);
 
+		return "ChiefRevisaPrestamo";
+	} 
+	
 }

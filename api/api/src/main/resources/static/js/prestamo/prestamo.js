@@ -4,6 +4,8 @@ function limpiarCuotas() {
 
 	var table = document.getElementById("tbCuotas").getElementsByTagName('tbody')[0];
 	table.innerHTML = '';
+
+    
 }
 
 function cargarCuotas() {
