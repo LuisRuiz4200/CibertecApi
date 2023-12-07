@@ -59,7 +59,7 @@ public class PrestamoApiController {
 	}
 	
 	@GetMapping("/listar")
-	public List<Prestamo> listarPrestamosPorPrestatario() {
+	public List<Prestamo> listar() {
 
 		List<Prestamo> listaPrestamo = new ArrayList<>();
 
