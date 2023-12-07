@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.cibertec.api.model.Comprobante;
 import com.cibertec.api.model.Prestatario;
@@ -52,7 +53,9 @@ public class ComprobanteController {
 	}
 
 	@GetMapping("/registrar")
-	private String registrar(Model model) {
+	private String registrar(Model model,
+			@RequestParam(name="idPrestamo",required = false, defaultValue = "0")int idPrestamo,
+			@RequestParam(name="idCuota",required = false,defaultValue = "0")int idCuota) {
 		
 		Comprobante comprobante = new Comprobante();
 		List<TipoComprobante> listaTipoComprobante = new ArrayList<>();
@@ -62,9 +65,10 @@ public class ComprobanteController {
 		
 		
 		try {
-			
+			comprobante.getCuotaPrestamo().getCuotaPrestamoPk().setIdPrestamo(idPrestamo);
+			comprobante.getCuotaPrestamo().getCuotaPrestamoPk().setIdCuotaPrestamo(idCuota);
 			comprobante.setRucEmisor("20759630049");
-			comprobante.setNomEmisor("TE PRESTO SAC");
+			comprobante.setNomEmisor("ME PRESTA ONLINE SAC SAC");
 			
 			listaTipoComprobante = tipoComprobanteService.listar().stream().filter(tipo->!tipo.getDescripcion().equals("FACTURA")).toList();
 			listaTipoDocumento = tipoDocumentoService.listar();

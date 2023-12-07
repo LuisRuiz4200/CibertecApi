@@ -4,11 +4,11 @@ function init() {
 }
 init();
 
-async function apiListaComprobante(idPrestamo,idCuota) {
+async function apiListaComprobante(idPrestamo, idCuota) {
 
 	const url = new URL("http://localhost:9090/api/comprobante/listar");
 	url.searchParams.append("idPrestamo", idPrestamo);
-	url.searchParams.append("idCuota",idCuota);
+	url.searchParams.append("idCuota", idCuota);
 
 	return fetch(url)
 		.then(response => response.json());
@@ -60,16 +60,31 @@ async function apiConsultaDocumentoIdentidad(tipoDocumento, numDocumento) {
 
 }
 
-async function mostrarModalDetallePago(idPrestamo,idCuota) {
+function cargarComprobante(idPrestamo, idCuota) {
+
+	var btnCargarComprobante = document.getElementById("btnCargarComprobante");
+
+	btnCargarComprobante.addEventListener('click', function(event) {
+
+		var url = new URL("http://localhost:9090/web/comprobante/registrar");
+		url.searchParams.append("idPrestamo", idPrestamo);
+		url.searchParams.append("idCuota", idCuota);
+
+		location.href = url;
+	});
+
+}
+
+
+async function mostrarModalDetallePago(idPrestamo, idCuota) {
 
 	var tbComprobante = document.getElementById("modalTbComprobante").getElementsByTagName("tbody")[0];
 	tbComprobante.innerHTML = '';
-	
+
 	var tituloModalDetallePago = document.getElementById("tituloModalDetallePago");
-	
 	tituloModalDetallePago.innerText = "DETALLE DE PAGO PARA EL PRESTAMO #" + idPrestamo + " CUOTA #" + idCuota;
 
-	var listaComprobantePorPrestamo = await apiListaComprobante(idPrestamo,idCuota);
+	var listaComprobantePorPrestamo = await apiListaComprobante(idPrestamo, idCuota);
 
 	for (var comprobante of listaComprobantePorPrestamo) {
 
@@ -81,9 +96,12 @@ async function mostrarModalDetallePago(idPrestamo,idCuota) {
 			fila.insertCell(3).innerText = comprobante.fechaEmision;
 		}
 	}
-	
-	
+
+
 	$("#modalDetallePago").modal("show");
+	
+	cargarComprobante(idPrestamo,idCuota);
+
 
 }
 
@@ -111,11 +129,11 @@ async function listarCuotaPorPrestatario() {
 		fila.insertCell(3).innerText = cuota.montoTotal;
 		fila.insertCell(4).innerText = cuota.fechaPago;
 		fila.insertCell(5).innerText = cuota.estado;
-		
+
 		var idPrestamo = fila.cells[0].innerText;
 		var idCuota = fila.cells[2].innerText;
-		
-		fila.insertCell(6).innerHTML = "<button class='btn btn-primary btn-sm' onclick='mostrarModalDetallePago(" + idPrestamo+','+idCuota+ ")'>PAGOS</button>";
+
+		fila.insertCell(6).innerHTML = "<button class='btn btn-primary btn-sm' onclick='mostrarModalDetallePago(" + idPrestamo + ',' + idCuota + ")'>PAGOS</button>";
 
 
 

@@ -39,7 +39,7 @@ public class Comprobante {
 		@JoinColumn(name="idPrestamo",referencedColumnName = "idPrestamo"),
 		@JoinColumn(name="idCuotaPrestamo",referencedColumnName = "idCuotaPrestamo")
 	})
-	private CuotaPrestamo cuotaPrestamo;
+	private CuotaPrestamo cuotaPrestamo = new CuotaPrestamo();
 	@ManyToOne
 	@JoinColumn(name="idTipoDocumento")
 	private TipoDocumento tipoDocumento;
