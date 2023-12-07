@@ -35,6 +35,12 @@ public class Comprobante {
 	private String rucEmisor;
 	private String nomEmisor;
 	@ManyToOne
+	@JoinColumns({
+		@JoinColumn(name="idPrestamo",referencedColumnName = "idPrestamo"),
+		@JoinColumn(name="idCuotaPrestamo",referencedColumnName = "idCuotaPrestamo")
+	})
+	private CuotaPrestamo cuotaPrestamo;
+	@ManyToOne
 	@JoinColumn(name="idTipoDocumento")
 	private TipoDocumento tipoDocumento;
 	@ManyToOne

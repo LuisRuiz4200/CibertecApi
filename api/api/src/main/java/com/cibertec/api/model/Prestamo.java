@@ -1,14 +1,18 @@
 package com.cibertec.api.model;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -45,6 +49,8 @@ public class Prestamo {
 	private boolean activo;
 	
 	@OneToMany(mappedBy = "prestamo",cascade = CascadeType.PERSIST)
-	private List<CuotaPrestamo> listaCuotaPrestamo;
+	@JsonBackReference
+	//@JsonManagedReference
+	private List<CuotaPrestamo> listaCuotaPrestamo = new ArrayList<>();
 	
 }
