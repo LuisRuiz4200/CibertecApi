@@ -13,9 +13,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.cibertec.api.model.Comprobante;
+import com.cibertec.api.model.Prestatario;
 import com.cibertec.api.model.TipoComprobante;
 import com.cibertec.api.model.TipoDocumento;
 import com.cibertec.api.service.ComprobanteService;
+import com.cibertec.api.service.PrestamistaService;
+import com.cibertec.api.service.PrestatarioService;
 import com.cibertec.api.service.TipoComprobanteService;
 import com.cibertec.api.service.TipoDocumentoService;
 
@@ -29,6 +32,24 @@ public class ComprobanteController {
 	private TipoDocumentoService tipoDocumentoService;
 	@Autowired
 	private TipoComprobanteService tipoComprobanteService;
+	@Autowired
+	private PrestamistaService prestamistaService;
+	@Autowired
+	private PrestatarioService prestatarioService;
+	
+	
+	@GetMapping("/listaCuotaPorPrestamo")
+	private String listarCuotaPorPrestamo(Model model) {
+		
+		List<Prestatario> listaPrestatario = new ArrayList();
+		
+		listaPrestatario = prestatarioService.listarPrestatario().stream()
+				.filter(c->c.getPrestamistaPrestatario().getIdPrestamista()==59).toList();
+		
+		model.addAttribute("listaPrestatario",listaPrestatario);
+		
+		return "listaCuotaPorPrestamo";
+	}
 
 	@GetMapping("/registrar")
 	private String registrar(Model model) {

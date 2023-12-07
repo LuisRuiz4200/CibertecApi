@@ -12,14 +12,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cibertec.api.model.Comprobante;
 import com.cibertec.api.model.ComprobanteDetalle;
+import com.cibertec.api.model.Prestamo;
 import com.cibertec.api.modelDTO.ComprobanteDTO;
 import com.cibertec.api.modelDTO.ComprobanteDetalleDTO;
 import com.cibertec.api.service.ComprobanteDetalleService;
 import com.cibertec.api.service.ComprobanteService;
+import com.cibertec.api.service.PrestamoService;
 
 @RestController
 @RequestMapping("/api/comprobante")
@@ -29,6 +32,7 @@ public class ComprobanteApiController {
 	ComprobanteService comprobanteService;
 	@Autowired
 	ComprobanteDetalleService comprobanteDetalleService;
+	
 	
 	@PostMapping("/registrar")
 	private Map<String, Object> registrar(@RequestBody ComprobanteDTO comprobanteDTO){
@@ -75,15 +79,25 @@ public class ComprobanteApiController {
 		return response;
 	}
 	
+	
+	
 	@GetMapping("/listar")
-	private List<Comprobante> listar(){
+	private List<Comprobante> listar(
+			@RequestParam(name="idPrestamo",required = false,defaultValue = "0")int idPrestamo,
+			@RequestParam(name="idCuota",required = false,defaultValue = "0")int idCuota){
 		
 		List<Comprobante> listaComprobante = new ArrayList<>();
-		
 		
 		try {
 			
 			listaComprobante = comprobanteService.listar();
+			
+			if (idPrestamo>0 && idCuota>0) {
+				listaComprobante = comprobanteService.listar().stream()
+						.filter(c->c.getCuotaPrestamo().getCuotaPrestamoPk().getIdPrestamo()==idPrestamo)
+						.filter(c->c.getCuotaPrestamo().getCuotaPrestamoPk().getIdCuotaPrestamo()==idCuota)
+						.toList();
+			}
 			
 			
 		}catch(Exception ex) {
