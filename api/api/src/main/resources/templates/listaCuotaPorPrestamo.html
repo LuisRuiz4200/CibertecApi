@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlsn:th="www.thymleaf.org">
+
+<head>
+	<div th:replace="static/head.html"></div>
+</head>
+
+<body>
+	<div th:replace="static/navbar.html"></div>
+	<div class="container">
+		<div class="row gap-2">
+			<div>
+				<div class="mt-4">
+					<h2>REGISTRO DE PAGOS</h2>
+					<hr>
+				</div>
+			</div>
+			<div>
+				<form>
+					<div class="row gap-2">
+						<div class="col-3">
+							<div>
+								<label>PRESTATARIO</label>
+								<select id="filtroIdPrestatario" class="form-select">
+									<option th:each="prestatario : ${listaPrestatario}"
+										th:value="${prestatario.prestatario.idPersona}"
+										th:text="${prestatario.prestatario.nombres}"></option>
+								</select>
+							</div>
+
+						</div>
+						<hr>
+						<div class="col-12">
+
+							<div class="row">
+								<div class="col-auto">
+									<h5>FECHA</h5>
+								</div>
+								<div class="col-2">
+									<label>DESDE</label>
+									<input id="filtoFechaInicioCuota" class="form-control" type="date" />
+								</div>
+								<div class="col-2">
+									<label>HASTA</label>
+									<input id="filtroFechaFinCuota" class="form-control" type="date" />
+								</div>
+								<div class="col-auto mt-auto">
+									<button class="btn btn-success" type="button"
+										onclick="listarCuotaPorPrestatario()">FILTRAR</button>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</form>
+			</div>
+			<div class="table-responsive">
+				<table id="tbCuotaPorPrestatario" class="table table-hover">
+					<thead>
+						<tr>
+							<th>ID PRESTAMO</th>
+							<th>PRESTATARIO</th>
+							<th>NRO CUOTA</th>
+							<th>MONTO TOTAL</th>
+							<th>FECHA VENCIMIENTO</th>
+							<th>ESTADO</th>
+							<th>DETALLE</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<div id="modalDetallePago" class="modal ">
+		<div class="modal-dialog  modal-dialog-centered modal-lg">
+			<div class="modal-content">
+				<div class="modal-header text-bg-primary">
+					<h3 id="tituloModalDetallePago">DETALLES DE PAGO</h3>
+				</div>
+				<div class="modal-body">
+
+					<div class="row gap-4">
+						<div class="col-12">
+							<div>
+								<button class="btn btn-success btn-sm">Registrar nuevo pago</button>
+							</div>
+						</div>
+						<div class="col-12">
+							<div class="table-responsive">
+								<table id="modalTbComprobante" class="table table-hover">
+									<thead>
+										<tr>
+											<th>SERIE</th>
+											<th>CORRELATIVO</th>
+											<th>DESCRIPCION</th>
+											<th>FECHA EMISION</th>
+										</tr>
+									</thead>
+									<tbody>
+										
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+
+	</div>
+
+
+	<script src="/js/comprobante/comprobante.js"></script>
+	<script th:replace="static/scripts.html"></script>
+</body>
+
+</html>

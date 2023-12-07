@@ -4,6 +4,32 @@ function init() {
 }
 init();
 
+async function apiListaComprobante(idPrestamo,idCuota) {
+
+	const url = new URL("http://localhost:9090/api/comprobante/listar");
+	url.searchParams.append("idPrestamo", idPrestamo);
+	url.searchParams.append("idCuota",idCuota);
+
+	return fetch(url)
+		.then(response => response.json());
+}
+
+async function apiListaCuotaPorPrestatario(idPrestatario, fechaInicioCuota, fechaFinCuota) {
+
+	const url = new URL("http://localhost:9090/api/prestamo/listaCuotaPorPrestatario");
+
+	url.searchParams.append("idPrestatario", idPrestatario);
+	url.searchParams.append("fechaInicioCuota", fechaInicioCuota);
+	url.searchParams.append("fechaFinCuota", fechaFinCuota);
+
+	return fetch(url)
+		.then(response => response.json())
+		.then(data => {
+			toastr.success(data[0].prestamo.solicitudPrestamo.prestatario.prestatario.nombres);
+			return data;
+		});
+}
+
 async function apiConsultaDocumentoIdentidad(tipoDocumento, numDocumento) {
 
 	var nomReceptor = document.getElementById("nomReceptor");
@@ -31,6 +57,69 @@ async function apiConsultaDocumentoIdentidad(tipoDocumento, numDocumento) {
 		});
 
 
+
+}
+
+async function mostrarModalDetallePago(idPrestamo,idCuota) {
+
+	var tbComprobante = document.getElementById("modalTbComprobante").getElementsByTagName("tbody")[0];
+	tbComprobante.innerHTML = '';
+	
+	var tituloModalDetallePago = document.getElementById("tituloModalDetallePago");
+	
+	tituloModalDetallePago.innerText = "DETALLE DE PAGO PARA EL PRESTAMO #" + idPrestamo + " CUOTA #" + idCuota;
+
+	var listaComprobantePorPrestamo = await apiListaComprobante(idPrestamo,idCuota);
+
+	for (var comprobante of listaComprobantePorPrestamo) {
+
+		for (var item of comprobante.listaComprobanteDetalle) {
+			var fila = tbComprobante.insertRow();
+			fila.insertCell(0).innerText = comprobante.serie;
+			fila.insertCell(1).innerText = comprobante.correlativo;
+			fila.insertCell(2).innerText = item.descripcion;
+			fila.insertCell(3).innerText = comprobante.fechaEmision;
+		}
+	}
+	
+	
+	$("#modalDetallePago").modal("show");
+
+}
+
+async function listarCuotaPorPrestatario() {
+
+	var tbPrestamo = document.getElementById("tbCuotaPorPrestatario").getElementsByTagName("tbody")[0];
+
+	var idPrestatario = document.getElementById("filtroIdPrestatario");
+	var fechaInicioCuota = document.getElementById("filtoFechaInicioCuota");
+	var fechaFinCuota = document.getElementById("filtroFechaFinCuota");
+
+	tbPrestamo.innerHTML = '';
+
+	var listaCuotaPorPrestatario = await apiListaCuotaPorPrestatario(idPrestatario.value, fechaInicioCuota.value, fechaFinCuota.value);
+
+
+	for (var cuota of listaCuotaPorPrestatario) {
+
+
+		var fila = tbPrestamo.insertRow();
+
+		fila.insertCell(0).innerText = cuota.prestamo.idPrestamo;
+		fila.insertCell(1).innerText = cuota.prestamo.solicitudPrestamo.prestatario.prestatario.nombres;
+		fila.insertCell(2).innerText = cuota.cuotaPrestamoPk.idCuotaPrestamo;
+		fila.insertCell(3).innerText = cuota.montoTotal;
+		fila.insertCell(4).innerText = cuota.fechaPago;
+		fila.insertCell(5).innerText = cuota.estado;
+		
+		var idPrestamo = fila.cells[0].innerText;
+		var idCuota = fila.cells[2].innerText;
+		
+		fila.insertCell(6).innerHTML = "<button class='btn btn-primary btn-sm' onclick='mostrarModalDetallePago(" + idPrestamo+','+idCuota+ ")'>PAGOS</button>";
+
+
+
+	}
 
 }
 
@@ -221,20 +310,20 @@ function guardarComprobante() {
 
 }
 
-function limpiarFormularioComprobante(){
-	
+function limpiarFormularioComprobante() {
+
 	var numDocReceptor = document.getElementById("numDocReceptor");
 	var nomReceptor = document.getElementById("nomReceptor");
 	var lblTipoDocumento = document.getElementById("lblTipoDocumento");
 	var correlativo = document.getElementById("correlativo");
-	
-	
-	numDocReceptor.value='';
-	nomReceptor.value ='';
-	correlativo.value='';
-	lblTipoDocumento.innerHTML='DOCUMENTO RECEPTOR';
-	
-	
+
+
+	numDocReceptor.value = '';
+	nomReceptor.value = '';
+	correlativo.value = '';
+	lblTipoDocumento.innerHTML = 'DOCUMENTO RECEPTOR';
+
+
 }
 
 function asignarSerie() {
