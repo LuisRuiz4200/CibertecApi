@@ -252,7 +252,7 @@ public class PrestamistaController {
 				if (totalDeMiembros < 1)
 					service.eliminarPrestamista(id);
 				else
-					System.out.println("Sry manito no se puede, este jefe es gozu :v");
+					flash.addFlashAttribute("errorMessage", "Error al eliminar al Jefe Prestamista");
 			}
 
 			// Como Jefe - Elimino a un asesorPrestamista

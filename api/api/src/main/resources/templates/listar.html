@@ -76,6 +76,9 @@
 		</div>
 	</div>
 
+	<!-- Alters -->
+	<div th:if="${errorMessage}" id="errorMessage"></div>
+
 	<!--<footer th:replace="static/footer.html"></footer>-->
 </body>
 <!--Para validacion 09-10-23   -->
@@ -106,6 +109,26 @@
 		});
 	}
 
+	// Alerta de eliminacion
+	function errorJefePrestamista() {
+		const divError = document.getElementById('errorMessage');
+		if (divError == null)
+			return;
+
+		Swal.fire({
+			title: 'Error',
+			text: 'No puede eliminar a un Jefe de Prestamista, que tenga prestamistas activos a su cargo',
+			icon: 'error',
+			confirmButtonText: 'Aceptar'
+		});
+
+		setTimeout(() => {
+			document.getElementById('errorMessage').style.display = 'none';
+		}, 10);
+	}
+
+	// Run script
+	errorJefePrestamista()
 
 </script>
 
