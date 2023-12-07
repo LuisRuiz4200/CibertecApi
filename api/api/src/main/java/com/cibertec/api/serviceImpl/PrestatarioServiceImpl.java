@@ -6,10 +6,8 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.cibertec.api.model.Prestamista;
-//import com.cibertec.api.model.Prestamista;
 import com.cibertec.api.model.Prestatario;
 
-//import com.cibertec.api.repository.PrestamistaRepository;
 import com.cibertec.api.repository.PrestatarioRepository;
 import com.cibertec.api.service.PrestatarioService;
 
@@ -65,17 +63,14 @@ public class PrestatarioServiceImpl implements PrestatarioService{
 	}
 	@Override
 	public Prestatario buscarPorDni(String dni) {
-		// TODO Auto-generated method stub
 		return repo.findByPrestatarioDni(dni);
 	}
 	@Override
 	public Prestatario buscarPorRuc(String ruc) {
-		// TODO Auto-generated method stub
 		return repo.findByPrestatarioRuc(ruc);
 	}
 	@Override
 	public Prestatario buscarPorDniOPorRuc(String dni,String ruc) {
-		// TODO Auto-generated method stub
 		return repo.findByPrestatarioDniOrPrestatarioRuc(dni,ruc);
 	}
 

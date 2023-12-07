@@ -40,13 +40,13 @@ public class PrestamistaServiceImpl implements PrestamistaService {
 		// Obtener el objeto PersonaM del prestamista
 		/*
 		 * PersonaM persona = prestamista.getPrestamista();
-		 * 
+		 *
 		 * // Si la persona ya existe en la base de datos, actualizarla if
 		 * (persona.getIdPersona() != 0) { persona =
 		 * personaRepo.findById(persona.getIdPersona()).orElse(null); if (persona !=
 		 * null) { // Volver a conectar la persona a la sesión de Hibernate persona =
 		 * personaRepo.save(persona); prestamista.setPrestamista(persona); } }
-		 * 
+		 *
 		 * // Verificar si el objeto PrestamistaM ya existe en la base de datos if
 		 * (prestamista.getIdPrestamista() != 0 &&
 		 * repo.existsById(prestamista.getIdPrestamista())) { throw new
@@ -89,17 +89,14 @@ public class PrestamistaServiceImpl implements PrestamistaService {
 
 	@Override
 	public Prestamista buscarPorDni(String dni) {
-		// TODO Auto-generated method stub
 		return repo.findByPrestamistaDni(dni);
 	}
 	@Override
 	public Prestamista buscarPorRuc(String ruc) {
-		// TODO Auto-generated method stub
 		return repo.findByPrestamistaRuc(ruc);
 	}
 	@Override
 	public Prestamista buscarPorDniOPorRuc(String dni,String ruc) {
-		// TODO Auto-generated method stub
 		return repo.findByPrestamistaDniOrPrestamistaRuc(dni,ruc);
 	}
 }

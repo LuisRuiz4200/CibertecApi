@@ -2,26 +2,40 @@ package com.cibertec.api.model;
 
 import java.sql.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.ToString;
 
 @Entity
-@Table(name="tb_cuota_prestamo")
+@Table(name = "tb_cuota_prestamo")
 @Data
 
 public class CuotaPrestamo {
-	
+
 	@EmbeddedId
-	private CuotaPrestamoPK cuotaPrestamoPk = new CuotaPrestamoPK();
-	
+	private CuotaPrestamoPK cuotaPrestamoPk;
+
 	private double monto;
 	private double interes;
-	@Column(name="montototal")
+
+	@Column(name = "montototal")
 	private double montoTotal;
-	@Column(name="fechapago")
+
+	@Column(name = "fechapago")
 	private Date fechaPago;
+
 	private String estado;
+
+	@ManyToOne
+	@JoinColumn(name = "idPrestamo", insertable = false, updatable = false)
+	@JsonIgnore
+	@ToString.Exclude
+	private Prestamo prestamo;
 }

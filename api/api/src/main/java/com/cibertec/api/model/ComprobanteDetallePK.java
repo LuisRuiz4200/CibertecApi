@@ -1,12 +1,13 @@
 package com.cibertec.api.model;
 
+
 import jakarta.persistence.Embeddable;
 import lombok.Data;
 
 @Embeddable
 @Data
-public class CuotaPrestamoPK {
+public class ComprobanteDetallePK {
 
-	private int  idPrestamo;
-	private int idCuotaPrestamo;
+	private int idComprobante;
+	private int idComprobanteDetalle;
 }

@@ -223,13 +223,27 @@
 						</form>
 						<!-- FIN DEL FORMULARIO FORM -->
 
-						<div class="alert alert-danger my-2 text-center w-75 mx-auto" th:if="${errorMessage}">
+						<!--<div class="alert alert-danger my-2 text-center w-75 mx-auto" th:if="${errorMessage}">
 							No puede registrar más de 2 solicitudes diaras.
 						</div>
 						<div class="alert alert-success my-2 text-center w-75 mx-auto" th:if="${successMessage}">
 							Solicitud generada con éxito.
+						</div>-->
+						
+						<div class="alert alert-danger my-2 text-center w-75 mx-auto" th:if="${errorMessage}" id="errorMessage" style="display: none;"  >
+							No puede registrar más de 2 solicitudes diarias.
 						</div>
-
+						<!--<div class="alert alert-success my-2 text-center w-75 mx-auto" th:if="${successMessage}">
+							Solicitud generada con éxito.
+						</div>-->
+						<!--Asignamos id para quitarlo despues de 5s-->
+						
+						<div class="alert alert-success my-2 text-center w-75 mx-auto" th:if="${successMessage}" id="successMessage" style="display: none;" >
+							
+    					Solicitud generada con éxito. Número de Solicitud: <span th:text="${idSolicitud}"></span>
+						</div>
+						
+						
 					</div>
 					<!-- FIN del div class modal-body -->
 
@@ -599,7 +613,25 @@
 		getAndShowTasaMensual();
 		
 	</script>
+<script>
+	/* Agrega este script para ocultar el mensaje después de 5 segundos */
+	setTimeout(function () {
+		document.getElementById('successMessage').style.display = 'none';
+	}, 100);
+	// Obtén el valor de idSolicitud desde el elemento span
+	var idSolicitud = document.getElementById('successMessage').innerText.trim();
+	// Muestra el toast con el mensaje
+	toastr.success(idSolicitud);
 
+</script>
+<script>
+	setTimeout(function () {
+		document.getElementById('errorMessage').style.display = 'none';
+	}, 100);
+	var error2solicitudesdiarias = document.getElementById('errorMessage').innerText.trim();
+	//muestra toast rojo
+	toastr.error(error2solicitudesdiarias);
+</script>
 
 </body>
 

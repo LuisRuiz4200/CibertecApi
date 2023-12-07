@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
+	<div th:replace="static/head.html"></div>
+
+	<!-- Bootstrap CSS -->
+	<!--<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+		integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
+	<!--FONT AWESOME-->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+		integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<!-- Fin de Bootstrap -->
+	 <!-- Estilo de la tabla -->
+   <link rel="stylesheet" href="https://cdn.datatables.net/1.13.2/css/dataTables.bootstrap4.min.css">
+   <!-- Fin del estilo de tabla -->
+	<title>Rendimiento financiero por grupo</title>
+	<!-- Creamos style para css -->
+	<style type="text/css">
+		/*Aqui con este modal-header damos estilo al contenedor del titulo REGISTRAR DOCENTE */
+		.modal-header {
+			color: #fff;
+			background: #428bca;
+			display: flex;
+			justify-content: center;
+		}
+
+		/*Esto de aqui abajo son para el color de errores de validacion*/
+		.help-block {
+			color: red;
+		}
+
+		.form-group.has-error .form-control-label {
+			color: red;
+		}
+
+		.form-group.has-error .form-control {
+			border: 1px solid red;
+			box-shadow: 0 0 0 0.2rem rgba(250, 16, 0, 0.18);
+		}
+	</style>
+	<!-- FIN DEL CSS -->
+</head>
+
+<body>
+	<div th:insert="~{plantilla/UITemplate.html::cabecera}"></div>
+	</br>
+	</br>
+	<h1 class="text-center">Rendimiento financiero por Jefe de Prestamista</h1>
+	<!-- Contenido centrado y con margens con container -->
+	</br>
+	</br>
+	<!-- INICIO EL CONTAINER -->
+	<div class="container-fluid">
+		<!-- Inicio de FORMULARIO -->
+
+		<form class="form-inline" th:action="@{/}" method="get" id="formularioListaSolcitud">
+
+			<!--Contenedor 10 + 1 del boton para que este a costado-->
+			<div class="row align-items-center" style="width: 100%;">
+				<div class="col-md-8">
+
+					<!-- Banco combobox -->
+					<div class="row align-items-center">
+						<div class="col-lg-2">
+							<div class="form-group mb-0">
+								<label for="exampleInputNombre1">Jefe de Prestamista: </label>
+							</div>
+						</div>
+
+						<div class="col-lg-3">
+							<div class="form-group">
+								<!-- Para despegable con bootstrap con SELECT y asignamos id =idSexo -->
+								<select class="form-select" id="idFiltroPrestamista" name="prestamista">
+									<!-- donde para Seleccione su value es vacio(espacio) es empty y agarra para la validación, y para los otros si tienen value-->
+									<option value="-1">[Seleccione Jefe de Prestamista...]</option>
+									<option value="-1">[Chat]</option>
+									<option value="-1">[Channing]</option>
+									<option value="-1">[Tatum]</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					
+				
+					
+					</br>
+					
+				</div>
+				<div class="col-md-2">
+					
+					<!-- Banco combobox -->
+					<div class="row align-items-center">
+						<div class="col-lg-5">
+							<div class="form-group mb-0">
+								<label for="exampleInputNombre1" style="margin-bottom: 29px;">Rentabilidad: </label>
+							</div>
+						</div>
+
+						<div class="col-lg-1">
+							<div class="form-group">
+							<input id="rentabilidad" class="form-control" type="text"
+							placeholder="Ingresar monto" style="margin-bottom: 29px;" readonly>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+				
+				
+				<!--BOTON ROJO > -->
+				<div class="col-md-2">
+					<div class="form-group">
+
+						<button type="submit" class="btn btn-success w-100" id="btnFiltrar"
+							style="margin-left: 120px; margin-bottom:30px">Filtrar</button>
+					</div>
+				</div>
+			</div> <!--FIN Contenedor 10 + 1 del boton para que este a costado-->
+		</form>
+
+		<!-- FIN DEL FORMULARIO -->
+
+		<!-- INICIO DE DIV PARA SEPARACIÓN MT-4 -->
+		<!-- ESPACIADO  class mt-4 es margen superior de 4 para toda la tabla -->
+		<div class="mt-4">
+			</br>
+			</br>
+			<!-- INICIO DE LA TABLA y asignamos id tableDocentes -->
+			<table id="tableRevisaByChief" class="table table-striped table-bordered" style="width:100%">
+				<!-- thead seria para el nombre de las columnas o encabezado -->
+				<thead  class="text-center">
+					<tr>
+						<!-- Aqui se ponen el nombre de los encabezados de la tabla -->
+						<th class="text-center">Prestamista</th>
+						<th class="text-center">Prestado</th>
+						<th class="text-center">Pagado</th>
+						<th class="text-center">Pendiente</th>
+						<th class="text-center">Rentabilidad</th>
+					</tr>
+				</thead>
+				<!-- Dentro del cuerpo creamos tr que es una fila y td es celda dentro de la fila -->
+				<tbody class="text-center">
+					<!--Inicio REGISTROS-->
+					<tr>
+                <td>Juan Quispe</td>
+                <td>8000.20</td>
+                <td>1500</td>
+                <td>550</td>
+                <td>25%</td>
+            		</tr>
+            		<tr>
+                <td>Elba Flores</td>
+                <td>7000.20</td>
+                <td>2000</td>
+                <td>3100</td>
+                <td>18%</td>
+            		</tr>
+            		<tr>
+                <td>Luci Perez</td>
+                <td>8000.20</td>
+                <td>1700</td>
+                <td>1400</td>
+                <td>30%</td>
+            		</tr>
+            	<!--	<tr>
+                <td>Luci Perez</td>
+                <td>8000</td>
+                <td>1700</td>
+                <td>1400</td>
+                <td>30%</td>
+            		</tr>
+            		<tr>
+                <td>Luci Perez</td>
+                <td>8000</td>
+                <td>1700</td>
+                <td>1400</td>
+                <td>30%</td>
+            		</tr>
+            		<tr>
+                <td>Luci Perez</td>
+                <td>8000</td>
+                <td>1700</td>
+                <td>1400</td>
+                <td>30%</td>
+            		</tr>
+            		<tr>
+                <td>Luci Perez</td>
+                <td>8000</td>
+                <td>1700</td>
+                <td>1400</td>
+                <td>30%</td>
+            		</tr>
+            		<tr>
+                <td>Luci Perez</td>
+                <td>8000</td>
+                <td>1700</td>
+                <td>1400</td>
+                <td>30%</td>
+            		</tr>
+            		<tr>
+                <td>Luci Perez</td>
+                <td>8000</td>
+                <td>1700</td>
+                <td>1400</td>
+                <td>30%</td>
+            		</tr>
+            		<tr>
+                <td>Luci Perez</td>
+                <td>8000</td>
+                <td>1700</td>
+                <td>1400</td>
+                <td>30%</td>
+            		</tr>
+            		<tr>
+                <td>Luci Perez</td>
+                <td>8000</td>
+                <td>1700</td>
+                <td>1400</td>
+                <td>30%</td>
+            		</tr>-->
+            
+         
+        <!-- Nueva fila -->
+    
+<tr id="totalRow">
+    <td>Suma de Monto de todos los prestamos</td>
+    <!-- Suma de la columna Prestado -->
+    <td id="sumaPrestado"></td>
+    <!-- Suma de la columna Pagado -->
+    <td id="sumaPagado"></td>
+    <!-- Suma de la columna Pendiente -->
+    <td id="sumaPendiente"></td>
+    <!-- Promedio de la columna Rentabilidad -->
+    <td id="promedioRentabilidad"></td>
+</tr>
+            
+            
+            
+            <!--FIN REGISTROS-->
+				</tbody>
+				<!--FIN de tbody  -->
+			</table>
+			<!-- FIN DE LA TABLA -->
+		</div>
+</div><!-- FIN EL CONTAINER FLUID-->
+
+<!-- Importamos más cosas que se necesitaran hasta mas campos para bootstrap esto sirve para paginacion y search y demás de la tabla junto a lo que esta en script -->
+	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+	<!--<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+		crossorigin="anonymous"></script>-->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+		crossorigin="anonymous"></script>
+	<script src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.13.2/js/dataTables.bootstrap4.min.js"></script>
+	<!-- script para validar las cajas de texto -->
+	<script src="https://cdn.bootcdn.net/ajax/libs/bootstrap-validator/0.5.3/js/bootstrapValidator.js"></script>
+	<!--DataTable -->
+	<script src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdn.datatables.net/1.13.2/js/dataTables.bootstrap4.min.js"></script>
+	
+	<script>
+		$(document).ready(function () {
+    $('#tableRevisaByChief').DataTable();
+		});
+		
+	</script>
+	
+		<script>
+    // Calcular los valores dinámicamente
+    var sumaPrestado = 0;
+    var sumaPagado = 0;
+    var sumaPendiente = 0;
+    var sumaRentabilidad = 0;
+    var numFilas = 0;
+
+    // Recorrer las filas de la tabla y sumar los valores
+    $("#tableRevisaByChief tbody tr:not(#totalRow)").each(function() {
+        var prestado = parseFloat($(this).find("td:eq(1)").text().replace(",", ""));
+        var pagado = parseFloat($(this).find("td:eq(2)").text().replace(",", ""));
+        var pendiente = parseFloat($(this).find("td:eq(3)").text().replace(",", ""));
+        var rentabilidad = parseFloat($(this).find("td:eq(4)").text().replace("%", ""));
+
+        sumaPrestado += prestado;
+        sumaPagado += pagado;
+        sumaPendiente += pendiente;
+        sumaRentabilidad += rentabilidad;
+        numFilas++;
+    });
+
+    // Calcular el promedio de la rentabilidad
+    var promedioRentabilidad = sumaRentabilidad / numFilas;
+
+    // Actualizar los valores en los TD correspondientes
+    $("#sumaPrestado").text(sumaPrestado);
+    $("#sumaPagado").text(sumaPagado);
+    $("#sumaPendiente").text(sumaPendiente);
+    $("#promedioRentabilidad").text(promedioRentabilidad.toFixed(2) + "%");
+    
+    
+    if (numFilas > 0) {
+        // Calcular el promedio de la rentabilidad
+        var promedioRentabilidad = sumaRentabilidad / numFilas;
+
+        // Actualizar el valor en el input
+        $("#rentabilidad").val(promedioRentabilidad.toFixed(2) + "%");
+    } else {
+        // Si no hay filas, establecer el valor predeterminado en 0.0
+        $("#rentabilidad").val("0.0%");
+    }
+    
+</script>
+	</body>
+
+</html>
