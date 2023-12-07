@@ -59,13 +59,19 @@ public class PrestamoApiController {
 	}
 	
 	@GetMapping("/listar")
-	public List<Prestamo> listar() {
+	public List<Prestamo> listar(
+			@RequestParam(name="idPrestamista",required=false,defaultValue="0") int idPrestamista) {
 
 		List<Prestamo> listaPrestamo = new ArrayList<>();
 
 		try {
 
 			listaPrestamo = prestamoService.listar();
+			if (idPrestamista>0) {
+				prestamoService.listar().stream()
+				.filter(c->c.getSolicitudPrestamo().getPrestatario().getPrestamistaPrestatario().getPrestamista().getIdPersona()==idPrestamista)
+				.toList();
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

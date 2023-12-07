@@ -11,4 +11,5 @@ public interface GrupoPrestamistaService {
     GrupoPrestamista addOrUpdate(GrupoPrestamista grupoPrestamista);
     GrupoPrestamista delete(GrupoPrestamista grupoPrestamista);
     GrupoPrestamista getByJefeAndAsesor(Prestamista jefePrestamista, Prestamista asesorPrestamista);
+	List<GrupoPrestamista> listar();
 }

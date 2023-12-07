@@ -42,4 +42,9 @@ public class GrupoPrestamistaServiceImpl implements GrupoPrestamistaService{
         return repository.findByJefePrestamistaAndAsesorPrestamista(jefePrestamista, asesorPrestamista);
     }
     
+    @Override
+    public List<GrupoPrestamista> listar(){
+    	return repository.findAll();
+    }
+    
 }
