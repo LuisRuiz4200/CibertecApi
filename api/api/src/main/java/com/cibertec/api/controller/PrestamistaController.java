@@ -49,6 +49,8 @@ public class PrestamistaController {
 	public String listarPrestamista(Model model, HttpSession session) {
 		// Obtener al JefePrestamista desde la session de su Usuario
 		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
+		if(userLogged == null)
+			return "redirect:/login";
 
 		// obtener el rol
 		int rolIngreso = userLogged.getRol().getIdRol();
@@ -76,7 +78,7 @@ public class PrestamistaController {
 
 			List<Prestamista> jefesPrestamistas = new ArrayList<>();
 			jefesPrestamistas = users.stream()
-					.map(usuario -> service.getPrestamistaById(usuario.getPersona().getIdPersona()).orElse(null))
+					.map(usuario -> service.getByIdPrestamistaActivo(usuario.getPersona().getIdPersona()))
 					.collect(Collectors.toList());
 			
 
@@ -247,7 +249,7 @@ public class PrestamistaController {
 			// Como admin - Elimino a un Jefe
 			if (rolIngreso == 1) {
 				Prestamista jefePrestamista = service.getPrestamistaById(id).orElse(null);
-				int totalDeMiembros = grupoController.listGrupoByJefePrestamista(jefePrestamista).size();
+				int totalDeMiembros = grupoController.listGrupoByJefePrestamistaAndActivo(jefePrestamista).size();
 				// De ser el caso que no tenga miembros, se podrá eliminar al jefePrestamista
 				if (totalDeMiembros < 1)
 					service.eliminarPrestamista(id);
