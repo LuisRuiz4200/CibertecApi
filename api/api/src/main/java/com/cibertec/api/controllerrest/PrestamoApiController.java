@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cibertec.api.model.CuotaPrestamo;
 import com.cibertec.api.model.Prestamo;
+import com.cibertec.api.reuzable.Utils;
 import com.cibertec.api.service.CuotaPrestamoService;
 import com.cibertec.api.service.PrestamoService;
 
@@ -46,8 +47,9 @@ public class PrestamoApiController {
 		try {
 
 			listaCuotaPrestamos = cuotaPrestamoService.listar().stream()
-					.filter(c -> c.getPrestamo().getSolicitudPrestamo().getPrestatario().getPrestatario().getIdPersona() == idPrestatario)
-					.filter(c->c.getFechaPago().after(fechaInicioCuota)&&c.getFechaPago().before(fechaFinCuota))
+					.filter(c -> c.getPrestamo().getSolicitudPrestamo().getPrestatario().getPrestatario()
+							.getIdPersona() == idPrestatario)
+					.filter(c -> c.getFechaPago().after(fechaInicioCuota) && c.getFechaPago().before(fechaFinCuota))
 					.sorted(Comparator.comparing(CuotaPrestamo::getFechaPago))
 					.toList();
 
@@ -57,20 +59,21 @@ public class PrestamoApiController {
 
 		return listaCuotaPrestamos;
 	}
-	
+
 	@GetMapping("/listar")
 	public List<Prestamo> listar(
-			@RequestParam(name="idPrestamista",required=false,defaultValue="0") int idPrestamista) {
+			@RequestParam(name = "idPrestamista", required = false, defaultValue = "0") int idPrestamista) {
 
 		List<Prestamo> listaPrestamo = new ArrayList<>();
 
 		try {
 
 			listaPrestamo = prestamoService.listar();
-			if (idPrestamista>0) {
+			if (idPrestamista > 0) {
 				prestamoService.listar().stream()
-				.filter(c->c.getSolicitudPrestamo().getPrestatario().getPrestamistaPrestatario().getPrestamista().getIdPersona()==idPrestamista)
-				.toList();
+						.filter(c -> c.getSolicitudPrestamo().getPrestatario().getPrestamistaPrestatario()
+								.getPrestamista().getIdPersona() == idPrestamista)
+						.toList();
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -78,7 +81,6 @@ public class PrestamoApiController {
 
 		return listaPrestamo;
 	}
-	
 
 	@PostMapping("/guardarPrestamo")
 	@ResponseBody
@@ -119,7 +121,7 @@ public class PrestamoApiController {
 					cuotaPrestamo.setInteres(interes);
 					cuotaPrestamo.setMontoTotal(montoTotal);
 
-					cuotaPrestamo.setEstado("Por pagar");
+					cuotaPrestamo.setEstado(Utils.PAGO_PENDIENTE);
 
 					cuotaPrestamo = cuotaPrestamoService.guardar(cuotaPrestamo);
 
