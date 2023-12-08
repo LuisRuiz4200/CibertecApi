@@ -4,11 +4,11 @@ function init() {
 }
 init();
 
-async function apiListaComprobante(idPrestamo, idCuota) {
+async function apiListaComprobante(idPrestamo, idCuotaPrestamo) {
 
 	const url = new URL("http://localhost:9090/api/comprobante/listar");
 	url.searchParams.append("idPrestamo", idPrestamo);
-	url.searchParams.append("idCuota", idCuota);
+	url.searchParams.append("idCuotaPrestamo", idCuotaPrestamo);
 
 	return fetch(url)
 		.then(response => response.json());
@@ -60,130 +60,23 @@ async function apiConsultaDocumentoIdentidad(tipoDocumento, numDocumento) {
 
 }
 
-function cargarComprobante(idPrestamo, idCuota) {
-
-	var btnCargarComprobante = document.getElementById("btnCargarComprobante");
-
-	btnCargarComprobante.addEventListener('click', function(event) {
-
-		var url = new URL("http://localhost:9090/web/comprobante/registrar");
-		url.searchParams.append("idPrestamo", idPrestamo);
-		url.searchParams.append("idCuota", idCuota);
-
-		location.href = url;
-	});
-
-}
-
-
-async function mostrarModalDetallePago(idPrestamo, idCuota) {
-
-	var tbComprobante = document.getElementById("modalTbComprobante").getElementsByTagName("tbody")[0];
-	tbComprobante.innerHTML = '';
-
-	var tituloModalDetallePago = document.getElementById("tituloModalDetallePago");
-	tituloModalDetallePago.innerText = "DETALLE DE PAGO PARA EL PRESTAMO #" + idPrestamo + " CUOTA #" + idCuota;
-
-	var listaComprobantePorPrestamo = await apiListaComprobante(idPrestamo, idCuota);
-
-	for (var comprobante of listaComprobantePorPrestamo) {
-
-		for (var item of comprobante.listaComprobanteDetalle) {
-			var fila = tbComprobante.insertRow();
-			fila.insertCell(0).innerText = comprobante.serie;
-			fila.insertCell(1).innerText = comprobante.correlativo;
-			fila.insertCell(2).innerText = item.descripcion;
-			fila.insertCell(3).innerText = comprobante.fechaEmision;
-		}
-	}
-
-
-	$("#modalDetallePago").modal("show");
-	
-	cargarComprobante(idPrestamo,idCuota);
-
-
-}
-
-async function listarCuotaPorPrestatario() {
-
-	var tbPrestamo = document.getElementById("tbCuotaPorPrestatario").getElementsByTagName("tbody")[0];
-
-	var idPrestatario = document.getElementById("filtroIdPrestatario");
-	var fechaInicioCuota = document.getElementById("filtoFechaInicioCuota");
-	var fechaFinCuota = document.getElementById("filtroFechaFinCuota");
-
-	tbPrestamo.innerHTML = '';
-
-	var listaCuotaPorPrestatario = await apiListaCuotaPorPrestatario(idPrestatario.value, fechaInicioCuota.value, fechaFinCuota.value);
-
-
-	for (var cuota of listaCuotaPorPrestatario) {
-
-
-		var fila = tbPrestamo.insertRow();
-
-		fila.insertCell(0).innerText = cuota.prestamo.idPrestamo;
-		fila.insertCell(1).innerText = cuota.prestamo.solicitudPrestamo.prestatario.prestatario.nombres;
-		fila.insertCell(2).innerText = cuota.cuotaPrestamoPk.idCuotaPrestamo;
-		fila.insertCell(3).innerText = cuota.montoTotal;
-		fila.insertCell(4).innerText = cuota.fechaPago;
-		fila.insertCell(5).innerText = cuota.estado;
-
-		var idPrestamo = fila.cells[0].innerText;
-		var idCuota = fila.cells[2].innerText;
-
-		fila.insertCell(6).innerHTML = "<button class='btn btn-primary btn-sm' onclick='mostrarModalDetallePago(" + idPrestamo + ',' + idCuota + ")'>PAGOS</button>";
-
-
-
-	}
-
-}
-
-function consultaDni() {
-
-	var numDocReceptor = document.getElementById("numDocReceptor");
-	var idTipoDocumento = document.getElementById("idTipoDocumento");
-
-	numDocReceptor.addEventListener('input', function(event) {
-
-
-
-		switch (idTipoDocumento.value) {
-			case "1":
-				if (event.target.value.length === 11) {
-					event.target.maxLength = 11;
-					apiConsultaDocumentoIdentidad("ruc", numDocReceptor.value);
-				}
-				break;
-			case "2":
-				if (event.target.value.length === 8) {
-					event.target.maxLength = 8;
-					apiConsultaDocumentoIdentidad("dni", numDocReceptor.value);
-				}
-				break;
-		}
-
-	});
-}
 
 async function apiGuardarComprobante() {
-
+	
+	var params = new URLSearchParams(location.search);
+	
+	var idPrestamo = params.get("idPrestamo");
+	var idCuotaPrestamo = params.get("idCuotaPrestamo");
+	
 
 	var idTipoComprobante = document.getElementById("idTipoComprobante");
 	var serie = document.getElementById("serie");
-	var fechaEmision = document.getElementById("fechaEmision");
 	var correlativo = document.getElementById("correlativo");
 	var rucEmisor = document.getElementById("rucEmisor");
 	var nomEmisor = document.getElementById("nomEmisor");
 	var idTipoDocumento = document.getElementById("idTipoDocumento");
-	var idPrestatario = document.getElementById("idPrestatario");
 	var numDocReceptor = document.getElementById("numDocReceptor");
 	var nomReceptor = document.getElementById("nomReceptor");
-	var serieRef = document.getElementById("serieRef");
-	var correlativoRef = document.getElementById("correlativoRef");
-	var fechaRegistro = document.getElementById("fechaRegistro");
 
 	var listaComprobanteDetalle = document.getElementById("tbItem").getElementsByTagName("tbody")[0];
 	var filas = listaComprobanteDetalle.getElementsByTagName("tr");
@@ -217,11 +110,13 @@ async function apiGuardarComprobante() {
 		"idTipoDocumento": idTipoDocumento.value,
 		"idPrestatario": "32",
 		"numDocReceptor": numDocReceptor.value,
+		"idPrestamo":idPrestamo,
+		"idCuotaPrestamo":idCuotaPrestamo,
 		"nomReceptor": nomReceptor.value,
 		"serieRef": "",
 		"correlativoRef": "",
 		"fechaRegistro": new Date(),
-		"estado": "Pendiente de Pago",
+		"estado": "EMITIDO",
 		"listaComprobanteDetalle": listaDetalles
 	};
 
@@ -246,6 +141,118 @@ async function apiGuardarComprobante() {
 			}
 		});
 }
+
+
+function cargarComprobante(idPrestamo, idCuota) {
+
+	var btnCargarComprobante = document.getElementById("btnCargarComprobante");
+
+	btnCargarComprobante.addEventListener('click', function(event) {
+
+		var url = new URL("http://localhost:9090/web/comprobante/registrar");
+		url.searchParams.append("idPrestamo", idPrestamo);
+		url.searchParams.append("idCuotaPrestamo", idCuota);
+
+		location.href = url;
+	});
+
+}
+
+
+async function mostrarModalDetallePago(idPrestamo, idCuotaPrestamo) {
+
+	var tbComprobante = document.getElementById("modalTbComprobante").getElementsByTagName("tbody")[0];
+	tbComprobante.innerHTML = '';
+
+	var tituloModalDetallePago = document.getElementById("tituloModalDetallePago");
+	tituloModalDetallePago.innerText = "DETALLE DE PAGO PARA EL PRESTAMO #" + idPrestamo + " CUOTA #" + idCuotaPrestamo;
+
+	var listaComprobantePorPrestamo = await apiListaComprobante(idPrestamo, idCuotaPrestamo);
+
+	for (var comprobante of listaComprobantePorPrestamo) {
+
+		for (var item of comprobante.listaComprobanteDetalle) {
+			var fila = tbComprobante.insertRow();
+			fila.insertCell(0).innerText = comprobante.serie;
+			fila.insertCell(1).innerText = comprobante.correlativo;
+			fila.insertCell(2).innerText = item.descripcion;
+			fila.insertCell(3).innerText = item.montoTotal;
+			fila.insertCell(4).innerText = comprobante.fechaEmision;
+		}
+	}
+
+
+	$("#modalDetallePago").modal("show");
+	
+	cargarComprobante(idPrestamo,idCuotaPrestamo);
+
+
+}
+
+async function listarCuotaPorPrestatario() {
+
+	var tbPrestamo = document.getElementById("tbCuotaPorPrestatario").getElementsByTagName("tbody")[0];
+
+	var idPrestatario = document.getElementById("filtroIdPrestatario");
+	var fechaInicioCuota = document.getElementById("filtoFechaInicioCuota");
+	var fechaFinCuota = document.getElementById("filtroFechaFinCuota");
+
+	tbPrestamo.innerHTML = '';
+
+	var listaCuotaPorPrestatario = await apiListaCuotaPorPrestatario(idPrestatario.value, fechaInicioCuota.value, fechaFinCuota.value);
+
+
+	for (var cuota of listaCuotaPorPrestatario) {
+
+
+		var fila = tbPrestamo.insertRow();
+
+		fila.insertCell(0).innerText = cuota.prestamo.idPrestamo;
+		fila.insertCell(1).innerText = cuota.prestamo.solicitudPrestamo.prestatario.prestatario.nombres;
+		fila.insertCell(2).innerText = cuota.cuotaPrestamoPk.idCuotaPrestamo;
+		fila.insertCell(3).innerText = cuota.montoTotal;
+		fila.insertCell(4).innerText = cuota.fechaPago;
+		fila.insertCell(5).innerText = cuota.estado;
+
+		var idPrestamo = fila.cells[0].innerText;
+		var idCuotaPrestamo = fila.cells[2].innerText;
+
+		fila.insertCell(6).innerHTML = "<button class='btn btn-primary btn-sm' onclick='mostrarModalDetallePago(" + idPrestamo + ',' + idCuotaPrestamo + ")'>PAGOS</button>";
+
+
+
+	}
+
+}
+
+
+function consultaDni() {
+
+	var numDocReceptor = document.getElementById("numDocReceptor");
+	var idTipoDocumento = document.getElementById("idTipoDocumento");
+
+	numDocReceptor.addEventListener('input', function(event) {
+
+
+
+		switch (idTipoDocumento.value) {
+			case "1":
+				if (event.target.value.length === 11) {
+					event.target.maxLength = 11;
+					apiConsultaDocumentoIdentidad("ruc", numDocReceptor.value);
+				}
+				break;
+			case "2":
+				if (event.target.value.length === 8) {
+					event.target.maxLength = 8;
+					apiConsultaDocumentoIdentidad("dni", numDocReceptor.value);
+				}
+				break;
+		}
+
+	});
+}
+
 
 function validarFormularioComprobante() {
 

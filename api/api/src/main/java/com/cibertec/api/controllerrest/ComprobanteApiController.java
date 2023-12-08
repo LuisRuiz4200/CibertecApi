@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.tomcat.util.json.JSONParser;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,8 @@ import com.cibertec.api.modelDTO.ComprobanteDetalleDTO;
 import com.cibertec.api.service.ComprobanteDetalleService;
 import com.cibertec.api.service.ComprobanteService;
 import com.cibertec.api.service.PrestamoService;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 @RestController
 @RequestMapping("/api/comprobante")
@@ -47,6 +50,19 @@ public class ComprobanteApiController {
 		try {
 
 			comprobante = modelMapper.map(comprobanteDTO, Comprobante.class);
+			
+			
+			int idPrestamo = comprobanteDTO.getIdPrestamo();
+			int idCuotaPrestamo = comprobanteDTO.getIdCuotaPrestamo();
+			
+			comprobante.getCuotaPrestamo().getCuotaPrestamoPk().setIdPrestamo(idPrestamo);
+			comprobante.getCuotaPrestamo().getCuotaPrestamoPk().setIdCuotaPrestamo(idCuotaPrestamo);
+			
+
+			String json = new GsonBuilder().setPrettyPrinting().create().toJson(comprobante);
+			
+			System.out.println(json);
+			
 			comprobante = comprobanteService.guardar(comprobante);
 			
 			for (ComprobanteDetalleDTO cpeDTO : comprobanteDTO.getListaComprobanteDetalle()) {
@@ -84,7 +100,7 @@ public class ComprobanteApiController {
 	@GetMapping("/listar")
 	private List<Comprobante> listar(
 			@RequestParam(name="idPrestamo",required = false,defaultValue = "0")int idPrestamo,
-			@RequestParam(name="idCuota",required = false,defaultValue = "0")int idCuota){
+			@RequestParam(name="idCuotaPrestamo",required = false,defaultValue = "0")int idCuotaPrestamo){
 		
 		List<Comprobante> listaComprobante = new ArrayList<>();
 		
@@ -92,10 +108,10 @@ public class ComprobanteApiController {
 			
 			listaComprobante = comprobanteService.listar();
 			
-			if (idPrestamo>0 && idCuota>0) {
+			if (idPrestamo>0 && idCuotaPrestamo>0) {
 				listaComprobante = comprobanteService.listar().stream()
 						.filter(c->c.getCuotaPrestamo().getCuotaPrestamoPk().getIdPrestamo()==idPrestamo)
-						.filter(c->c.getCuotaPrestamo().getCuotaPrestamoPk().getIdCuotaPrestamo()==idCuota)
+						.filter(c->c.getCuotaPrestamo().getCuotaPrestamoPk().getIdCuotaPrestamo()==idCuotaPrestamo)
 						.toList();
 			}
 			

@@ -55,7 +55,7 @@ public class ComprobanteController {
 	@GetMapping("/registrar")
 	private String registrar(Model model,
 			@RequestParam(name="idPrestamo",required = false, defaultValue = "0")int idPrestamo,
-			@RequestParam(name="idCuota",required = false,defaultValue = "0")int idCuota) {
+			@RequestParam(name="idCuotaPrestamo",required = false,defaultValue = "0")int idCuortaPrestamo) {
 		
 		Comprobante comprobante = new Comprobante();
 		List<TipoComprobante> listaTipoComprobante = new ArrayList<>();
@@ -63,10 +63,8 @@ public class ComprobanteController {
 		
 		String mensaje = "";
 		
-		
 		try {
-			comprobante.getCuotaPrestamo().getCuotaPrestamoPk().setIdPrestamo(idPrestamo);
-			comprobante.getCuotaPrestamo().getCuotaPrestamoPk().setIdCuotaPrestamo(idCuota);
+			
 			comprobante.setRucEmisor("20759630049");
 			comprobante.setNomEmisor("ME PRESTA ONLINE SAC SAC");
 			

@@ -36,8 +36,8 @@ public class Comprobante {
 	private String nomEmisor;
 	@ManyToOne
 	@JoinColumns({
-		@JoinColumn(name="idPrestamo",referencedColumnName = "idPrestamo"),
-		@JoinColumn(name="idCuotaPrestamo",referencedColumnName = "idCuotaPrestamo")
+		@JoinColumn(name="idPrestamo",referencedColumnName = "idPrestamo",nullable = true),
+		@JoinColumn(name="idCuotaPrestamo",referencedColumnName = "idCuotaPrestamo",nullable = true)
 	})
 	private CuotaPrestamo cuotaPrestamo = new CuotaPrestamo();
 	@ManyToOne
