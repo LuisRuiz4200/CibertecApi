@@ -256,6 +256,7 @@
 			// console.log("prestamo", data);
 
 			const modalTableBody = document.getElementById("modalTableBody");
+			modalTableBody.innerHTML = "";
 			for (let i = 0; i < data.cuotas.length; i++) {
 				const row = document.createElement('tr');
 
@@ -268,7 +269,7 @@
 				cuotaCell.textContent = cuota.cuotaPrestamoPk.idCuotaPrestamo;
 
 				const montoCell = document.createElement('td');
-				montoCell.textContent = cuota.monto;
+				montoCell.textContent = "S/ " + cuota.montoTotal.toFixed(2);
 
 				const fechaCell = document.createElement('td');
 				fechaCell.textContent = cuota.fechaPago;
@@ -276,9 +277,9 @@
 				const estadoCell = document.createElement('td');
 				estadoCell.textContent = cuota.estado;
 
-				// TODO: Editar por calculo
+				// TODO: Editar por calculo entre el monto pagado (Comprobante) y el monto total
 				const deudaCell = document.createElement('td');
-				deudaCell.textContent = cuota.monto;
+				deudaCell.textContent = "S/ " + cuota.montoTotal.toFixed(2);
 
 				row.appendChild(codigoCell);
 				row.appendChild(cuotaCell);
