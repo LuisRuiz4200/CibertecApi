@@ -52,8 +52,8 @@ public class ComprobanteApiController {
 			comprobante = modelMapper.map(comprobanteDTO, Comprobante.class);
 			
 			
-			int idPrestamo = comprobanteDTO.getIdPrestamo();
-			int idCuotaPrestamo = comprobanteDTO.getIdCuotaPrestamo();
+			Integer idPrestamo = comprobanteDTO.getIdPrestamo();
+			Integer idCuotaPrestamo = comprobanteDTO.getIdCuotaPrestamo();
 			
 			comprobante.getCuotaPrestamo().getCuotaPrestamoPk().setIdPrestamo(idPrestamo);
 			comprobante.getCuotaPrestamo().getCuotaPrestamoPk().setIdCuotaPrestamo(idCuotaPrestamo);

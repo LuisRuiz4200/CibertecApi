@@ -54,8 +54,8 @@ public class ComprobanteController {
 
 	@GetMapping("/registrar")
 	private String registrar(Model model,
-			@RequestParam(name="idPrestamo",required = false, defaultValue = "0")int idPrestamo,
-			@RequestParam(name="idCuotaPrestamo",required = false,defaultValue = "0")int idCuortaPrestamo) {
+			@RequestParam(name="idPrestamo",required = false)Integer idPrestamo,
+			@RequestParam(name="idCuotaPrestamo",required = false)Integer idCuortaPrestamo) {
 		
 		Comprobante comprobante = new Comprobante();
 		List<TipoComprobante> listaTipoComprobante = new ArrayList<>();
