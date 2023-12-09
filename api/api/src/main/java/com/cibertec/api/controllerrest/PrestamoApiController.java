@@ -8,6 +8,9 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,9 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cibertec.api.model.CuotaPrestamo;
 import com.cibertec.api.model.CuotaPrestamoPK;
+import com.cibertec.api.model.Prestamista;
 import com.cibertec.api.model.Prestamo;
 import com.cibertec.api.reuzable.Utils;
 import com.cibertec.api.service.CuotaPrestamoService;
+import com.cibertec.api.service.PrestamistaService;
 import com.cibertec.api.service.PrestamoService;
 
 import jakarta.transaction.Transactional;
@@ -34,6 +39,8 @@ public class PrestamoApiController {
 	PrestamoService prestamoService;
 	@Autowired
 	CuotaPrestamoService cuotaPrestamoService;
+	@Autowired
+	PrestamistaService prestamistaService;
 
 	@GetMapping("/listaCuotaPorPrestatario")
 	public List<CuotaPrestamo> listarPrestamosPorPrestatario(
@@ -96,8 +103,15 @@ public class PrestamoApiController {
 		try {
 			listaPrestamo = prestamoService.listar();
 			if (idPrestamista > 0) {
-				listaPrestamo = prestamoService.listar().stream().filter(c -> c.getSolicitudPrestamo().getPrestatario()
-						.getPrestamistaPrestatario().getPrestamista().getIdPersona() == idPrestamista).toList();
+				// listaPrestamo = prestamoService.listar().stream().filter(c -> c.getSolicitudPrestamo().getPrestatario()
+				// 		.getPrestamistaPrestatario().getPrestamista().getIdPersona() == idPrestamista).toList();
+				Prestamista asesorPrestamista = prestamistaService.listarPrestamistaPorId(idPrestamista);
+				listaPrestamo = asesorPrestamista.getPrestatariosList().stream()
+					.flatMap(prestatario -> prestatario.getListaSolicitudPrestamo().stream()
+							.filter(solicitud -> Utils.PRESTAMO_APROBADO.equalsIgnoreCase(solicitud.getEstado()))
+							.map(solicitud -> prestamoService.getBySolicitud(solicitud))
+							.filter(Objects::nonNull))
+					.collect(Collectors.toList());
 			}
 			int cuotaPorPagar = 0;
 			int cuotaPagadas = 0;
