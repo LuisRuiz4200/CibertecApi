@@ -16,44 +16,49 @@
 				</div>
 			</div>
 			<div>
-				<form>
-					<div class="row gap-2">
-						<div class="col-auto">
-							<div>
-								<label>PRESTATARIO</label>
-								<select id="filtroIdPrestatario" class="form-select">
-									<option th:each="prestatario : ${listaPrestatario}"
-										th:value="${prestatario.prestatario.idPersona}"
-										th:text="${prestatario.prestatario.nombres} + ' ' + ${prestatario.prestatario.apellidos}">
-									</option>
-								</select>
-							</div>
+				<div class="card">
+					<div class="card-body">
 
-						</div>
-						<hr>
-						<div class="col-12">
-
-							<div class="row">
+						<form>
+							<div class="row gap-2">
 								<div class="col-auto">
-									<h5>FECHA</h5>
+									<div>
+										<label>PRESTATARIO</label>
+										<select id="filtroIdPrestatario" class="form-select">
+											<option th:each="prestatario : ${listaPrestatario}"
+												th:value="${prestatario.prestatario.idPersona}"
+												th:text="${prestatario.prestatario.nombres} + ' ' + ${prestatario.prestatario.apellidos}">
+											</option>
+										</select>
+									</div>
+
 								</div>
-								<div class="col-2">
-									<label>DESDE</label>
-									<input id="filtoFechaInicioCuota" class="form-control" type="date" />
-								</div>
-								<div class="col-2">
-									<label>HASTA</label>
-									<input id="filtroFechaFinCuota" class="form-control" type="date" />
-								</div>
-								<div class="col-auto mt-auto">
-									<button class="btn btn-success" type="button"
-										onclick="listarCuotaPorPrestatario()">FILTRAR</button>
+								<hr>
+								<div class="col-12">
+
+									<div class="row">
+										<div class="col-auto">
+											<h5>FECHA</h5>
+										</div>
+										<div class="col-2">
+											<label>DESDE</label>
+											<input id="filtoFechaInicioCuota" class="form-control" type="date" />
+										</div>
+										<div class="col-2">
+											<label>HASTA</label>
+											<input id="filtroFechaFinCuota" class="form-control" type="date" />
+										</div>
+										<div class="col-auto mt-auto">
+											<button class="btn btn-success" type="button"
+												onclick="listarCuotaPorPrestatario()">FILTRAR</button>
+										</div>
+									</div>
+
 								</div>
 							</div>
-
-						</div>
+						</form>
 					</div>
-				</form>
+				</div>
 			</div>
 			<div class="table-responsive">
 				<table id="tbCuotaPorPrestatario" class="table table-hover">
