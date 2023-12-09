@@ -105,7 +105,7 @@ async function apiGuardarComprobante() {
 		"fechaEmision": new Date(),
 		"rucEmisor": rucEmisor.value,
 		"nomEmisor": nomEmisor.value,
-		"idPrestatario":32,
+		"idPrestatario": 32,
 		"idTipoDocumento": idTipoDocumento.value,
 		"numDocReceptor": numDocReceptor.value,
 		"idPrestamo": idPrestamo,
@@ -129,7 +129,9 @@ async function apiGuardarComprobante() {
 		.then(data => {
 			if (data.mensaje) {
 				toastr.success(data.mensaje);
-				location.reload();
+				setTimeout(() => {
+					location.href = "http://localhost:9090/web/comprobante/registrar";
+				}, 2000)
 				return;
 			}
 			if (data.error) {
@@ -169,9 +171,9 @@ function cargarComprobante(idPrestamo, idCuota) {
 		url.searchParams.append("idCuotaPrestamo", idCuota);
 
 		location.href = url;
-		
-		
-		
+
+
+
 	});
 
 }
@@ -222,9 +224,9 @@ async function listarCuotaPorPrestatario() {
 
 
 	for (var cuota of listaCuotaPorPrestatario) {
-		
+
 		var fila = tbPrestamo.insertRow();
-		
+
 		var nombres = cuota.prestamo.solicitudPrestamo.prestatario.prestatario.nombres;
 		var apellidos = cuota.prestamo.solicitudPrestamo.prestatario.prestatario.apellidos;
 
@@ -239,10 +241,10 @@ async function listarCuotaPorPrestatario() {
 		var idCuotaPrestamo = fila.cells[2].innerText;
 
 		fila.insertCell(6).innerHTML = "<button class='btn btn-primary btn-sm' onclick='mostrarModalDetallePago(" + idPrestamo + ',' + idCuotaPrestamo + ")'>PAGOS</button>";
-		
+
 		var condicionEstado = fila.cells[5];
-		
-		switch(condicionEstado.innerText){
+
+		switch (condicionEstado.innerText) {
 			case "Pendiente":
 				condicionEstado.classList = 'text-bg-primary';
 				break;
@@ -357,12 +359,14 @@ function validarFormularioComprobante() {
 
 function guardarComprobante() {
 
-
 	const formularioComprobante = document.getElementById("formularioComprobante");
-
 
 	if (validarFormularioComprobante()) {
 		formularioComprobante.onsubmit();
+		setTimeout(2000, () => {
+
+			location.href = "http://localhost:9090/web/comprobante/listaCuotaPorPrestamo";
+		})
 	}
 
 
@@ -446,15 +450,13 @@ function limpiarModalItem() {
 	indicadorPagoParcial.checked = false;
 }
 
-function mostrarModalNuevoItem() {
-
-
-	var idModalCodItem = document.getElementById("idModalCodItem");
+function tiposDescripcion() {
 	var idPrestamo = new URLSearchParams(location.search).get("idPrestamo");
 	var indicadorPagoParcial = document.getElementById("chckPagoParcial");
 	var modalDescripcion = document.getElementById("idModalDescripcion");
 	var modalCantidadItem = document.getElementById("idModalCantidadItem");
 	var modalMontoItem = document.getElementById("idModalMontoItem");
+
 
 	idModalCodItem.addEventListener('change', async function(event) {
 
@@ -471,7 +473,7 @@ function mostrarModalNuevoItem() {
 		modalMontoItem.value = cuotaPrestamo.montoTotal;
 
 		toastr.warning(cuotaPrestamo.estado);
-		
+
 	});
 
 	indicadorPagoParcial.addEventListener('change', function(event) {
@@ -491,13 +493,83 @@ function mostrarModalNuevoItem() {
 
 
 	});
+}
 
+function mostrarModalNuevoItem() {
 
+	var modalTituloItem = document.getElementById("modalTituloItem");
+	var idModalCodItem = document.getElementById("idModalCodItem");
+
+	modalTituloItem.innerText = "NUEVO ITEM";
+	idModalCodItem.value = '-1';
+
+	tiposDescripcion();
+
+	limpiarModalItem();
 	$("#modalNuevoItem").modal('show')
+}
+
+function editarItem(enlace) {
+
+	tiposDescripcion();
+
+
+	var modalCodItem = document.getElementById("idModalCodItem");
+	var modalDescripcion = document.getElementById("idModalDescripcion");
+	var modalMontoItem = document.getElementById("idModalMontoItem");
+	var modalCantidadItem = document.getElementById("idModalCantidadItem");
+	var modalTituloItem = document.getElementById("modalTituloItem");
+
+	var fila = enlace.parentNode.parentNode;
+
+	var idItem = fila.cells[0].innerText;
+	var codItem = fila.cells[1].innerText;
+	var descripcion = fila.cells[2].innerText;
+	var cantidad = fila.cells[3].innerText;
+	var montoItem = fila.cells[4].innerText;
+
+
+	modalCodItem.value = codItem;
+	modalDescripcion.value = descripcion;
+	modalCantidadItem.value = cantidad;
+	modalMontoItem.value = montoItem;
+	modalTituloItem.innerText = "EDICION DEL ITEM " + fila.cells[0].innerText;
+
+
+
+	$("#modalNuevoItem").modal('show');
+
+	toastr.warning(idItem);
 
 }
 
-function agregarItem() {
+function guardarItem(crud) {
+
+	if (crud === 'editar') {
+
+		var tbItem = document.getElementById("tbItem").getElementsByTagName("tbody")[0];
+		var modalTituloItem = document.getElementById("modalTituloItem");
+
+		var nroFila = modalTituloItem.innerText.replace(/.*[^0-9]/, "")
+		
+		
+		toastr.warning("numero fila" + nroFila);
+
+		var modalCodItem = document.getElementById("idModalCodItem");
+		var modalDescripcion = document.getElementById("idModalDescripcion");
+		var modalMontoItem = document.getElementById("idModalMontoItem");
+		var modalCantidadItem = document.getElementById("idModalCantidadItem");
+
+		var fila = tbItem.rows[nroFila-1];
+
+		fila.cells[1].innerHTML = modalCodItem.value;
+		fila.cells[2].innerHTML = modalDescripcion.value;
+		fila.cells[3].innerHTML = modalCantidadItem.value;
+		fila.cells[4].innerHTML = modalMontoItem.value;
+		fila.cells[5].innerHTML = modalCantidadItem.value * modalMontoItem.value;
+
+		return;
+	}
 
 	var tbItem = document.getElementById("tbItem").getElementsByTagName("tbody")[0];
 
@@ -532,6 +604,7 @@ function agregarItem() {
 	var celdaCantidad = nuevaCelda.insertCell(3);
 	var celdaMontoItem = nuevaCelda.insertCell(4);
 	var celdaMontoTotal = nuevaCelda.insertCell(5);
+	var celdaDetalle = nuevaCelda.insertCell(6);
 
 
 
@@ -541,6 +614,7 @@ function agregarItem() {
 	celdaCantidad.innerHTML = modalCantidadItem.value;
 	celdaMontoItem.innerHTML = modalMontoItem.value;
 	celdaMontoTotal.innerHTML = modalCantidadItem.value * modalMontoItem.value;
+	celdaDetalle.innerHTML = "<a onclick='editarItem(this)' type='button' ><img src='https://cdn-icons-png.flaticon.com/512/6324/6324826.png' width='30px' height='30px'/></a>"
 
 
 	modalCodItem.value = '';
