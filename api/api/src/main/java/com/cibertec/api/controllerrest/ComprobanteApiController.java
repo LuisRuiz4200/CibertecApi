@@ -1,6 +1,7 @@
 package com.cibertec.api.controllerrest;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,15 +53,17 @@ public class ComprobanteApiController {
 		ComprobanteDetalle comprobanteDetalle = new ComprobanteDetalle();
 		CuotaPrestamo cuotaPrestamo = new CuotaPrestamo();
 		
+		Integer correlativo = 1;
 		
 		try {
 
 			comprobante = modelMapper.map(comprobanteDTO, Comprobante.class);
 			
-			String json = new GsonBuilder().setPrettyPrinting().create().toJson(comprobante);
+			correlativo = comprobanteService.listar().stream()
+					.map(c->c.getCorrelativo())
+					.max(Comparator.naturalOrder()).get();
 			
-			System.out.println(json);
-			
+			comprobante.setCorrelativo(correlativo + 1);
 			comprobante = comprobanteService.guardar(comprobante);
 			
 			for (ComprobanteDetalleDTO cpeDTO : comprobanteDTO.getListaComprobanteDetalle()) {

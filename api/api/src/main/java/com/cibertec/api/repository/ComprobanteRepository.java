@@ -9,5 +9,4 @@ import com.cibertec.api.model.Comprobante;
 public interface ComprobanteRepository extends JpaRepository<Comprobante, Integer>{
 
 	
-	
 }

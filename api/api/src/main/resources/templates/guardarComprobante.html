@@ -109,7 +109,11 @@
 														<td th:text="${item.cantidadItem}"></td>
 														<td th:text="${item.montoItem}"></td>
 														<td th:text="${item.montoTotal}"></td>
-														<td></td>
+														<td>
+															<a type="button" id="btnEditarItem" onclick="editarItem(this)">
+																<img src="https://cdn-icons-png.flaticon.com/512/6324/6324826.png" width="30px" height="30px"/>
+															</a>
+														</td>
 													</tr>
 												</tbody>
 											</table>
@@ -146,7 +150,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<div class="modal-title">
-							<h4>NUEVO ITEM</h4>
+							<h4 id="modalTituloItem">NUEVO ITEM</h4>
 						</div>
 					</div>
 					<div class="modal-body">
@@ -155,7 +159,7 @@
 								<div>
 									<label>COD. ITEM</label>
 									<select id="idModalCodItem" class="form-select">
-										<option> SELECIONAR </option>
+										<option value="-1"> SELECIONAR </option>
 										<option th:each="cuotaPrestamo : ${listaCuotaPrestamoPendiente}"
 											th:value="'C-' + ${cuotaPrestamo.cuotaPrestamoPk.idCuotaPrestamo}"
 											th:text="'C-' + ${cuotaPrestamo.cuotaPrestamoPk.idCuotaPrestamo}"></option>
@@ -192,7 +196,8 @@
 
 					<div class="modal-footer">
 						<div>
-							<button onclick="agregarItem()" class="btn-success">AGREGAR</button>
+							<button onclick="guardarItem('agregar')" class="btn-success">AGREGAR</button>
+							<button onclick="guardarItem('editar')" class="btn-primary">EDITAR</button>
 						</div>
 					</div>
 				</div>
