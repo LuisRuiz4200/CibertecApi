@@ -9,7 +9,7 @@
     <!-- Creamos style para css -->
     <style>
 		.ancho {
-                 width: 250px; }
+                 width: 220px; }
 	</style>
 </head>
 
@@ -45,7 +45,7 @@
                                        <option value="-1">Selecione Prestamista...</option>
                                        <option th:each="prestamista:${listaPrestamista}"
                                                th:value="${prestamista.asesorPrestamista.prestamista.idPersona}"
-                                               th:text="${prestamista.asesorPrestamista.prestamista.nombres}">
+                                               th:text="${prestamista.asesorPrestamista.prestamista.nombres} + ' ' + ${prestamista.asesorPrestamista.prestamista.apellidos}">
                                         </option>
                                      </select>
                                 </div>
