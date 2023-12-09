@@ -29,15 +29,14 @@ public class CuotaPrestamo {
 
 	private double monto;
 	private double interes;
-
 	@Column(name = "montototal")
 	private double montoTotal;
-
+	private Double montoMora;
+	@Column(name ="montoPendiente")
+	private double montoPendiente;
 	@Column(name = "fechapago")
 	private Date fechaPago;
-
 	private String estado;
-
 	@ManyToOne
 	@JoinColumn(name = "idPrestamo", insertable = false, updatable = false)
 	//@JsonManagedReference
@@ -46,5 +45,5 @@ public class CuotaPrestamo {
 	
 	@OneToMany(mappedBy = "cuotaPrestamo")
 	@JsonIgnore
-	private List<Comprobante> listaComprobantes = new ArrayList<>();
+	private List<ComprobanteDetalle> listaComprobanteDetalles = new ArrayList<>();
 }

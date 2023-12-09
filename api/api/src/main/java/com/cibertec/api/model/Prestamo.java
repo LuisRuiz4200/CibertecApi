@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -52,5 +53,9 @@ public class Prestamo {
 	@JsonBackReference
 	//@JsonManagedReference
 	private List<CuotaPrestamo> listaCuotaPrestamo = new ArrayList<>();
+
+	@OneToMany(mappedBy = "prestamo")
+	@JsonIgnore
+	private List<Comprobante> listaComprobantes = new ArrayList<>();
 	
 }

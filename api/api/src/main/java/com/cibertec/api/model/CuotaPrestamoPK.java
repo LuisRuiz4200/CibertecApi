@@ -7,6 +7,6 @@ import lombok.Data;
 @Data
 public class CuotaPrestamoPK {
 
-	private int  idPrestamo;
-	private int idCuotaPrestamo;
+	private Integer  idPrestamo;
+	private Integer idCuotaPrestamo;
 }

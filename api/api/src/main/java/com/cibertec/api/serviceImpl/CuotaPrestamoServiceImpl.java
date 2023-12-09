@@ -52,7 +52,7 @@ public class CuotaPrestamoServiceImpl implements CuotaPrestamoService{
 		return null;
 	}
 	@Override
-	public CuotaPrestamo buscarPorCuotaPrestamo(CuotaPrestamoPK cuotaPrestamoPK) {
+	public CuotaPrestamo buscarPorIdCompuesto(CuotaPrestamoPK cuotaPrestamoPK) {
 		
 		return cuotaPrestamoRepository.findById(cuotaPrestamoPK).get();
 	}
