@@ -18,13 +18,14 @@
 			<div>
 				<form>
 					<div class="row gap-2">
-						<div class="col-3">
+						<div class="col-auto">
 							<div>
 								<label>PRESTATARIO</label>
 								<select id="filtroIdPrestatario" class="form-select">
 									<option th:each="prestatario : ${listaPrestatario}"
 										th:value="${prestatario.prestatario.idPersona}"
-										th:text="${prestatario.prestatario.nombres} + ' ' + ${prestatario.prestatario.apellidos}"></option>
+										th:text="${prestatario.prestatario.nombres} + ' ' + ${prestatario.prestatario.apellidos}">
+									</option>
 								</select>
 							</div>
 
@@ -78,7 +79,7 @@
 	</div>
 
 	<div id="modalDetallePago" class="modal ">
-		<div class="modal-dialog  modal-dialog-centered modal-lg">
+		<div class="modal-dialog modal-xl modal-dialog-centered modal-lg">
 			<div class="modal-content">
 				<div class="modal-header text-bg-primary">
 					<h3 id="tituloModalDetallePago">DETALLES DE PAGO</h3>
@@ -86,12 +87,22 @@
 				<div class="modal-body">
 
 					<div class="row gap-4">
-						<div class="col-12">
-							<div>
-								<button id="btnCargarComprobante" class="btn btn-success btn-sm">Registrar nuevo pago</button>
+						<div class="col-sm-12">
+							<div class="row justify-content-between">
+								<div class="col-sm-auto">
+									<div>
+										<button id="btnCargarComprobante" class="btn btn-success btn-sm">Registrar nuevo
+											pago</button>
+									</div>
+								</div>
+								<div class="col-sm-auto">
+									<div>
+										<input id="modalEstadoCuota" class="form-control" type="text" readonly />
+									</div>
+								</div>
 							</div>
 						</div>
-						<div class="col-12">
+						<div class="col-sm-12">
 							<div class="responsive">
 								<table id="modalTbComprobante" class="table table-hover">
 									<thead>
@@ -99,12 +110,14 @@
 											<th class="col-auto">SERIE</th>
 											<th class="col-auto">NRO</th>
 											<th class="col-auto">DESCRIPCION</th>
+											<th class="col-auto">MONTO NETO</th>
+											<th class="col-auto">MONTO MORA</th>
 											<th class="col-auto">MONTO TOTAL</th>
 											<th class="col-auto">FECHA EMISION</th>
 										</tr>
 									</thead>
 									<tbody>
-										
+
 									</tbody>
 								</table>
 							</div>

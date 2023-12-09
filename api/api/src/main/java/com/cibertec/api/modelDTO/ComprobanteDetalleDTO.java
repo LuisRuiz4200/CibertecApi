@@ -15,7 +15,8 @@ public class ComprobanteDetalleDTO {
 	private String descripcion;
 	private Integer idPrestamo = null;
 	private Integer idCuotaPrestamo = null;
-	private int cantidadItem;
-	private double montoItem;
-	private double montoTotal;
+	private Integer cantidadItem;
+	private Double montoMora;
+	private Double montoItem;
+	private Double montoTotal;
 }

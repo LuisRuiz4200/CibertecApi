@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.tomcat.util.json.JSONParser;
 import org.modelmapper.ModelMapper;
@@ -47,6 +48,8 @@ public class ComprobanteApiController {
 	private Map<String, Object> registrar(@RequestBody ComprobanteDTO comprobanteDTO){
 		
 		Map<String,Object> response = new HashMap<>();
+		Map<String,Object> detalle = new HashMap<>();
+		
 		ModelMapper modelMapper = new ModelMapper();
 		
 		Comprobante comprobante = new Comprobante();
@@ -54,6 +57,7 @@ public class ComprobanteApiController {
 		CuotaPrestamo cuotaPrestamo = new CuotaPrestamo();
 		
 		Integer correlativo = 1;
+		String serie = "";
 		
 		try {
 
@@ -61,10 +65,14 @@ public class ComprobanteApiController {
 			
 			correlativo = comprobanteService.listar().stream()
 					.map(c->c.getCorrelativo())
-					.max(Comparator.naturalOrder()).get();
+					.max(Comparator.naturalOrder()).orElse(0);
+			
 			
 			comprobante.setCorrelativo(correlativo + 1);
 			comprobante = comprobanteService.guardar(comprobante);
+			
+			correlativo = comprobante.getCorrelativo();
+			serie = comprobante.getSerie();
 			
 			for (ComprobanteDetalleDTO cpeDTO : comprobanteDTO.getListaComprobanteDetalle()) {
 				
@@ -87,14 +95,21 @@ public class ComprobanteApiController {
 				cuotaPrestamo = comprobanteDetalle.getCuotaPrestamo();
 
 				
-				if(comprobanteDetalle.getMontoTotal()>=cuotaPrestamo.getMontoPendiente()) {
+
+				double montoPendienteActual = cuotaPrestamo.getMontoPendiente();
+				double montoFacturado = comprobanteDetalle.getMontoTotal();
+				
+				if(montoPendienteActual == 0) {
+					montoPendienteActual = cuotaPrestamo.getMontoTotal();
+				}
+				
+
+				if(comprobanteDetalle.getMontoTotal()>=montoPendienteActual) {
 					cuotaPrestamo.setEstado(Utils.PAGO_PAGADO);
 				}else {
 					cuotaPrestamo.setEstado(Utils.PAGO_PARCIAL);
 				}
-
-				double montoPendienteActual = cuotaPrestamo.getMontoPendiente();
-				double montoFacturado = comprobanteDetalle.getMontoTotal();
+				
 				cuotaPrestamo.setMontoPendiente(montoPendienteActual - montoFacturado);
 				
 				cuotaPrestamo = cuotaPrestamoService.guardar(cuotaPrestamo);
@@ -107,7 +122,12 @@ public class ComprobanteApiController {
 				return response;
 			}
 
-			response.put("mensaje", "Trabajo realizado");
+			detalle.put("serie",serie);
+			detalle.put("correlativo", correlativo);
+
+			response.put("mensaje", "Comprobante registrado !");
+			response.put("detalle", detalle);
+			
 			
 		}catch(Exception ex) {
 			response.put("error", ex.getMessage());

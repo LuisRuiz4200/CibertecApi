@@ -91,7 +91,8 @@ async function apiGuardarComprobante() {
 			"descripcion": celdas[2].innerText,
 			"cantidadItem": celdas[3].innerText,
 			"montoItem": celdas[4].innerText,
-			"montoTotal": celdas[5].innerText
+			"montoMora": celdas[5].innerText,
+			"montoTotal": celdas[6].innerText
 		};
 
 		listaDetalles.push(item);
@@ -129,6 +130,9 @@ async function apiGuardarComprobante() {
 		.then(data => {
 			if (data.mensaje) {
 				toastr.success(data.mensaje);
+
+				correlativo.value = data.detalle.correlativo;
+
 				setTimeout(() => {
 					location.href = "http://localhost:9090/web/comprobante/registrar";
 				}, 2000)
@@ -160,9 +164,10 @@ async function apiBuscarCuotaPrestamo(idPrestamo, idCuotaPrestamo) {
 }
 
 
-function cargarComprobante(idPrestamo, idCuota) {
+function cargarWebComprobante(idPrestamo, idCuota) {
 
 	var btnCargarComprobante = document.getElementById("btnCargarComprobante");
+	var modalEstadoCuota = document.getElementById("modalEstadoCuota");
 
 	btnCargarComprobante.addEventListener('click', function(event) {
 
@@ -170,25 +175,33 @@ function cargarComprobante(idPrestamo, idCuota) {
 		url.searchParams.append("idPrestamo", idPrestamo);
 		url.searchParams.append("idCuotaPrestamo", idCuota);
 
+		if (modalEstadoCuota.value === 'Pagado') {
+			toastr.error("No es posible acceder a pagar una cuota con estado pagado")
+			return;
+		}
+
 		location.href = url;
-
-
 
 	});
 
 }
 
 
-async function mostrarModalDetallePago(idPrestamo, idCuotaPrestamo) {
+async function mostrarModalDetallePago(enlace, idPrestamo, idCuotaPrestamo) {
 
 	var tbComprobante = document.getElementById("modalTbComprobante").getElementsByTagName("tbody")[0];
+	var modalEstadoCuota = document.getElementById("modalEstadoCuota");
 	tbComprobante.innerHTML = '';
 
+	var fila = enlace.parentNode.parentNode;
+	var celdaEstadoCuenta = fila.cells[5].innerText;
 
 	var tituloModalDetallePago = document.getElementById("tituloModalDetallePago");
 	tituloModalDetallePago.innerText = "DETALLE DE PAGO PARA EL PRESTAMO #" + idPrestamo + " CUOTA #" + idCuotaPrestamo;
 
 	var listaComprobantePorPrestamo = await apiListaComprobante(idPrestamo, idCuotaPrestamo);
+
+	modalEstadoCuota.value = celdaEstadoCuenta;
 
 	for (var comprobante of listaComprobantePorPrestamo) {
 
@@ -197,15 +210,19 @@ async function mostrarModalDetallePago(idPrestamo, idCuotaPrestamo) {
 			fila.insertCell(0).innerText = comprobante.serie;
 			fila.insertCell(1).innerText = comprobante.correlativo;
 			fila.insertCell(2).innerText = item.descripcion;
-			fila.insertCell(3).innerText = item.montoTotal;
-			fila.insertCell(4).innerText = comprobante.fechaEmision;
+			fila.insertCell(3).innerText = 'S/. ' + item.montoItem.toFixed(2);
+			fila.insertCell(4).innerText = item.montoMora === null ? 'S/. 0.00' : 'S/. ' + item.montoMora.toFixed(2);
+			fila.insertCell(5).innerText = 'S/. ' + item.montoTotal.toFixed(2);
+			fila.insertCell(6).innerText = comprobante.fechaEmision;
 		}
 	}
 
 
 	$("#modalDetallePago").modal("show");
 
-	cargarComprobante(idPrestamo, idCuotaPrestamo);
+
+
+	cargarWebComprobante(idPrestamo, idCuotaPrestamo);
 
 
 }
@@ -233,14 +250,14 @@ async function listarCuotaPorPrestatario() {
 		fila.insertCell(0).innerText = cuota.prestamo.idPrestamo;
 		fila.insertCell(1).innerText = nombres + ' ' + apellidos;
 		fila.insertCell(2).innerText = cuota.cuotaPrestamoPk.idCuotaPrestamo;
-		fila.insertCell(3).innerText = cuota.montoTotal;
+		fila.insertCell(3).innerText = "S/." + cuota.montoTotal.toFixed(2);
 		fila.insertCell(4).innerText = cuota.fechaPago;
 		fila.insertCell(5).innerText = cuota.estado;
 
 		var idPrestamo = fila.cells[0].innerText;
 		var idCuotaPrestamo = fila.cells[2].innerText;
 
-		fila.insertCell(6).innerHTML = "<button class='btn btn-primary btn-sm' onclick='mostrarModalDetallePago(" + idPrestamo + ',' + idCuotaPrestamo + ")'>PAGOS</button>";
+		fila.insertCell(6).innerHTML = "<button class='btn btn-primary btn-sm' onclick='mostrarModalDetallePago(this," + idPrestamo + ',' + idCuotaPrestamo + ")'>PAGOS</button>";
 
 		var condicionEstado = fila.cells[5];
 
@@ -443,19 +460,23 @@ function limpiarModalItem() {
 	var modalDescripcion = document.getElementById("idModalDescripcion");
 	var modalCantidadItem = document.getElementById("idModalCantidadItem");
 	var modalMontoItem = document.getElementById("idModalMontoItem");
+	var modalMontoMora = document.getElementById("idModalMontoMora");
 
 	modalDescripcion.value = '';
 	modalCantidadItem.value = '';
 	modalMontoItem.value = '';
+	modalMontoMora.value = '';
+	modalMontoItem.readOnly = true;
 	indicadorPagoParcial.checked = false;
 }
 
-function tiposDescripcion() {
+function cargarCuotaPrestamoModal() {
 	var idPrestamo = new URLSearchParams(location.search).get("idPrestamo");
 	var indicadorPagoParcial = document.getElementById("chckPagoParcial");
 	var modalDescripcion = document.getElementById("idModalDescripcion");
 	var modalCantidadItem = document.getElementById("idModalCantidadItem");
 	var modalMontoItem = document.getElementById("idModalMontoItem");
+	var modalFechaPago = document.getElementById("idModalFechaPago");
 
 
 	idModalCodItem.addEventListener('change', async function(event) {
@@ -470,9 +491,10 @@ function tiposDescripcion() {
 		modalDescripcion.value = "PAGO COMPLETO DE LA CUOTA NRO " + idCuotaPrestamo;
 		modalCantidadItem.value = "1";
 		modalMontoItem.readOnly = true;
-		modalMontoItem.value = cuotaPrestamo.montoTotal;
+		modalMontoItem.value = cuotaPrestamo.montoTotal.toFixed(2);
+		modalFechaPago.value = cuotaPrestamo.fechaPago;
 
-		toastr.warning(cuotaPrestamo.estado);
+		toastr.warning(cuotaPrestamo.fechaPago);
 
 	});
 
@@ -495,30 +517,39 @@ function tiposDescripcion() {
 	});
 }
 
-function mostrarModalNuevoItem() {
+function agregarItem() {
 
 	var modalTituloItem = document.getElementById("modalTituloItem");
 	var idModalCodItem = document.getElementById("idModalCodItem");
+	var btnAgregarItemModal = document.getElementById("btnAgregarItemModal");
+	var btnEditarItemModal= document.getElementById("btnEditarItemModal");
 
 	modalTituloItem.innerText = "NUEVO ITEM";
 	idModalCodItem.value = '-1';
 
-	tiposDescripcion();
+	cargarCuotaPrestamoModal();
 
+	btnAgregarItemModal.hidden = false;
+	btnEditarItemModal.hidden = true;
+	
 	limpiarModalItem();
 	$("#modalNuevoItem").modal('show')
+	
 }
 
 function editarItem(enlace) {
 
-	tiposDescripcion();
+	cargarCuotaPrestamoModal();
 
 
 	var modalCodItem = document.getElementById("idModalCodItem");
 	var modalDescripcion = document.getElementById("idModalDescripcion");
-	var modalMontoItem = document.getElementById("idModalMontoItem");
 	var modalCantidadItem = document.getElementById("idModalCantidadItem");
+	var modalMontoItem = document.getElementById("idModalMontoItem");
+	var modalMontoMora = document.getElementById("idModalMontoMora");
 	var modalTituloItem = document.getElementById("modalTituloItem");
+	var btnAgregarItemModal = document.getElementById("btnAgregarItemModal");
+	var btnEditarItemModal = document.getElementById("btnEditarItemModal");
 
 	var fila = enlace.parentNode.parentNode;
 
@@ -527,15 +558,19 @@ function editarItem(enlace) {
 	var descripcion = fila.cells[2].innerText;
 	var cantidad = fila.cells[3].innerText;
 	var montoItem = fila.cells[4].innerText;
+	var montoMora = fila.cells[5].innerText;
 
 
 	modalCodItem.value = codItem;
 	modalDescripcion.value = descripcion;
 	modalCantidadItem.value = cantidad;
 	modalMontoItem.value = montoItem;
+	modalMontoMora.value = montoMora;
 	modalTituloItem.innerText = "EDICION DEL ITEM " + fila.cells[0].innerText;
 
 
+	btnAgregarItemModal.hidden = true;
+	btnEditarItemModal.hidden = false;
 
 	$("#modalNuevoItem").modal('show');
 
@@ -543,33 +578,8 @@ function editarItem(enlace) {
 
 }
 
+
 function guardarItem(crud) {
-
-	if (crud === 'editar') {
-
-		var tbItem = document.getElementById("tbItem").getElementsByTagName("tbody")[0];
-		var modalTituloItem = document.getElementById("modalTituloItem");
-
-		var nroFila = modalTituloItem.innerText.replace(/.*[^0-9]/, "")
-		
-		
-		toastr.warning("numero fila" + nroFila);
-
-		var modalCodItem = document.getElementById("idModalCodItem");
-		var modalDescripcion = document.getElementById("idModalDescripcion");
-		var modalMontoItem = document.getElementById("idModalMontoItem");
-		var modalCantidadItem = document.getElementById("idModalCantidadItem");
-
-		var fila = tbItem.rows[nroFila-1];
-
-		fila.cells[1].innerHTML = modalCodItem.value;
-		fila.cells[2].innerHTML = modalDescripcion.value;
-		fila.cells[3].innerHTML = modalCantidadItem.value;
-		fila.cells[4].innerHTML = modalMontoItem.value;
-		fila.cells[5].innerHTML = modalCantidadItem.value * modalMontoItem.value;
-
-		return;
-	}
 
 	var tbItem = document.getElementById("tbItem").getElementsByTagName("tbody")[0];
 
@@ -578,6 +588,27 @@ function guardarItem(crud) {
 	var modalMontoItem = document.getElementById("idModalMontoItem");
 	var modalCantidadItem = document.getElementById("idModalCantidadItem");
 	var indicadorPagoParcial = document.getElementById("chckPagoParcial");
+	var modalMontoMora = document.getElementById("idModalMontoMora");
+	var modalTituloItem = document.getElementById("modalTituloItem");
+
+	if (crud === 'editar') {
+
+		var nroFila = modalTituloItem.innerText.replace(/.*[^0-9]/, "")
+
+		var fila = tbItem.rows[nroFila - 1];
+
+		fila.cells[1].innerHTML = modalCodItem.value;
+		fila.cells[2].innerHTML = modalDescripcion.value;
+		fila.cells[3].innerHTML = modalCantidadItem.value;
+		fila.cells[4].innerHTML = modalMontoItem.value;
+		fila.cells[5].innerHTML = modalMontoMora.value;
+		fila.cells[6].innerHTML = modalCantidadItem.value * modalMontoItem.value;
+
+
+		$("#modalNuevoItem").modal('hide');
+
+		return;
+	}
 
 	if (!modalCodItem.value || modalCodItem.value <= 0) {
 		toastr.error('Debe ingresar un código');
@@ -603,8 +634,9 @@ function guardarItem(crud) {
 	var celdaDescripcion = nuevaCelda.insertCell(2);
 	var celdaCantidad = nuevaCelda.insertCell(3);
 	var celdaMontoItem = nuevaCelda.insertCell(4);
-	var celdaMontoTotal = nuevaCelda.insertCell(5);
-	var celdaDetalle = nuevaCelda.insertCell(6);
+	var celdaMontoMora = nuevaCelda.insertCell(5);
+	var celdaMontoTotal = nuevaCelda.insertCell(6);
+	var celdaDetalle = nuevaCelda.insertCell(7);
 
 
 
@@ -613,6 +645,7 @@ function guardarItem(crud) {
 	celdaDescripcion.innerHTML = modalDescripcion.value;
 	celdaCantidad.innerHTML = modalCantidadItem.value;
 	celdaMontoItem.innerHTML = modalMontoItem.value;
+	celdaMontoMora.innerHTML = modalMontoMora.value;
 	celdaMontoTotal.innerHTML = modalCantidadItem.value * modalMontoItem.value;
 	celdaDetalle.innerHTML = "<a onclick='editarItem(this)' type='button' ><img src='https://cdn-icons-png.flaticon.com/512/6324/6324826.png' width='30px' height='30px'/></a>"
 

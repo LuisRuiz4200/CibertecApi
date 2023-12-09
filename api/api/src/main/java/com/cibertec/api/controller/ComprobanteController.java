@@ -120,6 +120,7 @@ public class ComprobanteController {
 			}
 			
 			
+			
 			listaCuotaPrestamoPendiente = listaCuotaPrestamo.stream()
 					.filter(c->c.getEstado().matches("("+Utils.PAGO_PENDIENTE+")||("+Utils.PAGO_PARCIAL+")"))
 					.toList();
