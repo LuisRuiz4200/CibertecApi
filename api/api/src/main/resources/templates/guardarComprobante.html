@@ -24,14 +24,16 @@
 					<img src="https://cdn-icons-png.flaticon.com/512/2463/2463731.png" width="300px" height="300px">
 				</div>
 
-				<form id="formularioComprobante" action="" th:object="${comprobante}" onsubmit="apiGuardarComprobante()">
+				<form id="formularioComprobante" action="" th:object="${comprobante}"
+					onsubmit="apiGuardarComprobante()">
 					<div class="row gap-4">
 						<div class="col-12">
 							<div class="row">
 								<div class="col-3">
 									<label>TIPO COMPROBANTE</label>
-									<select id="idTipoComprobante" class="form-select">
-										<option> SELECIONAR </option>
+									<select th:field="*{tipoComprobante.idTipoComprobante}" id="idTipoComprobante"
+										class="form-select">
+										<option value="-1">SELECCIONE</option>
 										<option th:each="tipoComprobante : ${listaTipoComprobante}"
 											th:value="${tipoComprobante.idTipoComprobante}"
 											th:text="${tipoComprobante.descripcion}"></option>
@@ -39,11 +41,11 @@
 								</div>
 								<div class="col-2">
 									<label>SERIE</label>
-									<input id="serie" class="form-control" />
+									<input th:field="*{serie}" id="serie" class="form-control" />
 								</div>
 								<div class="col-2">
 									<label>CORRELATIVO</label>
-									<input id="correlativo" class="form-control" />
+									<input th:field="*{correlativo}" id="correlativo" class="form-control"  />
 								</div>
 							</div>
 						</div>
@@ -53,11 +55,13 @@
 									<div class="row">
 										<div class="col-3">
 											<label>RUC EMISOR</label>
-											<input th:field="*{rucEmisor}" readonly id="rucEmisor" class="form-control" />
+											<input th:field="*{rucEmisor}" readonly id="rucEmisor"
+												class="form-control" />
 										</div>
 										<div class="col-5">
 											<label>NOMBRE EMISOR</label>
-											<input th:field="*{nomEmisor}" readonly id="nomEmisor" class="form-control" />
+											<input th:field="*{nomEmisor}" readonly id="nomEmisor"
+												class="form-control" />
 										</div>
 									</div>
 								</div>
@@ -65,8 +69,9 @@
 									<div class="row">
 										<div class="col-2">
 											<label>TIPO DOCUMENTO</label>
-											<select id="idTipoDocumento" class="form-select">
-												<option> SELECIONAR </option>
+											<select th:field="*{tipoDocumento.idTipoDocumento}" id="idTipoDocumento"
+												class="form-select">
+												<option value="-1"> SELECIONAR </option>
 												<option th:each="tipoDocumento : ${listaTipoDocumento}"
 													th:value="${tipoDocumento.idTipoDocumento}"
 													th:text="${tipoDocumento.descripcion}"></option>
@@ -74,11 +79,12 @@
 										</div>
 										<div class="col-3">
 											<label id="lblTipoDocumento">DOCUMENTO RECEPTOR</label>
-											<input id="numDocReceptor" class="form-control" />
+											<input th:field="*{numDocReceptor}" id="numDocReceptor" class="form-control" />
 										</div>
 										<div class="col-5">
 											<label>NOMBRE RECEPTOR</label>
-											<input id="nomReceptor" class="form-control" />
+											<input th:value="${nombresApellidos}" id="nomReceptor"
+												class="form-control" />
 										</div>
 									</div>
 								</div>
@@ -87,14 +93,24 @@
 										<div class="responsive position-relativo">
 											<table id="tbItem" class="table">
 												<thead>
-													<th class="col-1">NRO</th>
-													<th class="col-2">COD. ITEM</th>
-													<th class="col-4">DESCRIPCION</th>
-													<th class="col-1">CANT.</th>
-													<th class="col-2">MONTO ITEM</th>
-													<th class="col-2">MONTO TOTAL</th>
+													<th class="col-auto">NRO</th>
+													<th class="col-auto">COD. ITEM</th>
+													<th class="col-auto">DESCRIPCION</th>
+													<th class="col-auto">CANT.</th>
+													<th class="col-auto">MONTO ITEM</th>
+													<th class="col-auto">MONTO TOTAL</th>
+													<th class="col-auto">ACCION</th>
 												</thead>
 												<tbody>
+													<tr th:each="item, vars : ${listaDetalleComprobante}">
+														<td th:text="${vars.index} + 1"></td>
+														<td th:text="${item.codItem}"></td>
+														<td th:text="${item.descripcion}"></td>
+														<td th:text="${item.cantidadItem}"></td>
+														<td th:text="${item.montoItem}"></td>
+														<td th:text="${item.montoTotal}"></td>
+														<td></td>
+													</tr>
 												</tbody>
 											</table>
 											<div class="position-absolute end-0 bottom-0">
@@ -112,10 +128,13 @@
 
 						</div>
 						<div class=" col-12">
+							<form>
+								
 							<div>
 								<button onclick="guardarComprobante()" type="button"
 									class="btn-success">AGREGAR</button>
 							</div>
+							</form>
 						</div>
 					</div>
 				</form>
@@ -132,27 +151,38 @@
 					</div>
 					<div class="modal-body">
 						<div class="row gap-4">
-							<div class="col-4">
+							<div class="col-auto">
 								<div>
 									<label>COD. ITEM</label>
-									<input id="idModalCodItem" class="form-control" />
+									<select id="idModalCodItem" class="form-select">
+										<option> SELECIONAR </option>
+										<option th:each="cuotaPrestamo : ${listaCuotaPrestamoPendiente}"
+											th:value="'C-' + ${cuotaPrestamo.cuotaPrestamoPk.idCuotaPrestamo}"
+											th:text="'C-' + ${cuotaPrestamo.cuotaPrestamoPk.idCuotaPrestamo}"></option>
+									</select>
+								</div>
+							</div>
+							<div class="col-auto">
+								<div class="mt-4">
+									<label>Pago parcial</label>
+									<input id="chckPagoParcial" type="checkbox" />
 								</div>
 							</div>
 							<div class="col-10">
 								<div>
 									<label>DESCRIPCION</label>
-									<input id="idModalDescripcion" class="form-control" />
+									<input id="idModalDescripcion" class="form-control" readonly />
 								</div>
 							</div>
 							<div class="col-12">
 								<div class="row">
 									<div class="col-4">
 										<label>CANT</label>
-										<input id="idModalCantidadItem" class="form-control" type="number" />
+										<input id="idModalCantidadItem" class="form-control" type="number" readonly/>
 									</div>
 									<div class="col-4">
 										<label>MONTO</label>
-										<input id="idModalMontoItem" class="form-control" type="number" />
+										<input id="idModalMontoItem" class="form-control" type="number" readonly />
 									</div>
 
 								</div>

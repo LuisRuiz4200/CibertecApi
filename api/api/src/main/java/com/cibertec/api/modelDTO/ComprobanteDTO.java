@@ -16,7 +16,6 @@ public class ComprobanteDTO {
 	private String rucEmisor;
 	private String nomEmisor;
 	private Integer idPrestamo = null;
-	private Integer idCuotaPrestamo = null;
 	private int idTipoDocumento;
 	private int idPrestatario;
 	private String numDocReceptor;

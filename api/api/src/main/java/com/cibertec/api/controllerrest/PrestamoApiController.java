@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cibertec.api.model.CuotaPrestamo;
+import com.cibertec.api.model.CuotaPrestamoPK;
 import com.cibertec.api.model.Prestamo;
 import com.cibertec.api.reuzable.Utils;
 import com.cibertec.api.service.CuotaPrestamoService;
@@ -55,6 +56,30 @@ public class PrestamoApiController {
 		}
 
 		return listaCuotaPrestamos;
+	}
+	
+	@GetMapping("/buscar/cuotaPrestamo")
+	@ResponseBody
+	public CuotaPrestamo buscarCuotaPrestamo(
+			@RequestParam(name="idPrestamo",required = false) Integer idPrestamo, 
+			@RequestParam(name="idCuotaPrestamo",required = false) Integer idCuotaPrestamo) {
+		
+		CuotaPrestamo cuotaPrestamo = new CuotaPrestamo();
+		
+		try {
+			
+			CuotaPrestamoPK cuotaPrestamoPK = new CuotaPrestamoPK();
+			cuotaPrestamoPK.setIdPrestamo(idPrestamo);
+			cuotaPrestamoPK.setIdCuotaPrestamo(idCuotaPrestamo);
+			
+			cuotaPrestamo = cuotaPrestamoService.buscarPorIdCompuesto(cuotaPrestamoPK);
+			
+		}catch(Exception ex){
+			ex.printStackTrace();
+		};
+		
+		
+		return cuotaPrestamo;
 	}
 
 	//Jeanpi
@@ -127,7 +152,6 @@ public class PrestamoApiController {
 	}
 
 	@PostMapping("/guardarPrestamo")
-	@ResponseBody
 	@Transactional
 	public Map<?, ?> guardarPrestamo(@RequestBody Prestamo prestamo) {
 
@@ -141,8 +165,10 @@ public class PrestamoApiController {
 
 		try {
 
+			Date fechaActual = new Date(new java.util.Date().getTime());
+			
 			prestamo.setActivo(true);
-			prestamo.setFechaRegistro(new Date(new java.util.Date().getTime()));
+			prestamo.setFechaRegistro(fechaActual);
 
 			cuotas = prestamo.getCuotas();
 			montoMensual = prestamo.getMonto() / prestamo.getCuotas();
@@ -150,8 +176,6 @@ public class PrestamoApiController {
 			montoTotal = montoMensual + interes;
 
 			prestamo = prestamoService.guardar(prestamo);
-
-			Date fechaPago = new Date(new java.util.Date().getTime()); // Fecha actual
 
 			if (prestamo != null) {
 
@@ -164,21 +188,21 @@ public class PrestamoApiController {
 					cuotaPrestamo.setMonto(montoMensual);
 					cuotaPrestamo.setInteres(interes);
 					cuotaPrestamo.setMontoTotal(montoTotal);
-
+					cuotaPrestamo.setMontoPendiente(montoTotal);
 					cuotaPrestamo.setEstado(Utils.PAGO_PENDIENTE);
-
+					
 					cuotaPrestamo = cuotaPrestamoService.guardar(cuotaPrestamo);
 
 					// Aumentar la fecha para el siguiente mes
 					Calendar calendar = new GregorianCalendar();
-					calendar.setTime(fechaPago);
+					calendar.setTime(fechaActual);
 					calendar.add(Calendar.MONTH, 1);
-					fechaPago = new Date(calendar.getTimeInMillis());
+					Date nuevaFecha = new Date(calendar.getTimeInMillis());
 
-					cuotaPrestamo.setFechaPago(fechaPago);
+					cuotaPrestamo.setFechaPago(nuevaFecha);
 
 				}
-
+				
 				response.put("mensaje", "Prestamo generado");
 
 			} else {

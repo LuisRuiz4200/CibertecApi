@@ -2,103 +2,120 @@
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-    <div th:replace="static/head.html"></div>	
-    <!-- Fin del estilo de tabla -->
-    <title>Consulta de prestamos por Prestamistas</title>
-    <!-- Creamos style para css -->
-    <style>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+	<div th:replace="static/head.html"></div>
+	<!-- Fin del estilo de tabla -->
+	<title>Consulta de prestamos por Prestamistas</title>
+	<!-- Creamos style para css -->
+	<style>
 		.ancho {
-                 width: 250px; }
+			width: 250px;
+		}
 	</style>
 </head>
 
 <body>
-    <div th:insert="~{plantilla/UITemplate.html::cabecera}"></div>
-    <br>
-    <h1 class="text-center">Consulta de Prestamos por Prestamista</h1>
-    <!-- Contenido centrado y con margens con container -->
-    <!-- INICIO EL CONTAINER -->
-    <div class="container-fluid">
-        <!-- Inicio de FORMULARIO -->
+	<div th:insert="~{plantilla/UITemplate.html::cabecera}"></div>
+	<br>
 
-        <form class="form-inline" id="formularioListaSolcitud">
 
-            <!--Contenedor 10 + 1 del boton para que este a costado-->
-            <div class="row align-items-center" style="width: 100%;">
-                <div class="col-md-10">
+	<!-- Contenido centrado y con margens con container -->
+	<!-- INICIO EL CONTAINER -->
+	<div class="container-fluid">
+		<!-- Inicio de FORMULARIO -->
 
-                    <!-- Banco combobox -->
-                    <div class="row align-items-center">
-                        <div class="col-lg-2">
-                            <div class="form-group mb-0">
-                                <label for="exampleInputNombre1">Prestamista: </label>
-                            </div>
-                        </div>
+		<div class="card">
+			<div class="card-header">
+				<div>
+					<h1 class="text-center">Consulta de Prestamos por Prestamista</h1>
+				</div>
+			</div>
+			<div class="card-body">
 
-                        <div class="col-lg-2">
-                            <div class="form-group">
-                                <!-- Para despegable con bootstrap con SELECT y asignamos id =idSexo -->
-                                <div class="col-auto">
-                                    <select class="form-select ancho" id="idFiltroPrestamista" name="prestamista" onchange="habilitarBoton()">
-                                    <!-- donde para Seleccione su value es vacio(espacio) es empty y agarra para la validación, y para los otros si tienen value-->
-                                       <option value="-1">Selecione Prestamista...</option>
-                                       <option th:each="prestamista:${listaPrestamista}"
-                                               th:value="${prestamista.asesorPrestamista.prestamista.idPersona}"
-                                               th:text="${prestamista.asesorPrestamista.prestamista.nombres}">
-                                        </option>
-                                     </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--BOTON ROJO > -->
-                <div class="col-md-2">
-					   <br>
-                    <div class="form-group">
-                        <button type="button" class="btn btn-success w-100" style="margin-left: 120px; margin-bottom:30px" onclick="tablaConsulta()" id="btnFiltrar" disabled>Filtrar</button>
-                    </div>
-                </div>
-            </div> <!--FIN Contenedor 10 + 1 del boton para que este a costado-->
-        </form>
+				<form class="form-inline" id="formularioListaSolcitud">
 
-        <!-- FIN DEL FORMULARIO -->
+					<!--Contenedor 10 + 1 del boton para que este a costado-->
+					<div class="row align-items-center" style="width: 100%;">
+						<div class="col-md-10">
 
-        <!-- INICIO DE DIV PARA SEPARACIÓN MT-4 -->
-        <!-- ESPACIADO class mt-4 es margen superior de 4 para toda la tabla -->
-        <div class="mt-4">
-            <!-- INICIO DE LA TABLA y asignamos id tableDocentes -->
-            <table id="tablaPrestamos" class="table table-striped table-bordered" style="width:100%">
-                <!-- thead seria para el nombre de las columnas o encabezado -->
-                <thead class="text-center">
-                    <tr>
-                        <!-- Aqui se ponen el nombre de los encabezados de la tabla -->
-                        <th class="text-center">Código Prestamo</th>
-                        <th class="text-center">Prestatario</th>
-                        <th class="text-center">Monto</th>
-                        <th class="text-center">Cuotas</th>
-                        <th class="text-center">Cuotas Pagadas</th>
-                        <th class="text-center">Cuotas Pendientes</th>
-                        <th class="text-center">Monto Pagado</th>
-                        <th class="text-center">Monto Pendiente</th>
-                    </tr>
-                </thead>
-                <!-- Dentro del cuerpo creamos tr que es una fila y td es celda dentro de la fila -->
-                <tbody class="text-center">
-                    <!-- SI USAMOS JSTL, LA PÁGINA VA A REFRESCAR O ACTUALIZAR -->
-                    <tr>
-                        <!-- Aca creamos las celdas que tendrán los registros, si hay 8 encabezados arriba de la tabla abra 8 td aca -->
-                    </tr>
-                </tbody>
-                <!--FIN de tbody -->
-            </table>
-            <!-- FIN DE LA TABLA -->
-        </div>
-    </div><!-- FIN EL CONTAINER FLUID-->
+							<!-- Banco combobox -->
+							<div class="row align-items-center">
+								<div class="col-lg-2">
+									<div class="form-group mb-0">
+										<label for="exampleInputNombre1">Prestamista: </label>
+									</div>
+								</div>
 
-    <script th:replace="static/scripts.html"></script>
-    <script src="/js/prestamo/consultaPrestamoXPrestamista.js"></script>
+								<div class="col-lg-2">
+									<div class="form-group">
+										<!-- Para despegable con bootstrap con SELECT y asignamos id =idSexo -->
+										<div class="col-auto">
+											<select class="form-select ancho" id="idFiltroPrestamista"
+												name="prestamista" onchange="habilitarBoton()">
+												<!-- donde para Seleccione su value es vacio(espacio) es empty y agarra para la validación, y para los otros si tienen value-->
+												<option value="-1">Selecione Prestamista...</option>
+												<option th:each="prestamista:${listaPrestamista}"
+													th:value="${prestamista.asesorPrestamista.prestamista.idPersona}"
+													th:text="${prestamista.asesorPrestamista.prestamista.nombres}">
+												</option>
+											</select>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!--BOTON ROJO > -->
+						<div class="col-md-2">
+							<br>
+							<div class="form-group">
+								<button type="button" class="btn btn-success w-100"
+									style="margin-left: 120px; margin-bottom:30px" onclick="tablaConsulta()"
+									id="btnFiltrar" disabled>Filtrar</button>
+							</div>
+						</div>
+					</div> <!--FIN Contenedor 10 + 1 del boton para que este a costado-->
+				</form>
+
+				<!-- FIN DEL FORMULARIO -->
+
+				<!-- INICIO DE DIV PARA SEPARACIÓN MT-4 -->
+				<!-- ESPACIADO class mt-4 es margen superior de 4 para toda la tabla -->
+				<div class="mt-4">
+					<!-- INICIO DE LA TABLA y asignamos id tableDocentes -->
+					<table id="tablaPrestamos" class="table table-striped table-bordered table-hover" style="width:100%">
+						<!-- thead seria para el nombre de las columnas o encabezado -->
+						<thead class="text-center">
+							<tr>
+								<!-- Aqui se ponen el nombre de los encabezados de la tabla -->
+								<th class="text-center">Código Prestamo</th>
+								<th class="text-center">Prestatario</th>
+								<th class="text-center">Monto</th>
+								<th class="text-center">Cuotas</th>
+								<th class="text-center">Cuotas Pagadas</th>
+								<th class="text-center">Cuotas Pendientes</th>
+								<th class="text-center">Monto Pagado</th>
+								<th class="text-center">Monto Pendiente</th>
+							</tr>
+						</thead>
+						<!-- Dentro del cuerpo creamos tr que es una fila y td es celda dentro de la fila -->
+						<tbody class="text-center">
+							<!-- SI USAMOS JSTL, LA PÁGINA VA A REFRESCAR O ACTUALIZAR -->
+							<tr>
+								<!-- Aca creamos las celdas que tendrán los registros, si hay 8 encabezados arriba de la tabla abra 8 td aca -->
+							</tr>
+						</tbody>
+						<!--FIN de tbody -->
+					</table>
+					<!-- FIN DE LA TABLA -->
+				</div>
+
+			</div>
+
+		</div>
+	</div><!-- FIN EL CONTAINER FLUID-->
+
+	<script th:replace="static/scripts.html"></script>
+	<script src="/js/prestamo/consultaPrestamoXPrestamista.js"></script>
 
 </body>
 

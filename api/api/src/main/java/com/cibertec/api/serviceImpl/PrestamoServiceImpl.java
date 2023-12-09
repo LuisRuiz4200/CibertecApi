@@ -46,5 +46,6 @@ public class PrestamoServiceImpl implements PrestamoService {
 	public Prestamo getBySolicitud(SolicitudPrestamo solicitudPrestamo) {
 		return prestamoRepository.findBySolicitudPrestamo(solicitudPrestamo);
 	}
+	
 
 }

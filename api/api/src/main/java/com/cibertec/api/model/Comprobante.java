@@ -28,24 +28,21 @@ public class Comprobante {
 	private int idComprobante;
 	@ManyToOne()
 	@JoinColumn(name="idTipoComprobante")
-	private TipoComprobante tipoComprobante;
+	private TipoComprobante tipoComprobante = new TipoComprobante();
 	private String serie;
 	private int correlativo;
 	private Date fechaEmision;
 	private String rucEmisor;
 	private String nomEmisor;
 	@ManyToOne
-	@JoinColumns({
-		@JoinColumn(name="idPrestamo",referencedColumnName = "idPrestamo",nullable = true),
-		@JoinColumn(name="idCuotaPrestamo",referencedColumnName = "idCuotaPrestamo",nullable = true)
-	})
-	private CuotaPrestamo cuotaPrestamo = new CuotaPrestamo();
+	@JoinColumn(name="idPrestamo")
+	private Prestamo prestamo = new Prestamo();
 	@ManyToOne
 	@JoinColumn(name="idTipoDocumento")
-	private TipoDocumento tipoDocumento;
+	private TipoDocumento tipoDocumento =  new TipoDocumento();
 	@ManyToOne
 	@JoinColumn(name="idPrestatario")
-	private Prestatario prestatario;
+	private Prestatario prestatario = new Prestatario();
 	private String numDocReceptor;
 	private String nomReceptor;
 	private String serieRef;
@@ -54,6 +51,6 @@ public class Comprobante {
 	private String estado ;
 	
 	@OneToMany(mappedBy = "comprobante")
-	private List<ComprobanteDetalle> listaComprobanteDetalle;
+	private List<ComprobanteDetalle> listaComprobanteDetalle = new ArrayList<>();
 
 }

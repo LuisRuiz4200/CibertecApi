@@ -18,11 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cibertec.api.model.Comprobante;
 import com.cibertec.api.model.ComprobanteDetalle;
+import com.cibertec.api.model.CuotaPrestamo;
 import com.cibertec.api.model.Prestamo;
 import com.cibertec.api.modelDTO.ComprobanteDTO;
 import com.cibertec.api.modelDTO.ComprobanteDetalleDTO;
+import com.cibertec.api.reuzable.Utils;
 import com.cibertec.api.service.ComprobanteDetalleService;
 import com.cibertec.api.service.ComprobanteService;
+import com.cibertec.api.service.CuotaPrestamoService;
 import com.cibertec.api.service.PrestamoService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -35,6 +38,8 @@ public class ComprobanteApiController {
 	ComprobanteService comprobanteService;
 	@Autowired
 	ComprobanteDetalleService comprobanteDetalleService;
+	@Autowired
+	CuotaPrestamoService cuotaPrestamoService;
 	
 	
 	@PostMapping("/registrar")
@@ -45,20 +50,13 @@ public class ComprobanteApiController {
 		
 		Comprobante comprobante = new Comprobante();
 		ComprobanteDetalle comprobanteDetalle = new ComprobanteDetalle();
+		CuotaPrestamo cuotaPrestamo = new CuotaPrestamo();
 		
 		
 		try {
 
 			comprobante = modelMapper.map(comprobanteDTO, Comprobante.class);
 			
-			
-			Integer idPrestamo = comprobanteDTO.getIdPrestamo();
-			Integer idCuotaPrestamo = comprobanteDTO.getIdCuotaPrestamo();
-			
-			comprobante.getCuotaPrestamo().getCuotaPrestamoPk().setIdPrestamo(idPrestamo);
-			comprobante.getCuotaPrestamo().getCuotaPrestamoPk().setIdCuotaPrestamo(idCuotaPrestamo);
-			
-
 			String json = new GsonBuilder().setPrettyPrinting().create().toJson(comprobante);
 			
 			System.out.println(json);
@@ -71,6 +69,10 @@ public class ComprobanteApiController {
 				
 				comprobanteDetalle.getComprobanteDetallePK().setIdComprobante(comprobante.getIdComprobante());
 				comprobanteDetalle.getComprobanteDetallePK().setIdComprobanteDetalle(cpeDTO.getIdComprobanteDetalle());
+				
+				comprobanteDetalle.getCuotaPrestamo().getCuotaPrestamoPk().setIdPrestamo(comprobante.getPrestamo().getIdPrestamo());
+				comprobanteDetalle.getCuotaPrestamo().getCuotaPrestamoPk().setIdCuotaPrestamo(cpeDTO.getIdCuotaPrestamo());
+				
 				comprobanteDetalle.setCodItem(cpeDTO.getCodItem());
 				comprobanteDetalle.setDescripcion(cpeDTO.getDescripcion());
 				comprobanteDetalle.setCantidadItem(cpeDTO.getCantidadItem());
@@ -78,6 +80,22 @@ public class ComprobanteApiController {
 				comprobanteDetalle.setMontoTotal(cpeDTO.getMontoTotal());
 				
 				comprobanteDetalle = comprobanteDetalleService.guardar(comprobanteDetalle);
+				
+				cuotaPrestamo = comprobanteDetalle.getCuotaPrestamo();
+
+				
+				if(comprobanteDetalle.getMontoTotal()>=cuotaPrestamo.getMontoPendiente()) {
+					cuotaPrestamo.setEstado(Utils.PAGO_PAGADO);
+				}else {
+					cuotaPrestamo.setEstado(Utils.PAGO_PARCIAL);
+				}
+
+				double montoPendienteActual = cuotaPrestamo.getMontoPendiente();
+				double montoFacturado = comprobanteDetalle.getMontoTotal();
+				cuotaPrestamo.setMontoPendiente(montoPendienteActual - montoFacturado);
+				
+				cuotaPrestamo = cuotaPrestamoService.guardar(cuotaPrestamo);
+				
 			}
 			
 			
@@ -110,8 +128,12 @@ public class ComprobanteApiController {
 			
 			if (idPrestamo>0 && idCuotaPrestamo>0) {
 				listaComprobante = comprobanteService.listar().stream()
-						.filter(c->c.getCuotaPrestamo().getCuotaPrestamoPk().getIdPrestamo()==idPrestamo)
-						.filter(c->c.getCuotaPrestamo().getCuotaPrestamoPk().getIdCuotaPrestamo()==idCuotaPrestamo)
+						.filter(c->c.getPrestamo().getIdPrestamo()==idPrestamo)
+						.peek(c->c.setListaComprobanteDetalle(
+								c.getListaComprobanteDetalle().stream()
+								.filter(detalle->detalle.getCuotaPrestamo().getCuotaPrestamoPk().getIdCuotaPrestamo()==idCuotaPrestamo)
+								.toList()
+								))
 						.toList();
 			}
 			

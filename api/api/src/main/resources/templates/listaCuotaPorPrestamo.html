@@ -7,7 +7,7 @@
 
 <body>
 	<div th:replace="static/navbar.html"></div>
-	<div class="container">
+	<div class="container-fluid">
 		<div class="row gap-2">
 			<div>
 				<div class="mt-4">
@@ -24,7 +24,7 @@
 								<select id="filtroIdPrestatario" class="form-select">
 									<option th:each="prestatario : ${listaPrestatario}"
 										th:value="${prestatario.prestatario.idPersona}"
-										th:text="${prestatario.prestatario.nombres}"></option>
+										th:text="${prestatario.prestatario.nombres} + ' ' + ${prestatario.prestatario.apellidos}"></option>
 								</select>
 							</div>
 
@@ -92,15 +92,15 @@
 							</div>
 						</div>
 						<div class="col-12">
-							<div class="table-responsive">
+							<div class="responsive">
 								<table id="modalTbComprobante" class="table table-hover">
 									<thead>
 										<tr>
-											<th>SERIE</th>
-											<th>CORRELATIVO</th>
-											<th>DESCRIPCION</th>
-											<th>MONTO TOTAL</th>
-											<th>FECHA EMISION</th>
+											<th class="col-auto">SERIE</th>
+											<th class="col-auto">NRO</th>
+											<th class="col-auto">DESCRIPCION</th>
+											<th class="col-auto">MONTO TOTAL</th>
+											<th class="col-auto">FECHA EMISION</th>
 										</tr>
 									</thead>
 									<tbody>
