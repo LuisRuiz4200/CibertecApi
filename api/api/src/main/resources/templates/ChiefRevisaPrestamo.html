@@ -9,16 +9,15 @@
 	<!-- Creamos style para css -->
 	<style>
 		.ancho {
-			width: 250px;
-		}
+                 width: 220px; }
 	</style>
 </head>
 
 <body>
 	<div th:insert="~{plantilla/UITemplate.html::cabecera}"></div>
 	<br>
-
-
+	
+	
 	<!-- Contenido centrado y con margens con container -->
 	<!-- INICIO EL CONTAINER -->
 	<div class="container-fluid">
@@ -36,7 +35,7 @@
 
 					<!--Contenedor 10 + 1 del boton para que este a costado-->
 					<div class="row align-items-center" style="width: 100%;">
-						<div class="col-md-10">
+						<div class="col-md-8">
 
 							<!-- Banco combobox -->
 							<div class="row align-items-center">
@@ -56,7 +55,7 @@
 												<option value="-1">Selecione Prestamista...</option>
 												<option th:each="prestamista:${listaPrestamista}"
 													th:value="${prestamista.asesorPrestamista.prestamista.idPersona}"
-													th:text="${prestamista.asesorPrestamista.prestamista.nombres}">
+													th:text="${prestamista.asesorPrestamista.prestamista.nombres} + '  ' + ${prestamista.asesorPrestamista.prestamista.apellidos}">
 												</option>
 											</select>
 										</div>
@@ -69,14 +68,18 @@
 							<br>
 							<div class="form-group">
 								<button type="button" class="btn btn-success w-100"
-									style="margin-left: 120px; margin-bottom:30px" onclick="tablaConsulta()"
+									style="margin-left:10px; margin-bottom:30px" onclick="tablaConsulta()"
 									id="btnFiltrar" disabled>Filtrar</button>
+							</div>
+						</div>
+						<div class="col-md-2">
+							<br>
+							<div class="form-group">
+								<button type="button" class="btn btn-secondary w-100" style="margin-left: 10px; margin-bottom: 30px" onclick="limpiarFormulario()">Limpiar</button>
 							</div>
 						</div>
 					</div> <!--FIN Contenedor 10 + 1 del boton para que este a costado-->
 				</form>
-
-				<!-- FIN DEL FORMULARIO -->
 
 				<!-- INICIO DE DIV PARA SEPARACIÓN MT-4 -->
 				<!-- ESPACIADO class mt-4 es margen superior de 4 para toda la tabla -->
@@ -89,7 +92,9 @@
 								<!-- Aqui se ponen el nombre de los encabezados de la tabla -->
 								<th class="text-center">Código Prestamo</th>
 								<th class="text-center">Prestatario</th>
-								<th class="text-center">Monto</th>
+								<th class="text-center">Monto Prestado</th>
+								<th class="text-center">Interes Prestamo</th>
+								<th class="text-center">Monto a Pagar</th>
 								<th class="text-center">Cuotas</th>
 								<th class="text-center">Cuotas Pagadas</th>
 								<th class="text-center">Cuotas Pendientes</th>

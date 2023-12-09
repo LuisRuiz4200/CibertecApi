@@ -20,6 +20,18 @@ function habilitarBoton() {
     btnFiltrar.disabled = idPrestamista.value === "-1";
 }
 
+function limpiarFormulario() {
+    var idFiltroPrestamista = document.getElementById("idFiltroPrestamista");
+    var btnFiltrar = document.getElementById("btnFiltrar");
+    // Restablecer el valor del combo y deshabilitar el botón Filtrar
+    idFiltroPrestamista.value = "-1";
+    btnFiltrar.disabled = true;
+    // Limpiar la tabla de préstamos
+    var tablaPrestamo = document.getElementById("tablaPrestamos").getElementsByTagName("tbody")[0];
+    tablaPrestamo.innerHTML = "";
+}
+
+
 async function tablaConsulta(){
 	var tablaPrestamo = document.getElementById("tablaPrestamos").getElementsByTagName("tbody")[0];
 	var idPrestamista = document.getElementById("idFiltroPrestamista");
@@ -35,11 +47,13 @@ async function tablaConsulta(){
 		var fila = tablaPrestamo.insertRow();
         fila.insertCell(0).innerText = prestamo.idPrestamo;
         fila.insertCell(1).innerText = prestamo.nomPrestatario + ' ' + prestamo.apePrestatario;
-        fila.insertCell(2).innerText = 'S/. '+prestamo.montoTotal.toFixed(2);
-        fila.insertCell(3).innerText = prestamo.cuotas;
-        fila.insertCell(4).innerText = prestamo.cuotaPagadas;
-        fila.insertCell(5).innerText = prestamo.cuotaPorPagar;
-        fila.insertCell(6).innerText = 'S/. '+prestamo.montoPagado.toFixed(2);
-        fila.insertCell(7).innerText = 'S/. '+prestamo.montoPorPagar.toFixed(2);
+        fila.insertCell(2).innerText = 'S/. '+prestamo.montoPrestado.toFixed(2);
+        fila.insertCell(3).innerText = 'S/. '+prestamo.interesPagar;
+        fila.insertCell(4).innerText = 'S/. '+prestamo.montoTotal.toFixed(2);
+        fila.insertCell(5).innerText = prestamo.cuotas;
+        fila.insertCell(6).innerText = prestamo.cuotaPagadas;
+        fila.insertCell(7).innerText = prestamo.cuotaPorPagar;
+        fila.insertCell(8).innerText = 'S/. '+prestamo.montoPagado.toFixed(2);
+        fila.insertCell(9).innerText = 'S/. '+prestamo.montoPorPagar.toFixed(2);
 	}
 }

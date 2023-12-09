@@ -142,6 +142,8 @@ public class PrestamoApiController {
 				extraInfo.put("idPrestamo",prestamo.getIdPrestamo());
 				extraInfo.put("nomPrestatario",prestamo.getSolicitudPrestamo().getPrestatario().getPrestatario().getNombres());
 				extraInfo.put("apePrestatario",prestamo.getSolicitudPrestamo().getPrestatario().getPrestatario().getApellidos());
+				extraInfo.put("montoPrestado", prestamo.getMonto());
+				extraInfo.put("interesPagar", prestamo.getMonto()*prestamo.getTem());
 				extraInfo.put("montoTotal",prestamo.getMonto() * (prestamo.getTem() + 1));
 				extraInfo.put("cuotas",prestamo.getCuotas());
 				extraInfo.put("cuotaPorPagar", cuotaPorPagar);
