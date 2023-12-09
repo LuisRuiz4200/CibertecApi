@@ -33,8 +33,9 @@ public class ComprobanteDetalle {
 
 	private String codItem;
 	private String descripcion;
-	private int cantidadItem;
-	private double montoItem;
-	private double montoTotal;
+	private Integer cantidadItem;
+	private Double montoItem;
+	private Double montoMora;
+	private Double montoTotal;
 
 }

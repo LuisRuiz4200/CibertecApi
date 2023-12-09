@@ -47,6 +47,8 @@ public class ComprobanteApiController {
 	private Map<String, Object> registrar(@RequestBody ComprobanteDTO comprobanteDTO){
 		
 		Map<String,Object> response = new HashMap<>();
+		Map<String,Object> detalle = new HashMap<>();
+		
 		ModelMapper modelMapper = new ModelMapper();
 		
 		Comprobante comprobante = new Comprobante();
@@ -54,6 +56,7 @@ public class ComprobanteApiController {
 		CuotaPrestamo cuotaPrestamo = new CuotaPrestamo();
 		
 		Integer correlativo = 1;
+		String serie = "";
 		
 		try {
 
@@ -65,6 +68,9 @@ public class ComprobanteApiController {
 			
 			comprobante.setCorrelativo(correlativo + 1);
 			comprobante = comprobanteService.guardar(comprobante);
+			
+			correlativo = comprobante.getCorrelativo();
+			serie = comprobante.getSerie();
 			
 			for (ComprobanteDetalleDTO cpeDTO : comprobanteDTO.getListaComprobanteDetalle()) {
 				
@@ -107,7 +113,12 @@ public class ComprobanteApiController {
 				return response;
 			}
 
-			response.put("mensaje", "Trabajo realizado");
+			detalle.put("serie",serie);
+			detalle.put("correlativo", correlativo);
+
+			response.put("mensaje", "Comprobante registrado !");
+			response.put("detalle", detalle);
+			
 			
 		}catch(Exception ex) {
 			response.put("error", ex.getMessage());

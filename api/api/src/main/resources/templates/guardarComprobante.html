@@ -45,7 +45,7 @@
 								</div>
 								<div class="col-2">
 									<label>CORRELATIVO</label>
-									<input th:field="*{correlativo}" id="correlativo" class="form-control"  />
+									<input th:field="*{correlativo}" id="correlativo" class="form-control" />
 								</div>
 							</div>
 						</div>
@@ -79,7 +79,8 @@
 										</div>
 										<div class="col-3">
 											<label id="lblTipoDocumento">DOCUMENTO RECEPTOR</label>
-											<input th:field="*{numDocReceptor}" id="numDocReceptor" class="form-control" />
+											<input th:field="*{numDocReceptor}" id="numDocReceptor"
+												class="form-control" />
 										</div>
 										<div class="col-5">
 											<label>NOMBRE RECEPTOR</label>
@@ -98,6 +99,7 @@
 													<th class="col-auto">DESCRIPCION</th>
 													<th class="col-auto">CANT.</th>
 													<th class="col-auto">MONTO ITEM</th>
+													<th class="col-auto">MONTO MORA</th>
 													<th class="col-auto">MONTO TOTAL</th>
 													<th class="col-auto">ACCION</th>
 												</thead>
@@ -108,10 +110,13 @@
 														<td th:text="${item.descripcion}"></td>
 														<td th:text="${item.cantidadItem}"></td>
 														<td th:text="${item.montoItem}"></td>
+														<td th:text="${item.montoMora}"></td>
 														<td th:text="${item.montoTotal}"></td>
 														<td>
-															<a type="button" id="btnEditarItem" onclick="editarItem(this)">
-																<img src="https://cdn-icons-png.flaticon.com/512/6324/6324826.png" width="30px" height="30px"/>
+															<a type="button" id="btnEditarItem"
+																onclick="editarItem(this)">
+																<img src="https://cdn-icons-png.flaticon.com/512/6324/6324826.png"
+																	width="30px" height="30px" />
 															</a>
 														</td>
 													</tr>
@@ -133,11 +138,11 @@
 						</div>
 						<div class=" col-12">
 							<form>
-								
-							<div>
-								<button onclick="guardarComprobante()" type="button"
-									class="btn-success">AGREGAR</button>
-							</div>
+
+								<div>
+									<button onclick="guardarComprobante()" type="button"
+										class="btn-success">AGREGAR</button>
+								</div>
 							</form>
 						</div>
 					</div>
@@ -146,7 +151,7 @@
 		</div>
 
 		<div id="modalNuevoItem" class="modal fade">
-			<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-dialog modal-lg modal-dialog-centered">
 				<div class="modal-content">
 					<div class="modal-header">
 						<div class="modal-title">
@@ -166,6 +171,12 @@
 									</select>
 								</div>
 							</div>
+
+							<div class="col-auto">
+								<label>FECHA DE PAGO</label>
+								<input id="idModalFechaPago" class="form-control" type="date" readonly />
+							</div>
+							
 							<div class="col-auto">
 								<div class="mt-4">
 									<label>Pago parcial</label>
@@ -180,11 +191,15 @@
 							</div>
 							<div class="col-12">
 								<div class="row">
-									<div class="col-4">
+									<div class="col-3">
 										<label>CANT</label>
-										<input id="idModalCantidadItem" class="form-control" type="number" readonly/>
+										<input id="idModalCantidadItem" class="form-control" type="number" readonly />
 									</div>
-									<div class="col-4">
+									<div class="col-3">
+										<label>MORA</label>
+										<input id="idModalMontoMora" class="form-control" type="number" />
+									</div>
+									<div class="col-3">
 										<label>MONTO</label>
 										<input id="idModalMontoItem" class="form-control" type="number" readonly />
 									</div>
