@@ -8,10 +8,8 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,8 +48,7 @@ public class PrestamoApiController {
 					.filter(c -> c.getPrestamo().getSolicitudPrestamo().getPrestatario().getPrestatario()
 							.getIdPersona() == idPrestatario)
 					.filter(c -> c.getFechaPago().after(fechaInicioCuota) && c.getFechaPago().before(fechaFinCuota))
-					.sorted(Comparator.comparing(CuotaPrestamo::getFechaPago))
-					.toList();
+					.sorted(Comparator.comparing(CuotaPrestamo::getFechaPago)).toList();
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -60,26 +57,73 @@ public class PrestamoApiController {
 		return listaCuotaPrestamos;
 	}
 
+	//Jeanpi
 	@GetMapping("/listar")
-	public List<Prestamo> listar(
-			@RequestParam(name = "idPrestamista", required = false, defaultValue = "0") int idPrestamista) {
+	public HashMap<String, Object> listar(
+		@RequestParam(name = "idPrestamista", required = false, defaultValue = "0") int idPrestamista) {
 
 		List<Prestamo> listaPrestamo = new ArrayList<>();
-
+		HashMap<String, Object> res = new HashMap<>();
+		HashMap<String, Object> extraInfo = new HashMap<>();
+		HashMap<String, Object> resumen = new HashMap<>();
+		List<HashMap<String, Object>> prestamos = new ArrayList<>();
+		
 		try {
-
 			listaPrestamo = prestamoService.listar();
 			if (idPrestamista > 0) {
-				prestamoService.listar().stream()
-						.filter(c -> c.getSolicitudPrestamo().getPrestatario().getPrestamistaPrestatario()
-								.getPrestamista().getIdPersona() == idPrestamista)
-						.toList();
+				listaPrestamo = prestamoService.listar().stream().filter(c -> c.getSolicitudPrestamo().getPrestatario()
+						.getPrestamistaPrestatario().getPrestamista().getIdPersona() == idPrestamista).toList();
 			}
+			int cuotaPorPagar = 0;
+			int cuotaPagadas = 0;
+			double montoPagado = 0;
+			double montoPorPagar = 0;
+
+			for (Prestamo prestamo : listaPrestamo) {	
+				cuotaPorPagar = prestamo.getListaCuotaPrestamo().stream().filter(
+						c -> c.getEstado().matches("(" + Utils.PAGO_PENDIENTE + ")||(" + Utils.PAGO_PARCIAL + ")"))
+						.toList().size();
+
+				cuotaPagadas = prestamo.getListaCuotaPrestamo().stream()
+						.filter(c -> c.getEstado().matches("(" + Utils.PAGO_PAGADO + ")")).toList().size();
+				montoPagado = 0;
+				montoPorPagar = 0;
+				
+				for (CuotaPrestamo cuotaPrestamo : prestamo.getListaCuotaPrestamo()) {
+					if (cuotaPrestamo.getEstado()
+							.matches("(" + Utils.PAGO_PENDIENTE + ")||(" + Utils.PAGO_PARCIAL + ")")) {
+						montoPorPagar += cuotaPrestamo.getMontoTotal();
+					}
+					if (cuotaPrestamo.getEstado()
+							.matches("(" + Utils.PAGO_PAGADO + ")")) {
+						montoPagado += cuotaPrestamo.getMontoTotal();
+					}	
+				}
+				extraInfo = new HashMap<>();
+				extraInfo.put("idPrestamo",prestamo.getIdPrestamo());
+				extraInfo.put("nomPrestatario",prestamo.getSolicitudPrestamo().getPrestatario().getPrestatario().getNombres());
+				extraInfo.put("apePrestatario",prestamo.getSolicitudPrestamo().getPrestatario().getPrestatario().getApellidos());
+				extraInfo.put("montoTotal",prestamo.getMonto() * (prestamo.getTem() + 1));
+				extraInfo.put("cuotas",prestamo.getCuotas());
+				extraInfo.put("cuotaPorPagar", cuotaPorPagar);
+				extraInfo.put("cuotaPagadas", cuotaPagadas);
+				extraInfo.put("montoPorPagar", montoPorPagar);
+				extraInfo.put("montoPagado", montoPagado);
+				prestamos.add(extraInfo);
+			}	
+			
+			resumen.put("totalPorPagar", cuotaPorPagar);
+			resumen.put("totalPagadas", cuotaPagadas);
+			resumen.put("montoPorPagar", montoPorPagar);
+			resumen.put("montoPagado", montoPagado);
+			res.put("resumen", resumen);
+			res.put("prestamos", prestamos); 
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 
-		return listaPrestamo;
+		return res;
 	}
 
 	@PostMapping("/guardarPrestamo")
