@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.tomcat.util.json.JSONParser;
 import org.modelmapper.ModelMapper;
@@ -64,7 +65,8 @@ public class ComprobanteApiController {
 			
 			correlativo = comprobanteService.listar().stream()
 					.map(c->c.getCorrelativo())
-					.max(Comparator.naturalOrder()).get();
+					.max(Comparator.naturalOrder()).orElse(0);
+			
 			
 			comprobante.setCorrelativo(correlativo + 1);
 			comprobante = comprobanteService.guardar(comprobante);
@@ -93,14 +95,21 @@ public class ComprobanteApiController {
 				cuotaPrestamo = comprobanteDetalle.getCuotaPrestamo();
 
 				
-				if(comprobanteDetalle.getMontoTotal()>=cuotaPrestamo.getMontoPendiente()) {
+
+				double montoPendienteActual = cuotaPrestamo.getMontoPendiente();
+				double montoFacturado = comprobanteDetalle.getMontoTotal();
+				
+				if(montoPendienteActual == 0) {
+					montoPendienteActual = cuotaPrestamo.getMontoTotal();
+				}
+				
+
+				if(comprobanteDetalle.getMontoTotal()>=montoPendienteActual) {
 					cuotaPrestamo.setEstado(Utils.PAGO_PAGADO);
 				}else {
 					cuotaPrestamo.setEstado(Utils.PAGO_PARCIAL);
 				}
-
-				double montoPendienteActual = cuotaPrestamo.getMontoPendiente();
-				double montoFacturado = comprobanteDetalle.getMontoTotal();
+				
 				cuotaPrestamo.setMontoPendiente(montoPendienteActual - montoFacturado);
 				
 				cuotaPrestamo = cuotaPrestamoService.guardar(cuotaPrestamo);

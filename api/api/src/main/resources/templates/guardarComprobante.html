@@ -45,7 +45,7 @@
 								</div>
 								<div class="col-2">
 									<label>CORRELATIVO</label>
-									<input th:field="*{correlativo}" id="correlativo" class="form-control" />
+									<input th:field="*{correlativo}" id="correlativo" class="form-control" readonly />
 								</div>
 							</div>
 						</div>
@@ -123,7 +123,7 @@
 												</tbody>
 											</table>
 											<div class="position-absolute end-0 bottom-0">
-												<a onclick="mostrarModalNuevoItem()" href="#">
+												<a onclick="agregarItem()" type="button">
 													<img src="https://png.pngtree.com/png-vector/20230410/ourmid/pngtree-add-button-vector-png-image_6697932.png"
 														width="40px" height="40px" />
 												</a>
@@ -211,8 +211,8 @@
 
 					<div class="modal-footer">
 						<div>
-							<button onclick="guardarItem('agregar')" class="btn-success">AGREGAR</button>
-							<button onclick="guardarItem('editar')" class="btn-primary">EDITAR</button>
+							<button id="btnAgregarItemModal" onclick="guardarItem('agregar')" class="btn-success">AGREGAR</button>
+							<button id="btnEditarItemModal" onclick="guardarItem('editar')" class="btn-primary">EDITAR</button>
 						</div>
 					</div>
 				</div>
