@@ -254,17 +254,30 @@ public class PrestamoController {
 		return prestamosDto;
 	}
 	
-	//Jean PI tu papa
-	
+	//JeanPi
 	@GetMapping("/revisarEstadoPrestamoByJefePrestamista")
-	private String consultarPrestamistas(Model model) {
+	private String consultarPrestamistas(Model model, HttpSession session) {
+		
+		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
+		if(userLogged==null) {
+			return "redirect:/login";
+		}
+		int rol = userLogged.getRol().getIdRol();
 	    List<GrupoPrestamista> listPrestamista = new ArrayList<GrupoPrestamista>();
-		listPrestamista = grupoService.listar().stream()
-				.filter(c->c.getJefePrestamista().getPrestamista().getIdPersona()==10)
-				.toList();
-		model.addAttribute("listaPrestamista", listPrestamista);
+		
+	    if (rol == Utils.ROL_JEFE_PRESTAMISTA) {
+	        // Obtener el idPersona del prestamista actualmente logueado
+	        int idPrestamistaLogueado = userLogged.getPersona().getIdPersona();
 
+	        listPrestamista = grupoService.listar().stream()
+	                .filter(c -> c.getJefePrestamista().getPrestamista().getIdPersona() == idPrestamistaLogueado)
+	                .toList();
+
+	        model.addAttribute("listaPrestamista", listPrestamista);
+	    }
+	    
 		return "ChiefRevisaPrestamo";
 	} 
 	
+	 
 }
