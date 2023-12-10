@@ -16,11 +16,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.cibertec.api.model.Banco;
 import com.cibertec.api.model.Prestatario;
 import com.cibertec.api.model.SolicitudPrestamo;
+import com.cibertec.api.model.Usuario;
 import com.cibertec.api.service.BancoService;
 import com.cibertec.api.service.PrestamistaService;
 import com.cibertec.api.service.PrestatarioService;
 import com.cibertec.api.service.SolicitudPrestamoService;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 
 @Controller
@@ -34,7 +36,11 @@ public class SolicitudPrestamoController {
 	BancoService bancoService;
 	
 	@GetMapping("/listar")
-	private String listar(Model model) {
+	private String listar(Model model, HttpSession session) {
+		
+		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
+		if (userLogged == null)
+			return "redirect:/login";
 		
 		List<SolicitudPrestamo> listaSolicitudPrestamo = new ArrayList<SolicitudPrestamo>();
 		listaSolicitudPrestamo = solicitudPrestamoService.listar();
@@ -50,7 +56,11 @@ public class SolicitudPrestamoController {
 	}
 	
 	@GetMapping("/listar/")
-	private String listarPorPrestamista(@RequestParam("idPrestatario")int idPrestatario , Model model) {
+	private String listarPorPrestamista(@RequestParam("idPrestatario")int idPrestatario , Model model, HttpSession session) {
+		
+		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
+		if (userLogged == null)
+			return "redirect:/login";
 		
 		List<SolicitudPrestamo> listaSolicitudPrestamo = new ArrayList<SolicitudPrestamo>();
 		listaSolicitudPrestamo = solicitudPrestamoService.listarPorPrestatario(idPrestatario);
@@ -66,7 +76,11 @@ public class SolicitudPrestamoController {
 	}
 	
 	@GetMapping("/registrar")
-	private String registrar(Model model) {
+	private String registrar(Model model, HttpSession session) {
+		
+		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
+		if (userLogged == null)
+			return "redirect:/login";
 		
 		SolicitudPrestamo solicitudPrestamo = new SolicitudPrestamo();
 		solicitudPrestamo.setEstado("PENDIENTE DE ENVIO");
@@ -84,7 +98,11 @@ public class SolicitudPrestamoController {
 		return "guardarSolicitudPrestamo";
 	}
 	@GetMapping("/actualizar/{id}")
-	private String actualizar(@PathVariable int id, Model model) {
+	private String actualizar(@PathVariable int id, Model model, HttpSession session) {
+		
+		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
+		if (userLogged == null)
+			return "redirect:/login";
 		
 		SolicitudPrestamo solicitudPrestamo = new SolicitudPrestamo();
 		solicitudPrestamo = solicitudPrestamoService.buscarPorId(id);

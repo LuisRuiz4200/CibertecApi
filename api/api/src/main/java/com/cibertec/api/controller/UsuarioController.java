@@ -79,7 +79,12 @@ public class UsuarioController {
 		private PersonaService servicePersona; 
 		
 		@GetMapping("/listarUsuario") //localhost:9090 /
-		public String listarUsuario(Model model) {
+		public String listarUsuario(Model model, HttpSession session) {
+			
+			Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
+			if (userLogged == null)
+				return "redirect:/login";
+			
 			
 			List<Usuario> lista =serviceUsuario.listarUsuario();
 			lista.sort(Comparator.comparingInt(usuario -> usuario.getRol().getIdRol()));
@@ -93,7 +98,12 @@ public class UsuarioController {
 		
 		
 		@GetMapping("/registrarUsuario/{rolId}/{personaId}")
-		public String mostrarFormularioRegistroUsuario(Model model,@PathVariable int rolId,@PathVariable int personaId) {
+		public String mostrarFormularioRegistroUsuario(Model model,HttpSession session,@PathVariable int rolId,@PathVariable int personaId) {
+			Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
+			if (userLogged == null)
+				return "redirect:/login";
+			
+			
 			//creamos objeto usuario vacio
 			Usuario usuario=new Usuario();
 			//creamos listado para rol para combo
@@ -153,7 +163,12 @@ public class UsuarioController {
 		} //fin de guardarUsuario
 		
 		@GetMapping("/user/prestatario/{idPersona}")
-		public String addUserPrestatario(@PathVariable int idPersona, Model model){
+		public String addUserPrestatario(@PathVariable int idPersona, Model model,HttpSession session){
+			
+			Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
+			if (userLogged == null)
+				return "redirect:/login";
+			
 			Usuario usuario = new Usuario();
 			Persona persona = new Persona();
 			Rol rolPrestatario = new Rol();
@@ -175,8 +190,14 @@ public class UsuarioController {
 
 		//Metodo para actualizar
 			@GetMapping("/actualizarUsuario/{id}")
-			public String editarPrestamista(@PathVariable(name="id") int id,Model model,
+			public String editarPrestamista(@PathVariable(name="id") int id,Model model,HttpSession session,
 					RedirectAttributes flash) {		
+				
+				
+				Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
+				if (userLogged == null)
+					return "redirect:/login";
+				
 				//creamos objeto presta inicializado en null
 				Usuario usu=null;
 				//Valida que el id sea mayor a 0
@@ -232,7 +253,12 @@ public class UsuarioController {
 			//Extrae el id de la URL usando @PathVariable
 			@GetMapping("/eliminarUsuario/{id}")
 			public String eliminarPrestamista(@PathVariable(name="id") int id,
-					RedirectAttributes flash) {	
+					RedirectAttributes flash,HttpSession session) {	
+				
+				Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
+				if (userLogged == null)
+					return "redirect:/login";
+				
 				//Valida que el id sea mayor a 0
 				if(id>0) {
 					//Si es válido, llama al método eliminarPrestamista del servicio, pasándole el id

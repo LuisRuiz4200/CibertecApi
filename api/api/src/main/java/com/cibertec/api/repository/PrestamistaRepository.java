@@ -11,6 +11,6 @@ public interface PrestamistaRepository extends JpaRepository<Prestamista,Integer
 	Prestamista findByPrestamistaDni(String dni);
 	Prestamista findByPrestamistaRuc(String ruc);
 	Prestamista findByPrestamistaDniOrPrestamistaRuc(String dni, String ruc);
-	
+	Prestamista findByPrestamistaDniAndActivo(String dni, boolean activo);
 
 } //fin de PrestamistaRepository

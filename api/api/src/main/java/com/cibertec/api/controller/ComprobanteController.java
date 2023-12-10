@@ -21,6 +21,7 @@ import com.cibertec.api.model.Prestamo;
 import com.cibertec.api.model.Prestatario;
 import com.cibertec.api.model.TipoComprobante;
 import com.cibertec.api.model.TipoDocumento;
+import com.cibertec.api.model.Usuario;
 import com.cibertec.api.reuzable.Utils;
 import com.cibertec.api.service.ComprobanteService;
 import com.cibertec.api.service.PrestamistaService;
@@ -31,6 +32,7 @@ import com.cibertec.api.service.TipoDocumentoService;
 import com.mashape.unirest.request.HttpRequest;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("web/comprobante")
@@ -50,7 +52,11 @@ public class ComprobanteController {
 	private PrestamoService prestamoService;
 
 	@GetMapping("/listaCuotaPorPrestamo")
-	private String listarCuotaPorPrestamo(Model model) {
+	private String listarCuotaPorPrestamo(Model model, HttpSession session) {
+		
+		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
+		if (userLogged == null)
+			return "redirect:/login";
 
 		List<Prestatario> listaPrestatario = new ArrayList();
 
