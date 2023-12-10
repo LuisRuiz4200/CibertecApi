@@ -101,6 +101,16 @@ public class UserServiceImpl implements UService {
 	public Usuario buscarPorNombreUsuario(String nombreUsuario) {
 		return repo.findByNombreUsuario(nombreUsuario);
 	}
+
+	@Override
+	public Usuario findByNombreUsuarioAndActivo(String nombreUsuario, boolean activo) {
+		return repo.findByNombreUsuarioAndActivo(nombreUsuario, true);
+	}
+
+	@Override
+	public Usuario findByPersonaIdPersona(int idPersona) {
+		return repo.findByPersonaIdPersona(idPersona);
+	}
 	
 
 }

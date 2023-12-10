@@ -9,76 +9,89 @@
 	<div th:replace="static/navbar.html"></div>
 	<div class="container-fluid">
 		<div class="row gap-2">
-			<div>
+			<div class="col-10 m-auto">
 				<div class="mt-4">
 					<h2>REGISTRO DE PAGOS</h2>
-					<hr>
+					<hr class="bg-dark">
 				</div>
 			</div>
-			<div>
-				<form>
-					<div class="row gap-2">
-						<div class="col-3">
-							<div>
-								<label>PRESTATARIO</label>
-								<select id="filtroIdPrestatario" class="form-select">
-									<option th:each="prestatario : ${listaPrestatario}"
-										th:value="${prestatario.prestatario.idPersona}"
-										th:text="${prestatario.prestatario.nombres} + ' ' + ${prestatario.prestatario.apellidos}"></option>
-								</select>
-							</div>
-
-						</div>
-						<hr>
-						<div class="col-12">
-
-							<div class="row">
+			<div class="col-10 m-auto">
+				<div class="card text-white" style="background-color:#507BA9;">
+					<div class="card-body ">
+						<form>
+							<div class="row gap-2">
 								<div class="col-auto">
-									<h5>FECHA</h5>
+									<div>
+										<label>PRESTATARIO</label>
+										<select id="filtroIdPrestatario" class="form-select">
+											<option th:each="prestatario : ${listaPrestatario}"
+												th:value="${prestatario.prestatario.idPersona}"
+												th:text="${prestatario.prestatario.nombres} + ' ' + ${prestatario.prestatario.apellidos}">
+											</option>
+										</select>
+									</div>
+
 								</div>
-								<div class="col-2">
-									<label>DESDE</label>
-									<input id="filtoFechaInicioCuota" class="form-control" type="date" />
-								</div>
-								<div class="col-2">
-									<label>HASTA</label>
-									<input id="filtroFechaFinCuota" class="form-control" type="date" />
-								</div>
-								<div class="col-auto mt-auto">
-									<button class="btn btn-success" type="button"
-										onclick="listarCuotaPorPrestatario()">FILTRAR</button>
+								<hr>
+								<div class="col-12">
+
+									<div class="row">
+										<div class="col-auto">
+											<h5>FECHA</h5>
+										</div>
+										<div class="col-2">
+											<label>DESDE</label>
+											<input id="filtoFechaInicioCuota" class="form-control" type="date" />
+										</div>
+										<div class="col-2">
+											<label>HASTA</label>
+											<input id="filtroFechaFinCuota" class="form-control" type="date" />
+										</div>
+										<div class="col-auto mt-auto">
+											<button class="btn btn-success" type="button"
+												onclick="listarCuotaPorPrestatario()">FILTRAR</button>
+										</div>
+									</div>
+
 								</div>
 							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			
+			<div class="col-10 m-auto">
+				<div class="card">
+					<div class="card-body">
+						<div class="table-responsive">
+							<table id="tbCuotaPorPrestatario" class="table table-sm table-hover">
+								<thead>
+									<tr>
+										<th>ID PRESTAMO</th>
+										<th>PRESTATARIO</th>
+										<th>NRO CUOTA</th>
+										<th>MONTO TOTAL</th>
+										<th>FECHA VENCIMIENTO</th>
+										<th>ESTADO</th>
+										<th>DETALLE</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
 
+									</tr>
+								</tbody>
+							</table>
 						</div>
 					</div>
-				</form>
+				</div>
 			</div>
-			<div class="table-responsive">
-				<table id="tbCuotaPorPrestatario" class="table table-hover">
-					<thead>
-						<tr>
-							<th>ID PRESTAMO</th>
-							<th>PRESTATARIO</th>
-							<th>NRO CUOTA</th>
-							<th>MONTO TOTAL</th>
-							<th>FECHA VENCIMIENTO</th>
-							<th>ESTADO</th>
-							<th>DETALLE</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
 
-						</tr>
-					</tbody>
-				</table>
-			</div>
 		</div>
 	</div>
 
 	<div id="modalDetallePago" class="modal ">
-		<div class="modal-dialog  modal-dialog-centered modal-lg">
+		<div class="modal-dialog modal-xl modal-dialog-centered modal-lg">
 			<div class="modal-content">
 				<div class="modal-header text-bg-primary">
 					<h3 id="tituloModalDetallePago">DETALLES DE PAGO</h3>
@@ -86,12 +99,22 @@
 				<div class="modal-body">
 
 					<div class="row gap-4">
-						<div class="col-12">
-							<div>
-								<button id="btnCargarComprobante" class="btn btn-success btn-sm">Registrar nuevo pago</button>
+						<div class="col-sm-12">
+							<div class="row justify-content-between">
+								<div class="col-sm-auto">
+									<div>
+										<button id="btnCargarComprobante" class="btn btn-success btn-sm">Registrar nuevo
+											pago</button>
+									</div>
+								</div>
+								<div class="col-sm-auto">
+									<div>
+										<input id="modalEstadoCuota" class="form-control" type="text" readonly />
+									</div>
+								</div>
 							</div>
 						</div>
-						<div class="col-12">
+						<div class="col-sm-12">
 							<div class="responsive">
 								<table id="modalTbComprobante" class="table table-hover">
 									<thead>
@@ -99,12 +122,14 @@
 											<th class="col-auto">SERIE</th>
 											<th class="col-auto">NRO</th>
 											<th class="col-auto">DESCRIPCION</th>
+											<th class="col-auto">MONTO NETO</th>
+											<th class="col-auto">MONTO MORA</th>
 											<th class="col-auto">MONTO TOTAL</th>
 											<th class="col-auto">FECHA EMISION</th>
 										</tr>
 									</thead>
 									<tbody>
-										
+
 									</tbody>
 								</table>
 							</div>

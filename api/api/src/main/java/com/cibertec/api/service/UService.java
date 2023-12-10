@@ -20,4 +20,8 @@ public interface UService {
 	List<Usuario> getUsuarioByRol(Rol rol);
 
 	Usuario buscarPorNombreUsuario(String nombreUsuario);
+	
+	public Usuario findByNombreUsuarioAndActivo(String nombreUsuario, boolean activo);
+
+	public Usuario findByPersonaIdPersona(int idPersona);
 }

@@ -7,9 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cibertec.api.model.Prestamista;
+import com.cibertec.api.model.Usuario;
 import com.cibertec.api.repository.PrestamistaRepository;
+import com.cibertec.api.repository.UsuarioRepository;
 import com.cibertec.api.service.PrestamistaService;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import java.util.stream.Collectors;
@@ -21,6 +24,8 @@ public class PrestamistaServiceImpl implements PrestamistaService {
 	
 	@Autowired
 	private PrestamistaRepository repo;
+	@Autowired
+	private UsuarioRepository usuarioRepository;
 	//private PersonaRepository personaRepo;
 	
 	@Override
@@ -67,6 +72,7 @@ public class PrestamistaServiceImpl implements PrestamistaService {
 	 */
 	//----------------------Eliminacion Logica
 	@Override
+	@Transactional
 	public void eliminarPrestamista(int id) {
 	    Prestamista prestamista = repo.findById(id).orElse(null);
 	    if (prestamista != null) {
@@ -74,6 +80,10 @@ public class PrestamistaServiceImpl implements PrestamistaService {
 	        //al  campo prestamista de tipo PrestamistaM lo cambia a true osea de eliminado
 	        prestamista.setActivo(false);
 	        repo.save(prestamista);
+	        
+	        Usuario usuario = usuarioRepository.findByPersonaIdPersona(prestamista.getIdPrestamista());
+			usuario.setActivo(false);
+			usuarioRepository.save(usuario);
 	    }
 	}
 
@@ -98,5 +108,10 @@ public class PrestamistaServiceImpl implements PrestamistaService {
 	@Override
 	public Prestamista buscarPorDniOPorRuc(String dni,String ruc) {
 		return repo.findByPrestamistaDniOrPrestamistaRuc(dni,ruc);
+	}
+
+	@Override
+	public Prestamista buscarPorDniAndActivo(String dni) {
+		return repo.findByPrestamistaDniAndActivo(dni, true);
 	}
 }
