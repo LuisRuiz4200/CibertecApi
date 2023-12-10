@@ -67,7 +67,7 @@ public class PrestamistaApiController {
 		
 		try {
 			
-			if (prestamistaService.buscarPorDni( dni)!=null) {
+			if (prestamistaService.buscarPorDniAndActivo( dni)!=null) {
 				response.put("mensaje", "El dni " + dni + " ya existe");
 			}
 		}catch(Exception ex) {

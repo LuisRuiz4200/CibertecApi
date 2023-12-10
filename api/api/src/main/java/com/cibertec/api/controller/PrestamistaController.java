@@ -175,7 +175,7 @@ public class PrestamistaController {
 
 		else {
 
-			if (service.buscarPorDni(dni) != null) {
+			if (service.buscarPorDniAndActivo(dni) != null) {
 				mensaje = "El dni " + dni + " ha sido registrado anteriormente";
 				flash.addFlashAttribute("mensaje", mensaje);
 				return "redirect:/registrar";

@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 
 import com.cibertec.api.model.Prestamista;
 import com.cibertec.api.repository.PrestamistaRepository;
+import com.cibertec.api.repository.UsuarioRepository;
 import com.cibertec.api.service.PrestamistaService;
 
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import java.util.stream.Collectors;
@@ -21,6 +23,8 @@ public class PrestamistaServiceImpl implements PrestamistaService {
 	
 	@Autowired
 	private PrestamistaRepository repo;
+	@Autowired
+	private UsuarioRepository usuarioRepository;
 	//private PersonaRepository personaRepo;
 	
 	@Override
@@ -98,5 +102,10 @@ public class PrestamistaServiceImpl implements PrestamistaService {
 	@Override
 	public Prestamista buscarPorDniOPorRuc(String dni,String ruc) {
 		return repo.findByPrestamistaDniOrPrestamistaRuc(dni,ruc);
+	}
+
+	@Override
+	public Prestamista buscarPorDniAndActivo(String dni) {
+		return repo.findByPrestamistaDniAndActivo(dni, true);
 	}
 }
