@@ -98,7 +98,7 @@ public class PrestamoApiController {
 			
 			resumen.put("montoPagado", montoPagado);
 			resumen.put("montoMora", montoMora);
-			resumen.put("montoPendientePago", Utils.formatearDecimales(montoPendientePago, "0.00") );
+			resumen.put("montoPendientePago", Utils.formatearDecimales((montoPendientePago * -1), "0.00") );
 			
 			respuesta.put("cuotaPrestamo", cuotaPrestamo);
 			respuesta.put("resumen", resumen);
