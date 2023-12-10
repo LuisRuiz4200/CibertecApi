@@ -203,13 +203,13 @@ public class PrestamistaController {
 
 	// Metodo para actualizar
 	@GetMapping("/actualizar/{id}")
-	public String editarPrestamista(@PathVariable(name = "id") int id, Model model, RedirectAttributes flash, HttpSession session) {
-		
-		
+	public String editarPrestamista(@PathVariable(name = "id") int id, Model model, RedirectAttributes flash,
+			HttpSession session) {
+
 		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
 		if (userLogged == null)
 			return "redirect:/login";
-		
+
 		// creamos objeto presta inicializado en null
 		Prestamista presta = null;
 		// Valida que el id sea mayor a 0
@@ -254,7 +254,7 @@ public class PrestamistaController {
 			Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
 			if (userLogged == null)
 				return "redirect:/login";
-			
+
 			int rolIngreso = userLogged.getRol().getIdRol();
 
 			// Como admin - Elimino a un Jefe
@@ -296,7 +296,7 @@ public class PrestamistaController {
 		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
 		if (userLogged == null)
 			return "redirect:/login";
-		
+
 		Prestamista prestamista = service.listarPrestamistaPorId(userLogged.getPersona().getIdPersona());
 		List<Prestatario> PrestatariosList = new ArrayList<>();
 
@@ -343,12 +343,11 @@ public class PrestamistaController {
 			@RequestParam("fechaDesde") String fechaDesde,
 			@RequestParam("fechaHasta") String fechaHasta,
 			Model model, HttpSession session) throws ParseException {
-		
-		
+
 		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
 		if (userLogged == null)
 			return "redirect:/login";
-		
+
 		List<SolicitudPrestamo> listaSolicitudes = new ArrayList<SolicitudPrestamo>();
 		if (idPrestamista == -1) {
 
@@ -378,7 +377,7 @@ public class PrestamistaController {
 
 	@GetMapping("/revisarEstadoPrestamoByJefePrestamista")
 	private String listarPrestamoRevisarByBoss(Model model, HttpSession session) {
-		
+
 		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
 		if (userLogged == null)
 			return "redirect:/login";
@@ -396,7 +395,7 @@ public class PrestamistaController {
 		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
 		if (userLogged == null)
 			return "redirect:/login";
-		
+
 		return "AdminRevisaRendimiento";
 	}
 

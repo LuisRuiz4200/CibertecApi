@@ -23,9 +23,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
 @Entity
-@Table(name="tb_prestatario")
+@Table(name = "tb_prestatario")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -33,32 +32,35 @@ import lombok.ToString;
 @ToString
 public class Prestatario {
 	@Id
-    @Column(name = "idprestatario")
-    private int idPrestatario;
+	@Column(name = "idprestatario")
+	private int idPrestatario;
 
 	@ManyToOne
 	@JoinColumn(name = "idPrestamista")
 	private Prestamista prestamistaPrestatario;
-	
+
 	@OneToOne(cascade = CascadeType.ALL)
 	@MapsId
-	@JoinColumn(name="idprestatario")
-	private Persona prestatario = new Persona(); ;
+	@JoinColumn(name = "idprestatario")
+	private Persona prestatario = new Persona();
+
 	@Temporal(TemporalType.DATE)
-	@Column(name="fecharegistro")
+	@Column(name = "fecharegistro")
 	private Date fechaRegistro;
+
 	@Temporal(TemporalType.DATE)
-	@Column(name="fechaedicion")
+	@Column(name = "fechaedicion")
 	private Date fechaEdicion;
+
 	private boolean activo;
-	
+
 	@OneToMany(mappedBy = "prestatario")
 	@JsonIgnore
 	@ToString.Exclude
 	private List<SolicitudPrestamo> listaSolicitudPrestamo;
-	
+
 	@OneToMany(mappedBy = "idPrestatarioCuenta")
 	@JsonIgnore
 	@ToString.Exclude
-    private List<Cuenta> cuentaList;
+	private List<Cuenta> cuentaList;
 }

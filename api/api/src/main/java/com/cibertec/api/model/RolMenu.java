@@ -10,27 +10,25 @@ import jakarta.persistence.Table;
 import lombok.ToString;
 
 @Entity
-@Table(name="tb_rol_menu")
+@Table(name = "tb_rol_menu")
 public class RolMenu {
 
 	@EmbeddedId
 	private RolMenuPK pk;
-	
+
 	@ManyToOne
-	@JoinColumn(name="idRol", insertable=false, updatable=false)
+	@JoinColumn(name = "idRol", insertable = false, updatable = false)
 	@ToString.Exclude
 	private Rol rol;
-	
+
 	@ManyToOne
-	@JoinColumn(name="idMenu", insertable=false, updatable=false)
+	@JoinColumn(name = "idMenu", insertable = false, updatable = false)
 	@ToString.Exclude
 	private Menu menu;
-	
-	
-	
+
 	private Date fechaRegistro;
 	private Date fechaEdicion;
-	
+
 	private int activo;
 
 	public RolMenuPK getPk() {
@@ -80,7 +78,5 @@ public class RolMenu {
 	public void setActivo(int activo) {
 		this.activo = activo;
 	}
-	
-	
-	
+
 }

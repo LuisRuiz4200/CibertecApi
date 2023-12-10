@@ -8,11 +8,12 @@ import com.cibertec.api.model.Prestamista;
 
 import java.util.List;
 
-
 @Repository
-public interface GrupoPrestamistaRepository extends JpaRepository<GrupoPrestamista, Integer>{
+public interface GrupoPrestamistaRepository extends JpaRepository<GrupoPrestamista, Integer> {
     List<GrupoPrestamista> findByJefePrestamista(Prestamista jefePrestamista);
-    List<GrupoPrestamista> findByJefePrestamistaAndActivo(Prestamista jefePrestamista, boolean activo);
-    GrupoPrestamista findByJefePrestamistaAndAsesorPrestamista(Prestamista jefePrestamista, Prestamista asesorPrestamista);
-}
 
+    List<GrupoPrestamista> findByJefePrestamistaAndActivo(Prestamista jefePrestamista, boolean activo);
+
+    GrupoPrestamista findByJefePrestamistaAndAsesorPrestamista(Prestamista jefePrestamista,
+            Prestamista asesorPrestamista);
+}

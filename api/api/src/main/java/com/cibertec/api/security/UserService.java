@@ -16,24 +16,23 @@ import com.cibertec.api.model.Usuario;
 import com.cibertec.api.repository.UsuarioRepository;
 
 @Service
-public class UserService implements UserDetailsService{
+public class UserService implements UserDetailsService {
 	@Autowired
 	private UsuarioRepository repo;
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		
-		UserDetails obj=null;
-		
-		Usuario bean=repo.iniciarSesion(username); //me salio error el iniciara secion 
 
-		Set<GrantedAuthority> rol=new HashSet<GrantedAuthority>();
+		UserDetails obj = null;
+
+		Usuario bean = repo.iniciarSesion(username); // me salio error el iniciara secion
+
+		Set<GrantedAuthority> rol = new HashSet<GrantedAuthority>();
 		rol.add(new SimpleGrantedAuthority(bean.getRol().getDescripcion()));
-		
-		obj=new User(username,bean.getClaveUsuario(),rol);
-		
+
+		obj = new User(username, bean.getClaveUsuario(), rol);
+
 		return obj;
 	}
 
-	
 }

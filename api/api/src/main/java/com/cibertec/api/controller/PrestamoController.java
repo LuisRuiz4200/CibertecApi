@@ -143,7 +143,6 @@ public class PrestamoController {
 	@GetMapping("detalle/{id}")
 	@ResponseBody
 	private HashMap<?, ?> detalle(@PathVariable int id, Model model) {
-		
 
 		Prestamo prestamo = prestamoService.buscarPorId(id);
 		List<CuotaPrestamo> cuotas = cuotaService.listarPorId(id);
@@ -189,7 +188,6 @@ public class PrestamoController {
 		if (userLogged == null)
 			return "redirect:/login";
 
-		
 		Prestamo prestamo = new Prestamo();
 		SolicitudPrestamo solicitudPrestamo = new SolicitudPrestamo();
 		// Prestamista prestamista = new Prestamista();
@@ -259,31 +257,30 @@ public class PrestamoController {
 		}
 		return prestamosDto;
 	}
-	
-	//JeanPi
+
+	// JeanPi
 	@GetMapping("/revisarEstadoPrestamoByJefePrestamista")
 	private String consultarPrestamistas(Model model, HttpSession session) {
-		
+
 		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
-		if(userLogged==null) {
+		if (userLogged == null) {
 			return "redirect:/login";
 		}
 		int rol = userLogged.getRol().getIdRol();
-	    List<GrupoPrestamista> listPrestamista = new ArrayList<GrupoPrestamista>();
-		
-	    if (rol == Utils.ROL_JEFE_PRESTAMISTA) {
-	        // Obtener el idPersona del prestamista actualmente logueado
-	        int idPrestamistaLogueado = userLogged.getPersona().getIdPersona();
+		List<GrupoPrestamista> listPrestamista = new ArrayList<GrupoPrestamista>();
 
-	        listPrestamista = grupoService.listar().stream()
-	                .filter(c -> c.getJefePrestamista().getPrestamista().getIdPersona() == idPrestamistaLogueado)
-	                .toList();
+		if (rol == Utils.ROL_JEFE_PRESTAMISTA) {
+			// Obtener el idPersona del prestamista actualmente logueado
+			int idPrestamistaLogueado = userLogged.getPersona().getIdPersona();
 
-	        model.addAttribute("listaPrestamista", listPrestamista);
-	    }
-	    
+			listPrestamista = grupoService.listar().stream()
+					.filter(c -> c.getJefePrestamista().getPrestamista().getIdPersona() == idPrestamistaLogueado)
+					.toList();
+
+			model.addAttribute("listaPrestamista", listPrestamista);
+		}
+
 		return "ChiefRevisaPrestamo";
-	} 
-	
-	 
+	}
+
 }

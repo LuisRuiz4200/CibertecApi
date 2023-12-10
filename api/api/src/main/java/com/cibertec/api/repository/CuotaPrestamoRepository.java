@@ -12,7 +12,7 @@ import com.cibertec.api.model.CuotaPrestamoPK;
 public interface CuotaPrestamoRepository extends JpaRepository<CuotaPrestamo, CuotaPrestamoPK> {
 
 	public List<CuotaPrestamo> findByCuotaPrestamoPkIdPrestamo(int idPrestamo);
-	
+
 	public void deleteByCuotaPrestamoPk(CuotaPrestamoPK cuotaPrestamoPK);
-	
+
 }

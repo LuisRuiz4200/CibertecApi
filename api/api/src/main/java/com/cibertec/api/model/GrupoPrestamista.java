@@ -22,7 +22,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class GrupoPrestamista{
+public class GrupoPrestamista {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,7 +52,7 @@ public class GrupoPrestamista{
     @JoinColumn(name = "usuarioActualiza", referencedColumnName = "idUsuario")
     private Usuario usuarioActualiza;
 
-    public boolean getActivo(){
+    public boolean getActivo() {
         return this.activo;
     }
 }

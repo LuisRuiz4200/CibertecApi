@@ -13,7 +13,7 @@ import com.cibertec.api.repository.CuentaRepository;
 import com.cibertec.api.service.CuentaService;
 
 @Service
-public class CuentaServiceImpl implements CuentaService{
+public class CuentaServiceImpl implements CuentaService {
     @Autowired
     private CuentaRepository repository;
 

@@ -25,7 +25,8 @@
 			<div class="card-header h2 text-center" th:text="${titulo}"></div>
 			<div class="card-body">
 				<h4 class="card-title">
-					<a th:href="@{/prestatario/registrarPrestatario}" class="btn btn-primary" th:text="${txtButton}">AGREGAR</a>
+					<a th:href="@{/prestatario/registrarPrestatario}" class="btn btn-primary"
+						th:text="${txtButton}">AGREGAR</a>
 
 					<!-- <a sec:authorize="hasRole('ADMIN')" th:href="@{/exportarPdf}"
 						class="btn btn-secondary">Exportar a PDF</a> <a
@@ -63,7 +64,8 @@
 							<!-- <td th:text="${prestamista.prestamista.ruc}"></td> -->
 
 							<td><a class="btn btn-warning btn-sm"
-									th:href="@{/prestatario/actualizarPrestata/} + ${prestatario.prestatario.idPersona}">Editar</a></td>
+									th:href="@{/prestatario/actualizarPrestata/} + ${prestatario.prestatario.idPersona}">Editar</a>
+							</td>
 							<td>
 								<a class="btn btn-danger btn-sm"
 									th:href="@{/prestatario/eliminarPrestata/} + ${prestatario.prestatario.idPersona}"
