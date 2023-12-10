@@ -1,5 +1,6 @@
 package com.cibertec.api.controllerrest;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -42,130 +43,128 @@ public class ComprobanteApiController {
 	ComprobanteDetalleService comprobanteDetalleService;
 	@Autowired
 	CuotaPrestamoService cuotaPrestamoService;
-	
-	
+
 	@PostMapping("/registrar")
-	private Map<String, Object> registrar(@RequestBody ComprobanteDTO comprobanteDTO){
-		
-		Map<String,Object> response = new HashMap<>();
-		Map<String,Object> detalle = new HashMap<>();
-		
+	private Map<String, Object> registrar(@RequestBody ComprobanteDTO comprobanteDTO) {
+
+		Map<String, Object> response = new HashMap<>();
+		Map<String, Object> detalle = new HashMap<>();
+
 		ModelMapper modelMapper = new ModelMapper();
-		
+
 		Comprobante comprobante = new Comprobante();
 		ComprobanteDetalle comprobanteDetalle = new ComprobanteDetalle();
 		CuotaPrestamo cuotaPrestamo = new CuotaPrestamo();
-		
+
 		Integer correlativo = 1;
 		String serie = "";
-		
+
 		try {
 
 			comprobante = modelMapper.map(comprobanteDTO, Comprobante.class);
-			
-			correlativo = comprobanteService.listar().stream()
-					.map(c->c.getCorrelativo())
+
+			correlativo = comprobanteService.listar().stream().map(c -> c.getCorrelativo())
 					.max(Comparator.naturalOrder()).orElse(0);
-			
-			
+
 			comprobante.setCorrelativo(correlativo + 1);
 			comprobante = comprobanteService.guardar(comprobante);
-			
+
 			correlativo = comprobante.getCorrelativo();
 			serie = comprobante.getSerie();
-			
+
 			for (ComprobanteDetalleDTO cpeDTO : comprobanteDTO.getListaComprobanteDetalle()) {
-				
+
 				comprobanteDetalle = new ComprobanteDetalle();
-				
+
 				comprobanteDetalle.getComprobanteDetallePK().setIdComprobante(comprobante.getIdComprobante());
 				comprobanteDetalle.getComprobanteDetallePK().setIdComprobanteDetalle(cpeDTO.getIdComprobanteDetalle());
-				
-				comprobanteDetalle.getCuotaPrestamo().getCuotaPrestamoPk().setIdPrestamo(comprobante.getPrestamo().getIdPrestamo());
-				comprobanteDetalle.getCuotaPrestamo().getCuotaPrestamoPk().setIdCuotaPrestamo(cpeDTO.getIdCuotaPrestamo());
-				
+
+				comprobanteDetalle.getCuotaPrestamo().getCuotaPrestamoPk()
+						.setIdPrestamo(comprobante.getPrestamo().getIdPrestamo());
+				comprobanteDetalle.getCuotaPrestamo().getCuotaPrestamoPk()
+						.setIdCuotaPrestamo(cpeDTO.getIdCuotaPrestamo());
+
 				comprobanteDetalle.setCodItem(cpeDTO.getCodItem());
 				comprobanteDetalle.setDescripcion(cpeDTO.getDescripcion());
 				comprobanteDetalle.setCantidadItem(cpeDTO.getCantidadItem());
 				comprobanteDetalle.setMontoItem(cpeDTO.getMontoItem());
 				comprobanteDetalle.setMontoTotal(cpeDTO.getMontoTotal());
-				
-				comprobanteDetalle = comprobanteDetalleService.guardar(comprobanteDetalle);
-				
-				cuotaPrestamo = comprobanteDetalle.getCuotaPrestamo();
+				comprobanteDetalle.setMontoMora(cpeDTO.getMontoMora());
 
-				
+				comprobanteDetalle = comprobanteDetalleService.guardar(comprobanteDetalle);
+
+				cuotaPrestamo = comprobanteDetalle.getCuotaPrestamo();
 
 				double montoPendienteActual = cuotaPrestamo.getMontoPendiente();
 				double montoFacturado = comprobanteDetalle.getMontoTotal();
-				
-				if(montoPendienteActual == 0) {
+
+				if (montoPendienteActual == 0) {
 					montoPendienteActual = cuotaPrestamo.getMontoTotal();
 				}
-				
+				/* 100 >= 100 */
 
-				if(comprobanteDetalle.getMontoTotal()>=montoPendienteActual) {
+				Date fechaVencimientoCuota = cuotaPrestamo.getFechaPago();
+				Double montoMoraPagada = comprobanteDetalle.getMontoMora();
+
+				if (comprobanteDetalle.getMontoTotal() >= montoPendienteActual
+						&& fechaVencimientoCuota.before(new Date(new java.util.Date().getTime()))
+						&& montoMoraPagada == 0) {
+					cuotaPrestamo.setEstado(Utils.PAGO_PARCIAL);
+				} else if (comprobanteDetalle.getMontoTotal() >= montoPendienteActual) {
 					cuotaPrestamo.setEstado(Utils.PAGO_PAGADO);
-				}else {
+				} else {
 					cuotaPrestamo.setEstado(Utils.PAGO_PARCIAL);
 				}
-				
+
 				cuotaPrestamo.setMontoPendiente(montoPendienteActual - montoFacturado);
-				
+
 				cuotaPrestamo = cuotaPrestamoService.guardar(cuotaPrestamo);
-				
+
 			}
-			
-			
-			if(comprobante.getIdComprobante()<0) {
+
+			if (comprobante.getIdComprobante() < 0) {
 				response.put("error", "Error durante el proceso");
 				return response;
 			}
 
-			detalle.put("serie",serie);
+			detalle.put("serie", serie);
 			detalle.put("correlativo", correlativo);
 
 			response.put("mensaje", "Comprobante registrado !");
 			response.put("detalle", detalle);
-			
-			
-		}catch(Exception ex) {
+
+		} catch (Exception ex) {
 			response.put("error", ex.getMessage());
 		}
-		
+
 		return response;
 	}
-	
-	
-	
+
 	@GetMapping("/listar")
 	private List<Comprobante> listar(
-			@RequestParam(name="idPrestamo",required = false,defaultValue = "0")int idPrestamo,
-			@RequestParam(name="idCuotaPrestamo",required = false,defaultValue = "0")int idCuotaPrestamo){
-		
+			@RequestParam(name = "idPrestamo", required = false, defaultValue = "0") int idPrestamo,
+			@RequestParam(name = "idCuotaPrestamo", required = false, defaultValue = "0") int idCuotaPrestamo) {
+
 		List<Comprobante> listaComprobante = new ArrayList<>();
-		
+
 		try {
-			
+
 			listaComprobante = comprobanteService.listar();
-			
-			if (idPrestamo>0 && idCuotaPrestamo>0) {
+
+			if (idPrestamo > 0 && idCuotaPrestamo > 0) {
 				listaComprobante = comprobanteService.listar().stream()
-						.filter(c->c.getPrestamo().getIdPrestamo()==idPrestamo)
-						.peek(c->c.setListaComprobanteDetalle(
-								c.getListaComprobanteDetalle().stream()
-								.filter(detalle->detalle.getCuotaPrestamo().getCuotaPrestamoPk().getIdCuotaPrestamo()==idCuotaPrestamo)
-								.toList()
-								))
+						.filter(c -> c.getPrestamo().getIdPrestamo() == idPrestamo)
+						.peek(c -> c.setListaComprobanteDetalle(
+								c.getListaComprobanteDetalle().stream().filter(detalle -> detalle.getCuotaPrestamo()
+										.getCuotaPrestamoPk().getIdCuotaPrestamo() == idCuotaPrestamo).toList()))
 						.toList();
 			}
-			
-			
-		}catch(Exception ex) {
+
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		
+
 		return listaComprobante;
 	}
-	
+
 }

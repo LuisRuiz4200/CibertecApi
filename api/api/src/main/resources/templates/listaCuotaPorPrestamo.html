@@ -9,16 +9,15 @@
 	<div th:replace="static/navbar.html"></div>
 	<div class="container-fluid">
 		<div class="row gap-2">
-			<div>
+			<div class="col-10 m-auto">
 				<div class="mt-4">
 					<h2>REGISTRO DE PAGOS</h2>
-					<hr>
+					<hr class="bg-dark">
 				</div>
 			</div>
-			<div>
-				<div class="card">
-					<div class="card-body">
-
+			<div class="col-10 m-auto">
+				<div class="card text-white" style="background-color:#507BA9;">
+					<div class="card-body ">
 						<form>
 							<div class="row gap-2">
 								<div class="col-auto">
@@ -60,26 +59,34 @@
 					</div>
 				</div>
 			</div>
-			<div class="table-responsive">
-				<table id="tbCuotaPorPrestatario" class="table table-hover">
-					<thead>
-						<tr>
-							<th>ID PRESTAMO</th>
-							<th>PRESTATARIO</th>
-							<th>NRO CUOTA</th>
-							<th>MONTO TOTAL</th>
-							<th>FECHA VENCIMIENTO</th>
-							<th>ESTADO</th>
-							<th>DETALLE</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
+			
+			<div class="col-10 m-auto">
+				<div class="card">
+					<div class="card-body">
+						<div class="table-responsive">
+							<table id="tbCuotaPorPrestatario" class="table table-sm table-hover">
+								<thead>
+									<tr>
+										<th>ID PRESTAMO</th>
+										<th>PRESTATARIO</th>
+										<th>NRO CUOTA</th>
+										<th>MONTO TOTAL</th>
+										<th>FECHA VENCIMIENTO</th>
+										<th>ESTADO</th>
+										<th>DETALLE</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
 
-						</tr>
-					</tbody>
-				</table>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
 			</div>
+
 		</div>
 	</div>
 

@@ -25,7 +25,7 @@ async function apiListaCuotaPorPrestatario(idPrestatario, fechaInicioCuota, fech
 	return fetch(url)
 		.then(response => response.json())
 		.then(data => {
-			toastr.success(data[0].prestamo.solicitudPrestamo.prestatario.prestatario.nombres);
+			toastr.success("Lista de cuotas por prestamista cargada !");
 			return data;
 		});
 }
@@ -130,12 +130,7 @@ async function apiGuardarComprobante() {
 		.then(data => {
 			if (data.mensaje) {
 				toastr.success(data.mensaje);
-
 				correlativo.value = data.detalle.correlativo;
-
-				setTimeout(() => {
-					location.href = "http://localhost:9090/web/comprobante/registrar";
-				}, 2000)
 				return;
 			}
 			if (data.error) {
@@ -169,16 +164,19 @@ function cargarWebComprobante(idPrestamo, idCuota) {
 	var btnCargarComprobante = document.getElementById("btnCargarComprobante");
 	var modalEstadoCuota = document.getElementById("modalEstadoCuota");
 
+	btnCargarComprobante.hidden = false;
+
+	if (modalEstadoCuota.value === 'Pagado') {
+		btnCargarComprobante.hidden = true;
+	}
+
 	btnCargarComprobante.addEventListener('click', function(event) {
 
 		var url = new URL("http://localhost:9090/web/comprobante/registrar/prestamo");
 		url.searchParams.append("idPrestamo", idPrestamo);
 		url.searchParams.append("idCuotaPrestamo", idCuota);
 
-		if (modalEstadoCuota.value === 'Pagado') {
-			toastr.error("No es posible acceder a pagar una cuota con estado pagado")
-			return;
-		}
+
 
 		location.href = url;
 
@@ -378,12 +376,21 @@ function guardarComprobante() {
 
 	const formularioComprobante = document.getElementById("formularioComprobante");
 
+	var params = new URLSearchParams(location.search);
+	var idPrestamo = params.get("idPrestamo");
+	var idCuotaPrestamo = params.get("idCuotaPrestamo");
+
 	if (validarFormularioComprobante()) {
 		formularioComprobante.onsubmit();
-		setTimeout(2000, () => {
+		setTimeout(() => {
+			if (idPrestamo && idCuotaPrestamo) {
+				location.href = "http://localhost:9090/web/comprobante/listaCuotaPorPrestamo";
+				return;
+			}
 
-			location.href = "http://localhost:9090/web/comprobante/listaCuotaPorPrestamo";
-		})
+			location.href = "http://localhost:9090/web/comprobante/registrar";
+
+		}, 2000)
 	}
 
 
@@ -399,7 +406,7 @@ function limpiarFormularioComprobante() {
 
 	numDocReceptor.value = '';
 	nomReceptor.value = '';
-	correlativo.value = '';
+	correlativo.value = '0';
 	lblTipoDocumento.innerHTML = 'DOCUMENTO RECEPTOR';
 
 
@@ -461,25 +468,39 @@ function limpiarModalItem() {
 	var modalCantidadItem = document.getElementById("idModalCantidadItem");
 	var modalMontoItem = document.getElementById("idModalMontoItem");
 	var modalMontoMora = document.getElementById("idModalMontoMora");
+	var modalFechaPago = document.getElementById("idModalFechaPago");
 
 	modalDescripcion.value = '';
 	modalCantidadItem.value = '';
 	modalMontoItem.value = '';
 	modalMontoMora.value = '';
+	modalFechaPago.value = '';
 	modalMontoItem.readOnly = true;
 	indicadorPagoParcial.checked = false;
 }
 
-function cargarCuotaPrestamoModal() {
-	var idPrestamo = new URLSearchParams(location.search).get("idPrestamo");
+async function cargarCuotaPrestamoModal() {
+	var params = new URLSearchParams(location.search)
+	var idPrestamo = params.get("idPrestamo");
+
 	var indicadorPagoParcial = document.getElementById("chckPagoParcial");
 	var modalDescripcion = document.getElementById("idModalDescripcion");
 	var modalCantidadItem = document.getElementById("idModalCantidadItem");
 	var modalMontoItem = document.getElementById("idModalMontoItem");
+	var modalMontoMora = document.getElementById("idModalMontoMora");
 	var modalFechaPago = document.getElementById("idModalFechaPago");
+	var modalDiasMora = document.getElementById("idModalDiasMora");
+	var modalCodItem = document.getElementById("idModalCodItem");
+
+	var codItem = modalCodItem.value;
+	var idCuotaPrestamo = codItem.replace(/.*[^0-9]/, "");
 
 
-	idModalCodItem.addEventListener('change', async function(event) {
+	var montoItem = modalMontoItem.value;
+	var montoMora = modalMontoMora.value;
+
+
+	modalCodItem.addEventListener('change', async function(event) {
 
 		limpiarModalItem();
 
@@ -491,26 +512,41 @@ function cargarCuotaPrestamoModal() {
 		modalDescripcion.value = "PAGO COMPLETO DE LA CUOTA NRO " + idCuotaPrestamo;
 		modalCantidadItem.value = "1";
 		modalMontoItem.readOnly = true;
-		modalMontoItem.value = cuotaPrestamo.montoTotal.toFixed(2);
-		modalFechaPago.value = cuotaPrestamo.fechaPago;
+		modalMontoItem.value = cuotaPrestamo.cuotaPrestamo.montoTotal.toFixed(2) - cuotaPrestamo.resumen.montoPagado.toFixed(2);
+		modalFechaPago.value = cuotaPrestamo.cuotaPrestamo.fechaPago;
 
-		toastr.warning(cuotaPrestamo.fechaPago);
+		var montoMensual = cuotaPrestamo.cuotaPrestamo.montoTotal;
+
+		var moraCalculada = calcularMora(montoMensual, cuotaPrestamo.cuotaPrestamo.fechaPago, 0.8);
+
+		modalMontoMora.value = moraCalculada.montoMora;
+		modalDiasMora.value = moraCalculada.diasMora;
 
 	});
 
-	indicadorPagoParcial.addEventListener('change', function(event) {
+	indicadorPagoParcial.addEventListener('change', async function(event) {
 
-		var codItem = idModalCodItem.value;
-		var idCuotaPrestamo = codItem.replace(/.*[^0-9]/, "");
 
-		toastr.warning(indicadorPagoParcial.checked ? "ok" : "no ok");
 
 		if (event.target.checked) {
 			modalDescripcion.value = "PAGO PARCIAL DE LA CUOTA NRO " + idCuotaPrestamo;
 			modalMontoItem.readOnly = false;
+			modalMontoMora.value = '0.00';
+			modalDiasMora.value = '0';
 		} else {
+
+			cuotaPrestamo = await apiBuscarCuotaPrestamo(idPrestamo, idCuotaPrestamo);
+
 			modalDescripcion.value = "PAGO COMPLETO DE LA CUOTA NRO " + idCuotaPrestamo;
 			modalMontoItem.readOnly = true;
+			modalMontoItem.value = (cuotaPrestamo.cuotaPrestamo.montoTotal - cuotaPrestamo.resumen.montoPagado).toFixed(2);
+
+			var moraCalculada = calcularMora(cuotaPrestamo.cuotaPrestamo.montoTotal, cuotaPrestamo.cuotaPrestamo.fechaPago, 0.8);
+
+			modalMontoMora.value = moraCalculada.montoMora;
+			modalDiasMora.value = moraCalculada.diasMora;
+
+
 		}
 
 
@@ -522,7 +558,7 @@ function agregarItem() {
 	var modalTituloItem = document.getElementById("modalTituloItem");
 	var idModalCodItem = document.getElementById("idModalCodItem");
 	var btnAgregarItemModal = document.getElementById("btnAgregarItemModal");
-	var btnEditarItemModal= document.getElementById("btnEditarItemModal");
+	var btnEditarItemModal = document.getElementById("btnEditarItemModal");
 
 	modalTituloItem.innerText = "NUEVO ITEM";
 	idModalCodItem.value = '-1';
@@ -531,16 +567,18 @@ function agregarItem() {
 
 	btnAgregarItemModal.hidden = false;
 	btnEditarItemModal.hidden = true;
-	
+
 	limpiarModalItem();
 	$("#modalNuevoItem").modal('show')
-	
+
 }
 
-function editarItem(enlace) {
+async function editarItem(enlace) {
 
-	cargarCuotaPrestamoModal();
+	limpiarModalItem();
 
+	var params = new URLSearchParams(location.search)
+	var idPrestamo = params.get("idPrestamo");
 
 	var modalCodItem = document.getElementById("idModalCodItem");
 	var modalDescripcion = document.getElementById("idModalDescripcion");
@@ -548,8 +586,11 @@ function editarItem(enlace) {
 	var modalMontoItem = document.getElementById("idModalMontoItem");
 	var modalMontoMora = document.getElementById("idModalMontoMora");
 	var modalTituloItem = document.getElementById("modalTituloItem");
+	var modalDiasMora = document.getElementById("idModalDiasMora");
+	var modalFechaPago = document.getElementById("idModalFechaPago");
 	var btnAgregarItemModal = document.getElementById("btnAgregarItemModal");
 	var btnEditarItemModal = document.getElementById("btnEditarItemModal");
+
 
 	var fila = enlace.parentNode.parentNode;
 
@@ -561,20 +602,28 @@ function editarItem(enlace) {
 	var montoMora = fila.cells[5].innerText;
 
 
+	var idCuotaPrestamo = codItem.replace(/.*[^0-9]/, "");
+	var cuotaPrestamo = await apiBuscarCuotaPrestamo(idPrestamo, idCuotaPrestamo);
+
+	var moraCalculada = calcularMora(cuotaPrestamo.cuotaPrestamo.montoMensual, cuotaPrestamo.cuotaPrestamo.fechaPago, 0.8);
+
+	modalDiasMora.value = moraCalculada.diasMora;
 	modalCodItem.value = codItem;
 	modalDescripcion.value = descripcion;
 	modalCantidadItem.value = cantidad;
 	modalMontoItem.value = montoItem;
 	modalMontoMora.value = montoMora;
-	modalTituloItem.innerText = "EDICION DEL ITEM " + fila.cells[0].innerText;
+	modalFechaPago.value = cuotaPrestamo.cuotaPrestamo.fechaPago;
+
+	modalTituloItem.innerText = "EDICION DEL ITEM " + idItem;
+
+	cargarCuotaPrestamoModal();
 
 
 	btnAgregarItemModal.hidden = true;
 	btnEditarItemModal.hidden = false;
 
 	$("#modalNuevoItem").modal('show');
-
-	toastr.warning(idItem);
 
 }
 
@@ -591,6 +640,8 @@ function guardarItem(crud) {
 	var modalMontoMora = document.getElementById("idModalMontoMora");
 	var modalTituloItem = document.getElementById("modalTituloItem");
 
+	var montoTotal = parseFloat(modalCantidadItem.value * modalMontoItem.value) + (parseFloat(modalMontoMora.value) || 0);
+
 	if (crud === 'editar') {
 
 		var nroFila = modalTituloItem.innerText.replace(/.*[^0-9]/, "")
@@ -602,7 +653,7 @@ function guardarItem(crud) {
 		fila.cells[3].innerHTML = modalCantidadItem.value;
 		fila.cells[4].innerHTML = modalMontoItem.value;
 		fila.cells[5].innerHTML = modalMontoMora.value;
-		fila.cells[6].innerHTML = modalCantidadItem.value * modalMontoItem.value;
+		fila.cells[6].innerHTML = montoTotal.toFixed(2);
 
 
 		$("#modalNuevoItem").modal('hide');
@@ -646,7 +697,7 @@ function guardarItem(crud) {
 	celdaCantidad.innerHTML = modalCantidadItem.value;
 	celdaMontoItem.innerHTML = modalMontoItem.value;
 	celdaMontoMora.innerHTML = modalMontoMora.value;
-	celdaMontoTotal.innerHTML = modalCantidadItem.value * modalMontoItem.value;
+	celdaMontoTotal.innerHTML = montoTotal.toFixed(2);
 	celdaDetalle.innerHTML = "<a onclick='editarItem(this)' type='button' ><img src='https://cdn-icons-png.flaticon.com/512/6324/6324826.png' width='30px' height='30px'/></a>"
 
 
@@ -667,3 +718,30 @@ function limpiarTablaItem() {
 	tbItem.innerHTML = '';
 
 }
+
+
+function calcularMora(montoMensual, fechaVencimiento, tea) {
+
+	var fechaActual = new Date();
+	fechaActual.setHours(0, 0, 0, 0);
+	var fechaPago = new Date(fechaVencimiento);
+	fechaPago.setHours(0, 0, 0, 0);
+	fechaPago.setDate(fechaPago.getDate() + 1);
+
+	var diasMora = (fechaActual - fechaPago) / (1000 * 60 * 60 * 24);
+
+	if (diasMora < 0) {
+		diasMora = 0;
+	}
+
+	var tasaDiaria = (Math.pow((1 + tea), (1 / 30))) - 1;
+	var montoMora = montoMensual * (Math.pow((1 + tasaDiaria), (diasMora)) - 1);
+
+	var respuesta = {
+		montoMora: montoMora.toFixed(2),
+		diasMora: diasMora
+	}
+
+	return respuesta;
+}
+
