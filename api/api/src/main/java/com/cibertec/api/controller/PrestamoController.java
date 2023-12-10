@@ -143,6 +143,8 @@ public class PrestamoController {
 	@GetMapping("detalle/{id}")
 	@ResponseBody
 	private HashMap<?, ?> detalle(@PathVariable int id, Model model) {
+		
+		
 
 		Prestamo prestamo = prestamoService.buscarPorId(id);
 		List<CuotaPrestamo> cuotas = cuotaService.listarPorId(id);
