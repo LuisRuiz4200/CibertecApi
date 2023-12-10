@@ -5,25 +5,25 @@ function limpiarCuotas() {
 	var table = document.getElementById("tbCuotas").getElementsByTagName('tbody')[0];
 	table.innerHTML = '';
 
-    
+
 }
 
 function cargarCuotas() {
 	var table = document.getElementById("tbCuotas").getElementsByTagName('tbody')[0];
 	var monto = document.getElementById("montoPrestamo").value;
 	var cuotas = document.getElementById("cuotaPrestamo").value;
-	
+
 	var montoInteresTotal = document.getElementById("interes").value;
-	
+
 	montoInteresTotal = montoInteresTotal.substring(3);
-	
+
 	var montoMensual = monto / cuotas;
 	var montoInteresMensual = montoInteresTotal / cuotas
-	
+
 	var montoCuota = montoMensual + montoInteresMensual;
-	
+
 	var fechaPago = new Date(); // Fecha actual
-    fechaPago.setMonth(fechaPago.getMonth() + 1); // Sumar un mes
+	fechaPago.setMonth(fechaPago.getMonth() + 1); // Sumar un mes
 
 	limpiarCuotas();
 
@@ -37,22 +37,22 @@ function cargarCuotas() {
 
 		celdaCuota.innerHTML = i;
 		celdaMonto.innerHTML = "S/" + montoCuota.toFixed(2);
-		
-		// Formatear el mes con dos dígitos
-        var mm = (fechaPago.getMonth() + 1).toString().padStart(2, '0');
-		
-		// Formatear la fecha como dd/mm/yyyy
-        var dd = fechaPago.getDate();
-        var yyyy = fechaPago.getFullYear();
-        celdaFechaPago.innerHTML = dd + '/' + mm + '/' + yyyy;
 
-        // Sumar un mes para la próxima cuota
-        fechaPago.setMonth(fechaPago.getMonth() + 1);
+		// Formatear el mes con dos dígitos
+		var mm = (fechaPago.getMonth() + 1).toString().padStart(2, '0');
+
+		// Formatear la fecha como dd/mm/yyyy
+		var dd = fechaPago.getDate();
+		var yyyy = fechaPago.getFullYear();
+		celdaFechaPago.innerHTML = dd + '/' + mm + '/' + yyyy;
+
+		// Sumar un mes para la próxima cuota
+		fechaPago.setMonth(fechaPago.getMonth() + 1);
 
 	}
 }
 
-function formularioPrestamo() {
+async function formularioPrestamo() {
 
 	var btnPrestamo = document.getElementById("btnPrestamo");
 
@@ -60,11 +60,8 @@ function formularioPrestamo() {
 
 		limpiarCuotas();
 
-		$("#modalPrestamo").modal('show')
 
 		var id = document.getElementById("idCodigo").value;
-
-
 		var prestatarioPrestamo = document.getElementById("prestatarioPrestamo");
 		var dniPrestamo = document.getElementById("dniPrestamo");
 		var montoPrestamo = document.getElementById("montoPrestamo");
@@ -77,17 +74,12 @@ function formularioPrestamo() {
 				dniPrestamo.value = data.prestatario.prestatario.dni;
 				montoPrestamo.value = data.monto;
 				cuotaPrestamo.value = data.cuotas;
-
+				cargarCuotas();
+				$("#modalPrestamo").modal('show')
 			});
-
-
-
 	});
 
-
-
 }
-
 formularioPrestamo();
 
 
@@ -96,7 +88,7 @@ function guardarPrestamo() {
 
 	var montoPrestamo = document.getElementById("montoPrestamo");
 	var cuotaPrestamo = document.getElementById("cuotaPrestamo");
-    var idSolicitudPrestamo = document.getElementById("idCodigo");
+	var idSolicitudPrestamo = document.getElementById("idCodigo");
 
 	var formularioSolicitud = document.getElementById("idRegistrar");
 
@@ -121,14 +113,14 @@ function guardarPrestamo() {
 		.then(result => {
 			if (result.mensaje) {
 				toastr.success(result.mensaje);
-				/*esto validar y quitarlo*/ 
+				/*esto validar y quitarlo*/
 				formularioSolicitud.addEventListener('submit', function(event) {
 					event.defaultPrevented();
 				});
-				
+
 				formularioSolicitud.submit();
-				
-			}else{				
+
+			} else {
 				toastr.error(result.error);
 			}
 		})
