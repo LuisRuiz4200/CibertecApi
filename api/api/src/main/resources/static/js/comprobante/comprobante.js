@@ -1,6 +1,7 @@
 function init() {
 	asignarSerie();
 	consultaDni();
+	cargarCuotaPrestamoModal();
 }
 init();
 
@@ -227,6 +228,7 @@ async function mostrarModalDetallePago(enlace, idPrestamo, idCuotaPrestamo) {
 
 async function listarCuotaPorPrestatario() {
 
+
 	var tbPrestamo = document.getElementById("tbCuotaPorPrestatario").getElementsByTagName("tbody")[0];
 
 	var idPrestatario = document.getElementById("filtroIdPrestatario");
@@ -273,6 +275,20 @@ async function listarCuotaPorPrestatario() {
 
 	}
 
+	/*
+	// Verificar si DataTable ya está inicializado
+	var existingDataTable = $('#tbCuotaPorPrestatario').DataTable();
+	if (existingDataTable) {
+		existingDataTable.destroy(); // Destruir DataTable existente
+	}
+
+	// Inicializar DataTable
+	$('#tbCuotaPorPrestatario').DataTable({
+		// Configuración de DataTable
+		language: {
+			url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json',
+		},
+	});*/
 }
 
 
@@ -415,7 +431,7 @@ function limpiarFormularioComprobante() {
 function asignarSerie() {
 	var tipoComprobante = document.getElementById("idTipoComprobante");
 	var tipoDocumento = document.getElementById("idTipoDocumento");
-	var numDocReceptor = document.getElementById("numDocReceptor")
+	var numDocReceptor = document.getElementById("numDocReceptor");
 	var lblTipoDocumento = document.getElementById("lblTipoDocumento");
 	var serie = document.getElementById("serie");
 
@@ -469,8 +485,10 @@ function limpiarModalItem() {
 	var modalMontoItem = document.getElementById("idModalMontoItem");
 	var modalMontoMora = document.getElementById("idModalMontoMora");
 	var modalFechaPago = document.getElementById("idModalFechaPago");
+	var modalDiasMora = document.getElementById("idModalDiasMora");
 
 	modalDescripcion.value = '';
+	modalDiasMora.value = '';
 	modalCantidadItem.value = '';
 	modalMontoItem.value = '';
 	modalMontoMora.value = '';
@@ -482,6 +500,9 @@ function limpiarModalItem() {
 async function cargarCuotaPrestamoModal() {
 	var params = new URLSearchParams(location.search)
 	var idPrestamo = params.get("idPrestamo");
+
+	let cuotaPrestamo;
+	let moraCalculada;
 
 	var indicadorPagoParcial = document.getElementById("chckPagoParcial");
 	var modalDescripcion = document.getElementById("idModalDescripcion");
@@ -496,10 +517,6 @@ async function cargarCuotaPrestamoModal() {
 	var idCuotaPrestamo = codItem.replace(/.*[^0-9]/, "");
 
 
-	var montoItem = modalMontoItem.value;
-	var montoMora = modalMontoMora.value;
-
-
 	modalCodItem.addEventListener('change', async function(event) {
 
 		limpiarModalItem();
@@ -507,17 +524,16 @@ async function cargarCuotaPrestamoModal() {
 		var codItem = idModalCodItem.value;
 		var idCuotaPrestamo = codItem.replace(/.*[^0-9]/, "");
 
-		var cuotaPrestamo = await apiBuscarCuotaPrestamo(idPrestamo, idCuotaPrestamo);
+		cuotaPrestamo = await apiBuscarCuotaPrestamo(idPrestamo, idCuotaPrestamo);
+
+		var montoMensual = cuotaPrestamo.cuotaPrestamo.montoTotal;
+		var moraCalculada = calcularMora(montoMensual, cuotaPrestamo.cuotaPrestamo.fechaPago, 0.8);
 
 		modalDescripcion.value = "PAGO COMPLETO DE LA CUOTA NRO " + idCuotaPrestamo;
 		modalCantidadItem.value = "1";
 		modalMontoItem.readOnly = true;
 		modalMontoItem.value = cuotaPrestamo.cuotaPrestamo.montoTotal.toFixed(2) - cuotaPrestamo.resumen.montoPagado.toFixed(2);
 		modalFechaPago.value = cuotaPrestamo.cuotaPrestamo.fechaPago;
-
-		var montoMensual = cuotaPrestamo.cuotaPrestamo.montoTotal;
-
-		var moraCalculada = calcularMora(montoMensual, cuotaPrestamo.cuotaPrestamo.fechaPago, 0.8);
 
 		modalMontoMora.value = moraCalculada.montoMora;
 		modalDiasMora.value = moraCalculada.diasMora;
@@ -526,8 +542,6 @@ async function cargarCuotaPrestamoModal() {
 
 	indicadorPagoParcial.addEventListener('change', async function(event) {
 
-
-
 		if (event.target.checked) {
 			modalDescripcion.value = "PAGO PARCIAL DE LA CUOTA NRO " + idCuotaPrestamo;
 			modalMontoItem.readOnly = false;
@@ -535,22 +549,30 @@ async function cargarCuotaPrestamoModal() {
 			modalDiasMora.value = '0';
 		} else {
 
+			indicadorPagoParcial.disabled = true;
 			cuotaPrestamo = await apiBuscarCuotaPrestamo(idPrestamo, idCuotaPrestamo);
+			moraCalculada = calcularMora(cuotaPrestamo.cuotaPrestamo.montoTotal, cuotaPrestamo.cuotaPrestamo.fechaPago, 0.8);
 
 			modalDescripcion.value = "PAGO COMPLETO DE LA CUOTA NRO " + idCuotaPrestamo;
 			modalMontoItem.readOnly = true;
 			modalMontoItem.value = (cuotaPrestamo.cuotaPrestamo.montoTotal - cuotaPrestamo.resumen.montoPagado).toFixed(2);
 
-			var moraCalculada = calcularMora(cuotaPrestamo.cuotaPrestamo.montoTotal, cuotaPrestamo.cuotaPrestamo.fechaPago, 0.8);
-
 			modalMontoMora.value = moraCalculada.montoMora;
 			modalDiasMora.value = moraCalculada.diasMora;
-
+			indicadorPagoParcial.disabled = false;
 
 		}
 
 
 	});
+}
+
+function eliminarItem(enlace) {
+
+	fila = enlace.parentNode.parentNode;
+
+	fila.remove();
+
 }
 
 function agregarItem() {
@@ -562,8 +584,6 @@ function agregarItem() {
 
 	modalTituloItem.innerText = "NUEVO ITEM";
 	idModalCodItem.value = '-1';
-
-	cargarCuotaPrestamoModal();
 
 	btnAgregarItemModal.hidden = false;
 	btnEditarItemModal.hidden = true;
@@ -604,7 +624,6 @@ async function editarItem(enlace) {
 
 	var idCuotaPrestamo = codItem.replace(/.*[^0-9]/, "");
 	var cuotaPrestamo = await apiBuscarCuotaPrestamo(idPrestamo, idCuotaPrestamo);
-
 	var moraCalculada = calcularMora(cuotaPrestamo.cuotaPrestamo.montoMensual, cuotaPrestamo.cuotaPrestamo.fechaPago, 0.8);
 
 	modalDiasMora.value = moraCalculada.diasMora;
@@ -616,8 +635,6 @@ async function editarItem(enlace) {
 	modalFechaPago.value = cuotaPrestamo.cuotaPrestamo.fechaPago;
 
 	modalTituloItem.innerText = "EDICION DEL ITEM " + idItem;
-
-	cargarCuotaPrestamoModal();
 
 
 	btnAgregarItemModal.hidden = true;
@@ -698,8 +715,9 @@ function guardarItem(crud) {
 	celdaMontoItem.innerHTML = modalMontoItem.value;
 	celdaMontoMora.innerHTML = modalMontoMora.value;
 	celdaMontoTotal.innerHTML = montoTotal.toFixed(2);
-	celdaDetalle.innerHTML = "<a onclick='editarItem(this)' type='button' ><img src='https://cdn-icons-png.flaticon.com/512/6324/6324826.png' width='30px' height='30px'/></a>"
-
+	var btnEditarHtml = "<a onclick='editarItem(this)' type='button' ><img src='https://cdn-icons-png.flaticon.com/512/6324/6324826.png' width='30px' height='30px'/></a>"
+	var btnEliminarHtml = "<a onclick='eliminarItem(this)' type='button' ><img src='https://cdn.icon-icons.com/icons2/1880/PNG/512/iconfinder-trash-4341321_120557.png' width='30px' height='30px'/></a>"
+	celdaDetalle.innerHTML = btnEditarHtml + btnEliminarHtml;
 
 	modalCodItem.value = '';
 	modalDescripcion.value = '';
