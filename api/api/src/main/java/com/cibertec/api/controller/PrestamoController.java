@@ -144,7 +144,6 @@ public class PrestamoController {
 	@ResponseBody
 	private HashMap<?, ?> detalle(@PathVariable int id, Model model) {
 		
-		
 
 		Prestamo prestamo = prestamoService.buscarPorId(id);
 		List<CuotaPrestamo> cuotas = cuotaService.listarPorId(id);
@@ -184,8 +183,13 @@ public class PrestamoController {
 	}
 
 	@GetMapping("/registrar/{id}")
-	private String registrar(@PathVariable int id, Model model) {
+	private String registrar(@PathVariable int id, Model model, HttpSession session) {
 
+		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
+		if (userLogged == null)
+			return "redirect:/login";
+
+		
 		Prestamo prestamo = new Prestamo();
 		SolicitudPrestamo solicitudPrestamo = new SolicitudPrestamo();
 		// Prestamista prestamista = new Prestamista();
