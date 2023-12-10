@@ -228,6 +228,7 @@ async function mostrarModalDetallePago(enlace, idPrestamo, idCuotaPrestamo) {
 
 async function listarCuotaPorPrestatario() {
 
+
 	var tbPrestamo = document.getElementById("tbCuotaPorPrestatario").getElementsByTagName("tbody")[0];
 
 	var idPrestatario = document.getElementById("filtroIdPrestatario");
@@ -274,6 +275,19 @@ async function listarCuotaPorPrestatario() {
 
 	}
 
+
+	// Verificar si DataTable ya está inicializado
+	var existingDataTable = $('#tbCuotaPorPrestatario').DataTable();
+	if (existingDataTable) {
+		existingDataTable.destroy(); // Destruir DataTable existente
+	}
+
+	// Inicializar DataTable
+	$('#tbCuotaPorPrestatario').DataTable({
+		language: {
+			url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json',
+		},
+	});
 }
 
 
@@ -416,7 +430,7 @@ function limpiarFormularioComprobante() {
 function asignarSerie() {
 	var tipoComprobante = document.getElementById("idTipoComprobante");
 	var tipoDocumento = document.getElementById("idTipoDocumento");
-	var numDocReceptor = document.getElementById("numDocReceptor")
+	var numDocReceptor = document.getElementById("numDocReceptor");
 	var lblTipoDocumento = document.getElementById("lblTipoDocumento");
 	var serie = document.getElementById("serie");
 
@@ -533,7 +547,7 @@ async function cargarCuotaPrestamoModal() {
 			modalMontoMora.value = '0.00';
 			modalDiasMora.value = '0';
 		} else {
-			
+
 			indicadorPagoParcial.disabled = true;
 			cuotaPrestamo = await apiBuscarCuotaPrestamo(idPrestamo, idCuotaPrestamo);
 			moraCalculada = calcularMora(cuotaPrestamo.cuotaPrestamo.montoTotal, cuotaPrestamo.cuotaPrestamo.fechaPago, 0.8);
@@ -552,12 +566,12 @@ async function cargarCuotaPrestamoModal() {
 	});
 }
 
-function eliminarItem(enlace){
-	
+function eliminarItem(enlace) {
+
 	fila = enlace.parentNode.parentNode;
-	
+
 	fila.remove();
-	
+
 }
 
 function agregarItem() {
