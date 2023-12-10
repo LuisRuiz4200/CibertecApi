@@ -275,7 +275,7 @@ async function listarCuotaPorPrestatario() {
 
 	}
 
-
+	/*
 	// Verificar si DataTable ya está inicializado
 	var existingDataTable = $('#tbCuotaPorPrestatario').DataTable();
 	if (existingDataTable) {
@@ -284,10 +284,11 @@ async function listarCuotaPorPrestatario() {
 
 	// Inicializar DataTable
 	$('#tbCuotaPorPrestatario').DataTable({
+		// Configuración de DataTable
 		language: {
 			url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json',
 		},
-	});
+	});*/
 }
 
 
