@@ -185,7 +185,7 @@ public class ComprobanteController {
 			comprobanteDetalle.setDescripcion(
 					"PAGO COMPLETO DE LA CUOTA NRO " + cuotaPrestamo.getCuotaPrestamoPk().getIdCuotaPrestamo());
 			comprobanteDetalle.setMontoItem(cuotaPrestamo.getMontoTotal());
-			comprobanteDetalle.setMontoTotal(montoTotal);
+			comprobanteDetalle.setMontoTotal(Utils.formatearDecimales(montoTotal, "0.00"));
 			comprobanteDetalle.setMontoMora(montoMora);
 
 			if (montoPagado > 0) {
