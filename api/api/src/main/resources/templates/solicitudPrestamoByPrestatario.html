@@ -559,16 +559,21 @@
 		});
 
 		function calcInteres(){
-			let montoPrestamo = monto.value;
-			let mesesPrestamo = meses.value;
-			let interesPrestamo = montoPrestamo * getAndShowTasaMensual() * mesesPrestamo;
+			let montoPrestamo = monto.value; //10000
+			let mesesPrestamo = meses.value;//8 meses
+			//let interesPrestamo = montoPrestamo * getAndShowTasaMensual() * mesesPrestamo;
+			//let interesPrestamo = montoPrestamo;
+			const base = (1 + getAndShowTasaMensual());
+			const exponente = (mesesPrestamo);
+			const resExponencial = Math.pow(base, exponente) - 1;
+			let interesPrestamo = montoPrestamo * resExponencial;
 			interes.value = interesPrestamo.toFixed(2);
 		}
 
 		function getAndShowTasaMensual(){
-			const teaAnual = 0.80;
+			const teaAnual = 0.8;
 			const base = (1 + teaAnual);
-			const exponente = (1 / 12);
+			const exponente = (1 / 30);//se cambio de 12 a 30 por el ultimo calculo de excel Sr hugo
 			const tasaMensual = Math.pow(base, exponente) - 1;
 			const textLabel = "Tasa " + (tasaMensual * 100).toFixed(3)  + "% (Mensual).";
 			lblTasa.textContent = textLabel;

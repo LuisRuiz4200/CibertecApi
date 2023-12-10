@@ -81,7 +81,12 @@ public class PrestatarioController {
 	} //fin de listar
 	
 	@GetMapping("/registrarPrestatario")
-	private String registrar(Model model) {
+	private String registrar(Model model, HttpSession session) {
+		
+		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
+		if (userLogged == null)
+			return "redirect:/login";
+
 		
 		Prestatario prestatario = new Prestatario();
 		//prestatario.setFechaRegistro(new Date(new java.util.Date().getTime()));
@@ -133,6 +138,9 @@ public class PrestatarioController {
 	@GetMapping("/solicitoPrestamo")
 	private String listar22(Model model, HttpSession session) {
 		Usuario user = (Usuario)session.getAttribute("UserLogged");
+		if (user == null)
+			return "redirect:/login";
+		
 		Persona persona = user.getPersona();
 
 		Prestatario prestatario = prestatarioService.listarPrestatarioPorId(user.getPersona().getIdPersona());
@@ -216,7 +224,12 @@ public class PrestatarioController {
 	
 	// Metodo para actualizar
 		@GetMapping("/actualizarPrestata/{id}")
-		public String editarPrestamista(@PathVariable(name = "id") int id, Model model, RedirectAttributes flash) {
+		public String editarPrestamista(@PathVariable(name = "id") int id, Model model, HttpSession session, RedirectAttributes flash) {
+			
+			Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
+			if (userLogged == null)
+				return "redirect:/login";
+			
 			// creamos objeto presta inicializado en null
 			Prestatario presta = null;
 			// Valida que el id sea mayor a 0
@@ -253,7 +266,12 @@ public class PrestatarioController {
 
 	//ELIMINAR
 	@GetMapping("/eliminarPrestata/{id}")
-	public String eliminarPrestatario(@PathVariable(name = "id") int id) {
+	public String eliminarPrestatario(@PathVariable(name = "id") int id, HttpSession session) {
+		
+		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
+		if (userLogged == null)
+			return "redirect:/login";
+		
 		// Valida que el id sea mayor a 0
 		if (id > 0) {
 			prestatarioService.eliminarPrestatario(id);
@@ -265,6 +283,7 @@ public class PrestatarioController {
 	@GetMapping("/buscaCuentaExistente/{idBanco}/{cuenta}")
 	@ResponseBody
 	public ResponseEntity<?> cuentaExistente(@PathVariable int idBanco, @PathVariable String cuenta){
+		
 		Optional<Cuenta> cuentaInDataBase = cuentaService.getCuentaByBancoAndNumero(idBanco, cuenta);
 		HashMap<String, Boolean> response = new HashMap<>();
 		response.put("exists", cuentaInDataBase.isPresent());
@@ -274,7 +293,11 @@ public class PrestatarioController {
 	//------------
 	
 	@GetMapping("/revisarEstadoPrestamo")
-	private String listarPrestamoRevisar(Model model) {
+	private String listarPrestamoRevisar(Model model, HttpSession session) {
+		
+		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
+		if (userLogged == null)
+			return "redirect:/login";
 		
 		return "prestatarioRevisaPrestamo";
 	}

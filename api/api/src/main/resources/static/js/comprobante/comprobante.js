@@ -25,7 +25,7 @@ async function apiListaCuotaPorPrestatario(idPrestatario, fechaInicioCuota, fech
 	return fetch(url)
 		.then(response => response.json())
 		.then(data => {
-			toastr.success(data[0].prestamo.solicitudPrestamo.prestatario.prestatario.nombres);
+			toastr.success("Lista de cuotas por prestamista cargada !");
 			return data;
 		});
 }
@@ -91,7 +91,8 @@ async function apiGuardarComprobante() {
 			"descripcion": celdas[2].innerText,
 			"cantidadItem": celdas[3].innerText,
 			"montoItem": celdas[4].innerText,
-			"montoTotal": celdas[5].innerText
+			"montoMora": celdas[5].innerText,
+			"montoTotal": celdas[6].innerText
 		};
 
 		listaDetalles.push(item);
@@ -105,7 +106,7 @@ async function apiGuardarComprobante() {
 		"fechaEmision": new Date(),
 		"rucEmisor": rucEmisor.value,
 		"nomEmisor": nomEmisor.value,
-		"idPrestatario":32,
+		"idPrestatario": 32,
 		"idTipoDocumento": idTipoDocumento.value,
 		"numDocReceptor": numDocReceptor.value,
 		"idPrestamo": idPrestamo,
@@ -129,7 +130,7 @@ async function apiGuardarComprobante() {
 		.then(data => {
 			if (data.mensaje) {
 				toastr.success(data.mensaje);
-				location.reload();
+				correlativo.value = data.detalle.correlativo;
 				return;
 			}
 			if (data.error) {
@@ -158,9 +159,16 @@ async function apiBuscarCuotaPrestamo(idPrestamo, idCuotaPrestamo) {
 }
 
 
-function cargarComprobante(idPrestamo, idCuota) {
+function cargarWebComprobante(idPrestamo, idCuota) {
 
 	var btnCargarComprobante = document.getElementById("btnCargarComprobante");
+	var modalEstadoCuota = document.getElementById("modalEstadoCuota");
+
+	btnCargarComprobante.hidden = false;
+
+	if (modalEstadoCuota.value === 'Pagado') {
+		btnCargarComprobante.hidden = true;
+	}
 
 	btnCargarComprobante.addEventListener('click', function(event) {
 
@@ -168,25 +176,30 @@ function cargarComprobante(idPrestamo, idCuota) {
 		url.searchParams.append("idPrestamo", idPrestamo);
 		url.searchParams.append("idCuotaPrestamo", idCuota);
 
+
+
 		location.href = url;
-		
-		
-		
+
 	});
 
 }
 
 
-async function mostrarModalDetallePago(idPrestamo, idCuotaPrestamo) {
+async function mostrarModalDetallePago(enlace, idPrestamo, idCuotaPrestamo) {
 
 	var tbComprobante = document.getElementById("modalTbComprobante").getElementsByTagName("tbody")[0];
+	var modalEstadoCuota = document.getElementById("modalEstadoCuota");
 	tbComprobante.innerHTML = '';
 
+	var fila = enlace.parentNode.parentNode;
+	var celdaEstadoCuenta = fila.cells[5].innerText;
 
 	var tituloModalDetallePago = document.getElementById("tituloModalDetallePago");
 	tituloModalDetallePago.innerText = "DETALLE DE PAGO PARA EL PRESTAMO #" + idPrestamo + " CUOTA #" + idCuotaPrestamo;
 
 	var listaComprobantePorPrestamo = await apiListaComprobante(idPrestamo, idCuotaPrestamo);
+
+	modalEstadoCuota.value = celdaEstadoCuenta;
 
 	for (var comprobante of listaComprobantePorPrestamo) {
 
@@ -195,15 +208,19 @@ async function mostrarModalDetallePago(idPrestamo, idCuotaPrestamo) {
 			fila.insertCell(0).innerText = comprobante.serie;
 			fila.insertCell(1).innerText = comprobante.correlativo;
 			fila.insertCell(2).innerText = item.descripcion;
-			fila.insertCell(3).innerText = item.montoTotal;
-			fila.insertCell(4).innerText = comprobante.fechaEmision;
+			fila.insertCell(3).innerText = 'S/. ' + item.montoItem.toFixed(2);
+			fila.insertCell(4).innerText = item.montoMora === null ? 'S/. 0.00' : 'S/. ' + item.montoMora.toFixed(2);
+			fila.insertCell(5).innerText = 'S/. ' + item.montoTotal.toFixed(2);
+			fila.insertCell(6).innerText = comprobante.fechaEmision;
 		}
 	}
 
 
 	$("#modalDetallePago").modal("show");
 
-	cargarComprobante(idPrestamo, idCuotaPrestamo);
+
+
+	cargarWebComprobante(idPrestamo, idCuotaPrestamo);
 
 
 }
@@ -222,27 +239,27 @@ async function listarCuotaPorPrestatario() {
 
 
 	for (var cuota of listaCuotaPorPrestatario) {
-		
+
 		var fila = tbPrestamo.insertRow();
-		
+
 		var nombres = cuota.prestamo.solicitudPrestamo.prestatario.prestatario.nombres;
 		var apellidos = cuota.prestamo.solicitudPrestamo.prestatario.prestatario.apellidos;
 
 		fila.insertCell(0).innerText = cuota.prestamo.idPrestamo;
 		fila.insertCell(1).innerText = nombres + ' ' + apellidos;
 		fila.insertCell(2).innerText = cuota.cuotaPrestamoPk.idCuotaPrestamo;
-		fila.insertCell(3).innerText = cuota.montoTotal;
+		fila.insertCell(3).innerText = "S/." + cuota.montoTotal.toFixed(2);
 		fila.insertCell(4).innerText = cuota.fechaPago;
 		fila.insertCell(5).innerText = cuota.estado;
 
 		var idPrestamo = fila.cells[0].innerText;
 		var idCuotaPrestamo = fila.cells[2].innerText;
 
-		fila.insertCell(6).innerHTML = "<button class='btn btn-primary btn-sm' onclick='mostrarModalDetallePago(" + idPrestamo + ',' + idCuotaPrestamo + ")'>PAGOS</button>";
-		
+		fila.insertCell(6).innerHTML = "<button class='btn btn-primary btn-sm' onclick='mostrarModalDetallePago(this," + idPrestamo + ',' + idCuotaPrestamo + ")'>PAGOS</button>";
+
 		var condicionEstado = fila.cells[5];
-		
-		switch(condicionEstado.innerText){
+
+		switch (condicionEstado.innerText) {
 			case "Pendiente":
 				condicionEstado.classList = 'text-bg-primary';
 				break;
@@ -357,12 +374,23 @@ function validarFormularioComprobante() {
 
 function guardarComprobante() {
 
-
 	const formularioComprobante = document.getElementById("formularioComprobante");
 
+	var params = new URLSearchParams(location.search);
+	var idPrestamo = params.get("idPrestamo");
+	var idCuotaPrestamo = params.get("idCuotaPrestamo");
 
 	if (validarFormularioComprobante()) {
 		formularioComprobante.onsubmit();
+		setTimeout(() => {
+			if (idPrestamo && idCuotaPrestamo) {
+				location.href = "http://localhost:9090/web/comprobante/listaCuotaPorPrestamo";
+				return;
+			}
+
+			location.href = "http://localhost:9090/web/comprobante/registrar";
+
+		}, 2000)
 	}
 
 
@@ -378,7 +406,7 @@ function limpiarFormularioComprobante() {
 
 	numDocReceptor.value = '';
 	nomReceptor.value = '';
-	correlativo.value = '';
+	correlativo.value = '0';
 	lblTipoDocumento.innerHTML = 'DOCUMENTO RECEPTOR';
 
 
@@ -439,24 +467,40 @@ function limpiarModalItem() {
 	var modalDescripcion = document.getElementById("idModalDescripcion");
 	var modalCantidadItem = document.getElementById("idModalCantidadItem");
 	var modalMontoItem = document.getElementById("idModalMontoItem");
+	var modalMontoMora = document.getElementById("idModalMontoMora");
+	var modalFechaPago = document.getElementById("idModalFechaPago");
 
 	modalDescripcion.value = '';
 	modalCantidadItem.value = '';
 	modalMontoItem.value = '';
+	modalMontoMora.value = '';
+	modalFechaPago.value = '';
+	modalMontoItem.readOnly = true;
 	indicadorPagoParcial.checked = false;
 }
 
-function mostrarModalNuevoItem() {
+async function cargarCuotaPrestamoModal() {
+	var params = new URLSearchParams(location.search)
+	var idPrestamo = params.get("idPrestamo");
 
-
-	var idModalCodItem = document.getElementById("idModalCodItem");
-	var idPrestamo = new URLSearchParams(location.search).get("idPrestamo");
 	var indicadorPagoParcial = document.getElementById("chckPagoParcial");
 	var modalDescripcion = document.getElementById("idModalDescripcion");
 	var modalCantidadItem = document.getElementById("idModalCantidadItem");
 	var modalMontoItem = document.getElementById("idModalMontoItem");
+	var modalMontoMora = document.getElementById("idModalMontoMora");
+	var modalFechaPago = document.getElementById("idModalFechaPago");
+	var modalDiasMora = document.getElementById("idModalDiasMora");
+	var modalCodItem = document.getElementById("idModalCodItem");
 
-	idModalCodItem.addEventListener('change', async function(event) {
+	var codItem = modalCodItem.value;
+	var idCuotaPrestamo = codItem.replace(/.*[^0-9]/, "");
+
+
+	var montoItem = modalMontoItem.value;
+	var montoMora = modalMontoMora.value;
+
+
+	modalCodItem.addEventListener('change', async function(event) {
 
 		limpiarModalItem();
 
@@ -468,36 +512,123 @@ function mostrarModalNuevoItem() {
 		modalDescripcion.value = "PAGO COMPLETO DE LA CUOTA NRO " + idCuotaPrestamo;
 		modalCantidadItem.value = "1";
 		modalMontoItem.readOnly = true;
-		modalMontoItem.value = cuotaPrestamo.montoTotal;
+		modalMontoItem.value = cuotaPrestamo.cuotaPrestamo.montoTotal.toFixed(2) - cuotaPrestamo.resumen.montoPagado.toFixed(2);
+		modalFechaPago.value = cuotaPrestamo.cuotaPrestamo.fechaPago;
 
-		toastr.warning(cuotaPrestamo.estado);
-		
+		var montoMensual = cuotaPrestamo.cuotaPrestamo.montoTotal;
+
+		var moraCalculada = calcularMora(montoMensual, cuotaPrestamo.cuotaPrestamo.fechaPago, 0.8);
+
+		modalMontoMora.value = moraCalculada.montoMora;
+		modalDiasMora.value = moraCalculada.diasMora;
+
 	});
 
-	indicadorPagoParcial.addEventListener('change', function(event) {
+	indicadorPagoParcial.addEventListener('change', async function(event) {
 
-		var codItem = idModalCodItem.value;
-		var idCuotaPrestamo = codItem.replace(/.*[^0-9]/, "");
 
-		toastr.warning(indicadorPagoParcial.checked ? "ok" : "no ok");
 
 		if (event.target.checked) {
 			modalDescripcion.value = "PAGO PARCIAL DE LA CUOTA NRO " + idCuotaPrestamo;
 			modalMontoItem.readOnly = false;
+			modalMontoMora.value = '0.00';
+			modalDiasMora.value = '0';
 		} else {
+
+			cuotaPrestamo = await apiBuscarCuotaPrestamo(idPrestamo, idCuotaPrestamo);
+
 			modalDescripcion.value = "PAGO COMPLETO DE LA CUOTA NRO " + idCuotaPrestamo;
 			modalMontoItem.readOnly = true;
+			modalMontoItem.value = (cuotaPrestamo.cuotaPrestamo.montoTotal - cuotaPrestamo.resumen.montoPagado).toFixed(2);
+
+			var moraCalculada = calcularMora(cuotaPrestamo.cuotaPrestamo.montoTotal, cuotaPrestamo.cuotaPrestamo.fechaPago, 0.8);
+
+			modalMontoMora.value = moraCalculada.montoMora;
+			modalDiasMora.value = moraCalculada.diasMora;
+
+
 		}
 
 
 	});
+}
 
+function agregarItem() {
 
+	var modalTituloItem = document.getElementById("modalTituloItem");
+	var idModalCodItem = document.getElementById("idModalCodItem");
+	var btnAgregarItemModal = document.getElementById("btnAgregarItemModal");
+	var btnEditarItemModal = document.getElementById("btnEditarItemModal");
+
+	modalTituloItem.innerText = "NUEVO ITEM";
+	idModalCodItem.value = '-1';
+
+	cargarCuotaPrestamoModal();
+
+	btnAgregarItemModal.hidden = false;
+	btnEditarItemModal.hidden = true;
+
+	limpiarModalItem();
 	$("#modalNuevoItem").modal('show')
 
 }
 
-function agregarItem() {
+async function editarItem(enlace) {
+
+	limpiarModalItem();
+
+	var params = new URLSearchParams(location.search)
+	var idPrestamo = params.get("idPrestamo");
+
+	var modalCodItem = document.getElementById("idModalCodItem");
+	var modalDescripcion = document.getElementById("idModalDescripcion");
+	var modalCantidadItem = document.getElementById("idModalCantidadItem");
+	var modalMontoItem = document.getElementById("idModalMontoItem");
+	var modalMontoMora = document.getElementById("idModalMontoMora");
+	var modalTituloItem = document.getElementById("modalTituloItem");
+	var modalDiasMora = document.getElementById("idModalDiasMora");
+	var modalFechaPago = document.getElementById("idModalFechaPago");
+	var btnAgregarItemModal = document.getElementById("btnAgregarItemModal");
+	var btnEditarItemModal = document.getElementById("btnEditarItemModal");
+
+
+	var fila = enlace.parentNode.parentNode;
+
+	var idItem = fila.cells[0].innerText;
+	var codItem = fila.cells[1].innerText;
+	var descripcion = fila.cells[2].innerText;
+	var cantidad = fila.cells[3].innerText;
+	var montoItem = fila.cells[4].innerText;
+	var montoMora = fila.cells[5].innerText;
+
+
+	var idCuotaPrestamo = codItem.replace(/.*[^0-9]/, "");
+	var cuotaPrestamo = await apiBuscarCuotaPrestamo(idPrestamo, idCuotaPrestamo);
+
+	var moraCalculada = calcularMora(cuotaPrestamo.cuotaPrestamo.montoMensual, cuotaPrestamo.cuotaPrestamo.fechaPago, 0.8);
+
+	modalDiasMora.value = moraCalculada.diasMora;
+	modalCodItem.value = codItem;
+	modalDescripcion.value = descripcion;
+	modalCantidadItem.value = cantidad;
+	modalMontoItem.value = montoItem;
+	modalMontoMora.value = montoMora;
+	modalFechaPago.value = cuotaPrestamo.cuotaPrestamo.fechaPago;
+
+	modalTituloItem.innerText = "EDICION DEL ITEM " + idItem;
+
+	cargarCuotaPrestamoModal();
+
+
+	btnAgregarItemModal.hidden = true;
+	btnEditarItemModal.hidden = false;
+
+	$("#modalNuevoItem").modal('show');
+
+}
+
+
+function guardarItem(crud) {
 
 	var tbItem = document.getElementById("tbItem").getElementsByTagName("tbody")[0];
 
@@ -506,6 +637,29 @@ function agregarItem() {
 	var modalMontoItem = document.getElementById("idModalMontoItem");
 	var modalCantidadItem = document.getElementById("idModalCantidadItem");
 	var indicadorPagoParcial = document.getElementById("chckPagoParcial");
+	var modalMontoMora = document.getElementById("idModalMontoMora");
+	var modalTituloItem = document.getElementById("modalTituloItem");
+
+	var montoTotal = parseFloat(modalCantidadItem.value * modalMontoItem.value) + (parseFloat(modalMontoMora.value) || 0);
+
+	if (crud === 'editar') {
+
+		var nroFila = modalTituloItem.innerText.replace(/.*[^0-9]/, "")
+
+		var fila = tbItem.rows[nroFila - 1];
+
+		fila.cells[1].innerHTML = modalCodItem.value;
+		fila.cells[2].innerHTML = modalDescripcion.value;
+		fila.cells[3].innerHTML = modalCantidadItem.value;
+		fila.cells[4].innerHTML = modalMontoItem.value;
+		fila.cells[5].innerHTML = modalMontoMora.value;
+		fila.cells[6].innerHTML = montoTotal.toFixed(2);
+
+
+		$("#modalNuevoItem").modal('hide');
+
+		return;
+	}
 
 	if (!modalCodItem.value || modalCodItem.value <= 0) {
 		toastr.error('Debe ingresar un código');
@@ -531,7 +685,9 @@ function agregarItem() {
 	var celdaDescripcion = nuevaCelda.insertCell(2);
 	var celdaCantidad = nuevaCelda.insertCell(3);
 	var celdaMontoItem = nuevaCelda.insertCell(4);
-	var celdaMontoTotal = nuevaCelda.insertCell(5);
+	var celdaMontoMora = nuevaCelda.insertCell(5);
+	var celdaMontoTotal = nuevaCelda.insertCell(6);
+	var celdaDetalle = nuevaCelda.insertCell(7);
 
 
 
@@ -540,7 +696,9 @@ function agregarItem() {
 	celdaDescripcion.innerHTML = modalDescripcion.value;
 	celdaCantidad.innerHTML = modalCantidadItem.value;
 	celdaMontoItem.innerHTML = modalMontoItem.value;
-	celdaMontoTotal.innerHTML = modalCantidadItem.value * modalMontoItem.value;
+	celdaMontoMora.innerHTML = modalMontoMora.value;
+	celdaMontoTotal.innerHTML = montoTotal.toFixed(2);
+	celdaDetalle.innerHTML = "<a onclick='editarItem(this)' type='button' ><img src='https://cdn-icons-png.flaticon.com/512/6324/6324826.png' width='30px' height='30px'/></a>"
 
 
 	modalCodItem.value = '';
@@ -560,3 +718,30 @@ function limpiarTablaItem() {
 	tbItem.innerHTML = '';
 
 }
+
+
+function calcularMora(montoMensual, fechaVencimiento, tea) {
+
+	var fechaActual = new Date();
+	fechaActual.setHours(0, 0, 0, 0);
+	var fechaPago = new Date(fechaVencimiento);
+	fechaPago.setHours(0, 0, 0, 0);
+	fechaPago.setDate(fechaPago.getDate() + 1);
+
+	var diasMora = (fechaActual - fechaPago) / (1000 * 60 * 60 * 24);
+
+	if (diasMora < 0) {
+		diasMora = 0;
+	}
+
+	var tasaDiaria = (Math.pow((1 + tea), (1 / 30))) - 1;
+	var montoMora = montoMensual * (Math.pow((1 + tasaDiaria), (diasMora)) - 1);
+
+	var respuesta = {
+		montoMora: montoMora.toFixed(2),
+		diasMora: diasMora
+	}
+
+	return respuesta;
+}
+

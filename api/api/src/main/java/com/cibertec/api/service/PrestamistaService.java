@@ -25,5 +25,7 @@ public interface PrestamistaService {
 	Prestamista buscarPorDniOPorRuc(String dni, String ruc);
 
 	Prestamista buscarPorRuc(String ruc);
+	
+	Prestamista buscarPorDniAndActivo(String dni);
 
 } //fin de PrestamitaMService

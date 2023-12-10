@@ -20,11 +20,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cibertec.api.controller.ComprobanteController;
+import com.cibertec.api.model.ComprobanteDetalle;
 import com.cibertec.api.model.CuotaPrestamo;
 import com.cibertec.api.model.CuotaPrestamoPK;
 import com.cibertec.api.model.Prestamista;
 import com.cibertec.api.model.Prestamo;
 import com.cibertec.api.reuzable.Utils;
+import com.cibertec.api.service.ComprobanteDetalleService;
 import com.cibertec.api.service.CuotaPrestamoService;
 import com.cibertec.api.service.PrestamistaService;
 import com.cibertec.api.service.PrestamoService;
@@ -41,6 +44,8 @@ public class PrestamoApiController {
 	CuotaPrestamoService cuotaPrestamoService;
 	@Autowired
 	PrestamistaService prestamistaService;
+	@Autowired
+	ComprobanteDetalleService comprobanteDetalleService;
 
 	@GetMapping("/listaCuotaPorPrestatario")
 	public List<CuotaPrestamo> listarPrestamosPorPrestatario(
@@ -67,11 +72,14 @@ public class PrestamoApiController {
 	
 	@GetMapping("/buscar/cuotaPrestamo")
 	@ResponseBody
-	public CuotaPrestamo buscarCuotaPrestamo(
+	public HashMap<String, Object> buscarCuotaPrestamo(
 			@RequestParam(name="idPrestamo",required = false) Integer idPrestamo, 
 			@RequestParam(name="idCuotaPrestamo",required = false) Integer idCuotaPrestamo) {
 		
+		HashMap<String, Object> respuesta = new HashMap<>();
+		HashMap<String, Object> resumen = new HashMap<>();
 		CuotaPrestamo cuotaPrestamo = new CuotaPrestamo();
+		Double montoPagado = 0.00;
 		
 		try {
 			
@@ -81,12 +89,19 @@ public class PrestamoApiController {
 			
 			cuotaPrestamo = cuotaPrestamoService.buscarPorIdCompuesto(cuotaPrestamoPK);
 			
+			montoPagado = montoPagadoPorCuotaPrestamo(idPrestamo, idCuotaPrestamo);
+			
+			resumen.put("montoPagado", montoPagado);
+			
+			respuesta.put("cuotaPrestamo", cuotaPrestamo);
+			respuesta.put("resumen", resumen);
+			
 		}catch(Exception ex){
 			ex.printStackTrace();
 		};
 		
 		
-		return cuotaPrestamo;
+		return respuesta;
 	}
 
 	//Jeanpi
@@ -228,6 +243,29 @@ public class PrestamoApiController {
 		}
 
 		return response;
+	}
+	
+	public Double montoPagadoPorCuotaPrestamo(Integer idPrestamo, Integer idCuotaPrestamo) {
+
+		List<ComprobanteDetalle> listaComprobanteDetalles = new ArrayList<>();
+		Double montoPagado = 0.00;
+
+		CuotaPrestamoPK cuotaPrestamoPK = new CuotaPrestamoPK();
+		cuotaPrestamoPK.setIdPrestamo(idPrestamo);
+		cuotaPrestamoPK.setIdCuotaPrestamo(idCuotaPrestamo);
+
+		listaComprobanteDetalles = comprobanteDetalleService.listar();
+		
+		for (ComprobanteDetalle comprobanteDetalle : listaComprobanteDetalles) {
+
+			if (comprobanteDetalle.getCuotaPrestamo().getCuotaPrestamoPk().getIdPrestamo() == idPrestamo) {
+				if (comprobanteDetalle.getCuotaPrestamo().getCuotaPrestamoPk().getIdCuotaPrestamo() == idCuotaPrestamo) {
+
+					montoPagado += comprobanteDetalle.getMontoTotal();
+				}
+			}
+		}
+		return montoPagado;
 	}
 
 }
