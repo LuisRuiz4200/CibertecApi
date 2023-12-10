@@ -103,8 +103,6 @@ public class PrestamoApiController {
 		try {
 			listaPrestamo = prestamoService.listar();
 			if (idPrestamista > 0) {
-				// listaPrestamo = prestamoService.listar().stream().filter(c -> c.getSolicitudPrestamo().getPrestatario()
-				// 		.getPrestamistaPrestatario().getPrestamista().getIdPersona() == idPrestamista).toList();
 				Prestamista asesorPrestamista = prestamistaService.listarPrestamistaPorId(idPrestamista);
 				listaPrestamo = asesorPrestamista.getPrestatariosList().stream()
 					.flatMap(prestatario -> prestatario.getListaSolicitudPrestamo().stream()

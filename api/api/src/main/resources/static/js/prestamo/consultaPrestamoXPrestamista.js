@@ -48,7 +48,7 @@ async function tablaConsulta(){
         fila.insertCell(0).innerText = prestamo.idPrestamo;
         fila.insertCell(1).innerText = prestamo.nomPrestatario + ' ' + prestamo.apePrestatario;
         fila.insertCell(2).innerText = 'S/. '+prestamo.montoPrestado.toFixed(2);
-        fila.insertCell(3).innerText = 'S/. '+prestamo.interesPagar;
+        fila.insertCell(3).innerText = 'S/. '+prestamo.interesPagar.toFixed(2);
         fila.insertCell(4).innerText = 'S/. '+prestamo.montoTotal.toFixed(2);
         fila.insertCell(5).innerText = prestamo.cuotas;
         fila.insertCell(6).innerText = prestamo.cuotaPagadas;
