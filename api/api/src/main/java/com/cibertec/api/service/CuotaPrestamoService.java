@@ -8,6 +8,6 @@ public interface CuotaPrestamoService extends CrudService<CuotaPrestamo> {
 
 	void eliminarCuota(CuotaPrestamoPK cuotaPrestamoPK);
 
-	CuotaPrestamo buscarPorCuotaPrestamo(CuotaPrestamoPK cuotaPrestamoPK);
+	CuotaPrestamo buscarPorIdCompuesto(CuotaPrestamoPK cuotaPrestamoPK);
 
 }

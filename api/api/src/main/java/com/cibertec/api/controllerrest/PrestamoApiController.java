@@ -8,6 +8,9 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,9 +21,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cibertec.api.model.CuotaPrestamo;
+import com.cibertec.api.model.CuotaPrestamoPK;
+import com.cibertec.api.model.Prestamista;
 import com.cibertec.api.model.Prestamo;
 import com.cibertec.api.reuzable.Utils;
 import com.cibertec.api.service.CuotaPrestamoService;
+import com.cibertec.api.service.PrestamistaService;
 import com.cibertec.api.service.PrestamoService;
 
 import jakarta.transaction.Transactional;
@@ -33,6 +39,8 @@ public class PrestamoApiController {
 	PrestamoService prestamoService;
 	@Autowired
 	CuotaPrestamoService cuotaPrestamoService;
+	@Autowired
+	PrestamistaService prestamistaService;
 
 	@GetMapping("/listaCuotaPorPrestatario")
 	public List<CuotaPrestamo> listarPrestamosPorPrestatario(
@@ -56,6 +64,30 @@ public class PrestamoApiController {
 
 		return listaCuotaPrestamos;
 	}
+	
+	@GetMapping("/buscar/cuotaPrestamo")
+	@ResponseBody
+	public CuotaPrestamo buscarCuotaPrestamo(
+			@RequestParam(name="idPrestamo",required = false) Integer idPrestamo, 
+			@RequestParam(name="idCuotaPrestamo",required = false) Integer idCuotaPrestamo) {
+		
+		CuotaPrestamo cuotaPrestamo = new CuotaPrestamo();
+		
+		try {
+			
+			CuotaPrestamoPK cuotaPrestamoPK = new CuotaPrestamoPK();
+			cuotaPrestamoPK.setIdPrestamo(idPrestamo);
+			cuotaPrestamoPK.setIdCuotaPrestamo(idCuotaPrestamo);
+			
+			cuotaPrestamo = cuotaPrestamoService.buscarPorIdCompuesto(cuotaPrestamoPK);
+			
+		}catch(Exception ex){
+			ex.printStackTrace();
+		};
+		
+		
+		return cuotaPrestamo;
+	}
 
 	//Jeanpi
 	@GetMapping("/listar")
@@ -71,8 +103,15 @@ public class PrestamoApiController {
 		try {
 			listaPrestamo = prestamoService.listar();
 			if (idPrestamista > 0) {
-				listaPrestamo = prestamoService.listar().stream().filter(c -> c.getSolicitudPrestamo().getPrestatario()
-						.getPrestamistaPrestatario().getPrestamista().getIdPersona() == idPrestamista).toList();
+				// listaPrestamo = prestamoService.listar().stream().filter(c -> c.getSolicitudPrestamo().getPrestatario()
+				// 		.getPrestamistaPrestatario().getPrestamista().getIdPersona() == idPrestamista).toList();
+				Prestamista asesorPrestamista = prestamistaService.listarPrestamistaPorId(idPrestamista);
+				listaPrestamo = asesorPrestamista.getPrestatariosList().stream()
+					.flatMap(prestatario -> prestatario.getListaSolicitudPrestamo().stream()
+							.filter(solicitud -> Utils.PRESTAMO_APROBADO.equalsIgnoreCase(solicitud.getEstado()))
+							.map(solicitud -> prestamoService.getBySolicitud(solicitud))
+							.filter(Objects::nonNull))
+					.collect(Collectors.toList());
 			}
 			int cuotaPorPagar = 0;
 			int cuotaPagadas = 0;
@@ -103,6 +142,8 @@ public class PrestamoApiController {
 				extraInfo.put("idPrestamo",prestamo.getIdPrestamo());
 				extraInfo.put("nomPrestatario",prestamo.getSolicitudPrestamo().getPrestatario().getPrestatario().getNombres());
 				extraInfo.put("apePrestatario",prestamo.getSolicitudPrestamo().getPrestatario().getPrestatario().getApellidos());
+				extraInfo.put("montoPrestado", prestamo.getMonto());
+				extraInfo.put("interesPagar", prestamo.getMonto()*prestamo.getTem());
 				extraInfo.put("montoTotal",prestamo.getMonto() * (prestamo.getTem() + 1));
 				extraInfo.put("cuotas",prestamo.getCuotas());
 				extraInfo.put("cuotaPorPagar", cuotaPorPagar);
@@ -127,7 +168,6 @@ public class PrestamoApiController {
 	}
 
 	@PostMapping("/guardarPrestamo")
-	@ResponseBody
 	@Transactional
 	public Map<?, ?> guardarPrestamo(@RequestBody Prestamo prestamo) {
 
@@ -141,8 +181,10 @@ public class PrestamoApiController {
 
 		try {
 
+			Date fechaActual = new Date(new java.util.Date().getTime());
+			
 			prestamo.setActivo(true);
-			prestamo.setFechaRegistro(new Date(new java.util.Date().getTime()));
+			prestamo.setFechaRegistro(fechaActual);
 
 			cuotas = prestamo.getCuotas();
 			montoMensual = prestamo.getMonto() / prestamo.getCuotas();
@@ -150,8 +192,6 @@ public class PrestamoApiController {
 			montoTotal = montoMensual + interes;
 
 			prestamo = prestamoService.guardar(prestamo);
-
-			Date fechaPago = new Date(new java.util.Date().getTime()); // Fecha actual
 
 			if (prestamo != null) {
 
@@ -164,21 +204,21 @@ public class PrestamoApiController {
 					cuotaPrestamo.setMonto(montoMensual);
 					cuotaPrestamo.setInteres(interes);
 					cuotaPrestamo.setMontoTotal(montoTotal);
-
+					cuotaPrestamo.setMontoPendiente(montoTotal);
 					cuotaPrestamo.setEstado(Utils.PAGO_PENDIENTE);
-
+					
 					cuotaPrestamo = cuotaPrestamoService.guardar(cuotaPrestamo);
 
 					// Aumentar la fecha para el siguiente mes
 					Calendar calendar = new GregorianCalendar();
-					calendar.setTime(fechaPago);
+					calendar.setTime(fechaActual);
 					calendar.add(Calendar.MONTH, 1);
-					fechaPago = new Date(calendar.getTimeInMillis());
+					Date nuevaFecha = new Date(calendar.getTimeInMillis());
 
-					cuotaPrestamo.setFechaPago(fechaPago);
+					cuotaPrestamo.setFechaPago(nuevaFecha);
 
 				}
-
+				
 				response.put("mensaje", "Prestamo generado");
 
 			} else {

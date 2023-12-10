@@ -10,9 +10,11 @@ public class ComprobanteDetalleDTO {
 	@JsonIgnore
 	private int idComprobante;
 	private int idComprobanteDetalle;
-	
+
 	private String codItem;
 	private String descripcion;
+	private Integer idPrestamo = null;
+	private Integer idCuotaPrestamo = null;
 	private int cantidadItem;
 	private double montoItem;
 	private double montoTotal;

@@ -55,4 +55,10 @@ public class Persona implements Serializable {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date fechaEdicion;
 	private boolean activo;
+	
+	//métodos útiles
+	public String getNombresApellidos() {
+		return this.nombres + " " + this.apellidos;
+	}
+	
 } //fin de Persona

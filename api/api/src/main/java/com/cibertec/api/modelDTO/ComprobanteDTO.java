@@ -15,6 +15,7 @@ public class ComprobanteDTO {
 	private Date fechaEmision;
 	private String rucEmisor;
 	private String nomEmisor;
+	private Integer idPrestamo = null;
 	private int idTipoDocumento;
 	private int idPrestatario;
 	private String numDocReceptor;
