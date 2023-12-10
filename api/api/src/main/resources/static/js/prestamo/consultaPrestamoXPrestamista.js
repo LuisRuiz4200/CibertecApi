@@ -57,6 +57,7 @@ async function tablaConsulta(){
         fila.insertCell(9).innerText = 'S/. '+prestamo.montoPorPagar.toFixed(2);
 	}
 	
+	/*
 	// Verificar si DataTable ya está inicializado
 	var existingDataTable = $('#tablaPrestamos').DataTable();
 	if (existingDataTable) {
@@ -69,4 +70,5 @@ async function tablaConsulta(){
 			url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json',
 		},
 	});
+	*/
 }
