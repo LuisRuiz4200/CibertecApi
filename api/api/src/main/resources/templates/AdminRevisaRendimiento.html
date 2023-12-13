@@ -41,6 +41,18 @@
 			border: 1px solid red;
 			box-shadow: 0 0 0 0.2rem rgba(250, 16, 0, 0.18);
 		}
+
+		/*Para grafico*/
+		#chartdiv {
+			width: 100%;
+			max-width: 100%;
+			height: 500px;
+		}
+
+		#chartdiv3 {
+			width: 100%;
+			height: 500px;
+		}
 	</style>
 	<!-- FIN DEL CSS -->
 </head>
@@ -75,11 +87,10 @@
 							<div class="form-group">
 								<!-- Para despegable con bootstrap con SELECT y asignamos id =idSexo -->
 								<select class="form-select" id="idFiltroPrestamista" name="prestamista">
-									<!-- donde para Seleccione su value es vacio(espacio) es empty y agarra para la validación, y para los otros si tienen value-->
-									<option value="-1">[Seleccione Jefe de Prestamista...]</option>
-									<option value="-1">[Chat]</option>
-									<option value="-1">[Channing]</option>
-									<option value="-1">[Tatum]</option>
+									<option>[SELECCIONE]</option>
+									<option th:each="prestamistaJefe : ${listaPrestamistasJefe}"
+										th:value="${prestamistaJefe.prestamista.idPersona}"
+										th:text="${prestamistaJefe.prestamista.nombresApellidos}"></option>
 								</select>
 							</div>
 						</div>
@@ -248,6 +259,59 @@
 		</div>
 	</div><!-- FIN EL CONTAINER FLUID-->
 
+	</br>
+	</br>
+
+	<div class="row">
+		<div class="col-lg-6">
+			<div class="panel">
+				<div class="panel-header">
+					<h3 class="panel-title text-center">Gráfico de Rentabilidad</h3>
+				</div>
+				<div class="panel-body">
+					<div id="chartdiv">
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--OTRO GRAFICO-->
+		<div class="col-lg-6">
+			<div class="panel">
+				<div class="panel-header">
+					<h3 class="panel-title text-center">Filtro por Prestamista Maximo Prestado</h3>
+				</div>
+
+				<div class="panel-body">
+					<div id="chartdiv3"></div>
+
+
+					<div class="row">
+						<div class="col-12">
+							<h3 class="text-center">Prestamista</h3>
+						</div>
+						<div class="col-auto m-auto">
+							<select id="cboPrestamistasPorPrestamistaJefe" class="form-select text-center"
+								name="soloConductorEmpleado">
+
+							</select>
+						</div>
+					</div>
+
+
+
+				</div>
+
+
+			</div>
+		</div>
+
+
+	</div> <!-- FIN DE ROW GRAFICOS-->
+
+	</br>
+	</br>
+	</br>
+
 	<!-- Importamos más cosas que se necesitaran hasta mas campos para bootstrap esto sirve para paginacion y search y demás de la tabla junto a lo que esta en script -->
 	<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 	<!--<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
@@ -263,6 +327,16 @@
 	<!--DataTable -->
 	<script src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
 	<script src="https://cdn.datatables.net/1.13.2/js/dataTables.bootstrap4.min.js"></script>
+	<!-- PARA GRAFICO -->
+	<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+	<script src="https://cdn.amcharts.com/lib/5/percent.js"></script>
+	<script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+	<script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
+	<script src="https://cdn.amcharts.com/lib/5/radar.js"></script>
+
+	<script src="/js/grafico/charts.js"></script>
+	<script src="/js/grafico/charts3.js"></script>
+	<!-- FIN PARA GRAFICO  -->
 
 	<script>
 		$(document).ready(function () {

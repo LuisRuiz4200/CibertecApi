@@ -30,11 +30,11 @@ public class GrupoPrestamista {
 
     @ManyToOne
     @JoinColumn(name = "idJefePrestamista")
-    private Prestamista jefePrestamista;
+    private Prestamista jefePrestamista = new Prestamista();
 
     @ManyToOne
     @JoinColumn(name = "idAsesorPrestamista")
-    private Prestamista asesorPrestamista;
+    private Prestamista asesorPrestamista = new Prestamista();
 
     private boolean activo;
 

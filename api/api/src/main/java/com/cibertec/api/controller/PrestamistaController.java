@@ -26,6 +26,7 @@ import com.cibertec.api.model.Rol;
 import com.cibertec.api.model.SolicitudDto;
 import com.cibertec.api.model.SolicitudPrestamo;
 import com.cibertec.api.model.Usuario;
+import com.cibertec.api.service.GrupoPrestamistaService;
 import com.cibertec.api.service.PrestamistaService;
 import com.cibertec.api.service.PrestatarioService;
 import com.cibertec.api.service.SolicitudPrestamoService;
@@ -45,6 +46,7 @@ public class PrestamistaController {
 	private UService userService;
 	PrestatarioService prestatarioService;
 	private SolicitudPrestamoService solicitudService;
+	private GrupoPrestamistaService grupoPrestamistaService;
 
 	@GetMapping({ "/listar", "/", "" }) // localhost:9090 /
 	public String listarPrestamista(Model model, HttpSession session) {
@@ -379,6 +381,7 @@ public class PrestamistaController {
 	private String listarPrestamoRevisarByBoss(Model model, HttpSession session) {
 
 		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
+
 		if (userLogged == null)
 			return "redirect:/login";
 
@@ -395,6 +398,12 @@ public class PrestamistaController {
 		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
 		if (userLogged == null)
 			return "redirect:/login";
+
+		List<Prestamista> listaPrestamistasJefe = new ArrayList<>();
+		listaPrestamistasJefe = grupoPrestamistaService.listar().stream().map(c -> c.getJefePrestamista()).distinct()
+				.toList();
+
+		model.addAttribute("listaPrestamistasJefe", listaPrestamistasJefe);
 
 		return "AdminRevisaRendimiento";
 	}
