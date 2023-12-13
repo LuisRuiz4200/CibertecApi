@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.cibertec.api.model.GrupoPrestamista;
 import com.cibertec.api.model.Persona;
 import com.cibertec.api.model.Prestamista;
 import com.cibertec.api.model.Prestatario;
@@ -26,6 +27,7 @@ import com.cibertec.api.model.Rol;
 import com.cibertec.api.model.SolicitudDto;
 import com.cibertec.api.model.SolicitudPrestamo;
 import com.cibertec.api.model.Usuario;
+import com.cibertec.api.service.GrupoPrestamistaService;
 import com.cibertec.api.service.PrestamistaService;
 import com.cibertec.api.service.PrestatarioService;
 import com.cibertec.api.service.SolicitudPrestamoService;
@@ -45,6 +47,7 @@ public class PrestamistaController {
 	private UService userService;
 	PrestatarioService prestatarioService;
 	private SolicitudPrestamoService solicitudService;
+	private GrupoPrestamistaService grupoPrestamistaService;
 
 	@GetMapping({ "/listar", "/", "" }) // localhost:9090 /
 	public String listarPrestamista(Model model, HttpSession session) {
@@ -380,8 +383,11 @@ public class PrestamistaController {
 	private String listarPrestamoRevisarByBoss(Model model, HttpSession session) {
 		
 		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
+		
 		if (userLogged == null)
 			return "redirect:/login";
+		
+
 
 		return "ChiefRevisaPrestamo";
 	}
@@ -396,6 +402,12 @@ public class PrestamistaController {
 		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
 		if (userLogged == null)
 			return "redirect:/login";
+		
+
+		List<Prestamista> listaPrestamistasJefe = new ArrayList<>();
+		listaPrestamistasJefe = grupoPrestamistaService.listar().stream().map(c->c.getJefePrestamista()).distinct().toList();
+		
+		model.addAttribute("listaPrestamistasJefe",listaPrestamistasJefe);
 		
 		return "AdminRevisaRendimiento";
 	}
