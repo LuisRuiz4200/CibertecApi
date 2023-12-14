@@ -59,9 +59,19 @@ public class DashBoardApiController {
 		
 		try {
 			
-
-			listaGrupoPrestamistas = grupoPrestamistaService.listar();
+			Thread hilo1 = new Thread(()->{
+				listaGrupoPrestamistas.addAll(grupoPrestamistaService.listar());
+			});
+			Thread hilo2 = new Thread(()->{
+				listaPrestamosPorPrestamista.addAll(prestamoService.listar());
+			});
 			
+			hilo1.start();
+			hilo2.start();
+			
+			hilo1.join();
+			hilo2.join();
+					
 			prestamistaJefe = listaGrupoPrestamistas.stream()
 					.filter(c->c.getJefePrestamista().getIdPrestamista()==idJefePrestamista)
 					.map(c->c.getJefePrestamista())
@@ -91,12 +101,10 @@ public class DashBoardApiController {
 				
 				
 				/*lista de los prestamos por prestamista asesor*/
-				listaPrestamosPorPrestamista  =prestamoService.listar().stream()
-				.filter(c->c.getSolicitudPrestamo().getPrestatario().getPrestamistaPrestatario().getPrestamista().getIdPersona()== idPrestamistaAsesor)
-				.toList();
 				
 				/*las estadistas de los prestamos*/
 				DoubleSummaryStatistics estadistica = listaPrestamosPorPrestamista.stream()
+						.filter(c->c.getSolicitudPrestamo().getPrestatario().getPrestamistaPrestatario().getPrestamista().getIdPersona()== idPrestamistaAsesor)
 						.mapToDouble(c->c.getMonto())
 						.summaryStatistics();
 				
@@ -119,6 +127,7 @@ public class DashBoardApiController {
 				
 				/*agregamos al prestamista a la lista de prestamistas por jefe de prestamistas*/
 				mapListaPrestamistasPorJefePrestamista.add(mapPrestamista);
+				
 			
 			}
 			
