@@ -105,6 +105,7 @@ public class ComprobanteApiController {
 					cuotaPrestamo.setEstado(Utils.PAGO_PARCIAL);
 				} else if (comprobanteDetalle.getMontoTotal() >= montoPendienteActual) {
 					cuotaPrestamo.setEstado(Utils.PAGO_PAGADO);
+					cuotaPrestamo.setMontoMora(montoMoraPagada);
 				} else {
 					cuotaPrestamo.setEstado(Utils.PAGO_PARCIAL);
 				}
