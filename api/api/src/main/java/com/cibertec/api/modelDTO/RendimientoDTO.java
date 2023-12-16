@@ -12,6 +12,7 @@ import lombok.ToString;
 public class RendimientoDTO {
     private int idJefePrestamista;
     private int idPrestamista;
+    private String nombrePrestamista;
     private double totalPrestado;
     private double totalInteres;
     private double totalPagado;

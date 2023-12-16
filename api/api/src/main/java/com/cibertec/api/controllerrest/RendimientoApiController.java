@@ -113,6 +113,7 @@ public class RendimientoApiController {
 
             // Agregamos el rendimiento del prestamista
             RendimientoDTO rendimientoDTO = new RendimientoDTO(idJefePresmista, prestamista.getIdPrestamista(),
+                    prestamista.getPrestamista().getNombresApellidos(),
                     decimalFormat(totalPrestado), decimalFormat(totalInteres), decimalFormat(totalPagado),
                     decimalFormat(totalPendiente),
                     decimalFormat(rentabilidad));
