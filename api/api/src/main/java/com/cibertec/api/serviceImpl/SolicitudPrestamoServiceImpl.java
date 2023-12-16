@@ -57,8 +57,7 @@ public class SolicitudPrestamoServiceImpl implements SolicitudPrestamoService {
 
 	@Override
 	public List<SolicitudPrestamo> listarPorPrestamista(int idPrestamista) {
-		// TODO Auto-generated method stub
-		return null;
+		return solicitudPrestamisteRepository.findByPrestatarioPrestamistaPrestatarioIdPrestamista(idPrestamista);
 	}
 
 	// FILTROOOOOO
