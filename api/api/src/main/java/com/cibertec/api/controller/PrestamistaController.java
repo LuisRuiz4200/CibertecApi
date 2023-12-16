@@ -40,6 +40,7 @@ import com.cibertec.api.model.Rol;
 import com.cibertec.api.model.SolicitudDto;
 import com.cibertec.api.model.SolicitudPrestamo;
 import com.cibertec.api.model.Usuario;
+import com.cibertec.api.reuzable.Utils;
 import com.cibertec.api.service.GrupoPrestamistaService;
 import com.cibertec.api.service.PrestamistaService;
 import com.cibertec.api.service.PrestatarioService;
@@ -414,8 +415,22 @@ public class PrestamistaController {
 			return "redirect:/login";
 
 		List<Prestamista> listaPrestamistasJefe = new ArrayList<>();
-		listaPrestamistasJefe = grupoPrestamistaService.listar().stream().map(c -> c.getJefePrestamista()).distinct()
-				.toList();
+
+		Rol rolJefes = new Rol();
+		rolJefes.setIdRol(Utils.ROL_JEFE_PRESTAMISTA);
+		List<Usuario> users = userService.getUsuarioByRol(rolJefes);
+
+		listaPrestamistasJefe = users.stream()
+				.map(usuario -> service.getByIdPrestamistaActivo(usuario.getPersona().getIdPersona()))
+				.collect(Collectors.toList());
+
+		if (listaPrestamistasJefe != null) {
+			listaPrestamistasJefe = listaPrestamistasJefe.stream().filter(Objects::nonNull)
+					.collect(Collectors.toList());
+		}
+		// listaPrestamistasJefe = grupoPrestamistaService.listar().stream().map(c ->
+		// c.getJefePrestamista()).distinct()
+		// .toList();
 
 		model.addAttribute("listaPrestamistasJefe", listaPrestamistasJefe);
 
