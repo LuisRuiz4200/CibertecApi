@@ -87,28 +87,34 @@ public class RendimientoApiController {
                     if (cuota.getEstado().equals(Utils.PAGO_PAGADO)) {
                         // 2.- Total pagado
                         totalPagado += cuota.getMonto() + cuota.getInteres();
+
+                        // 4.- Total Interes Mora
+                        totalInteres += cuota.getInteres();
+
+                        if (cuota.getMontoMora() != null)
+                            totalMora += cuota.getMontoMora();
+
                     } else {
                         // 3.- Total pendiente
                         totalPendiente += cuota.getMonto() + cuota.getInteres();
                     }
-
-                    // 4.- Total Interes Mora
-                    totalInteres += cuota.getInteres();
-
-                    if (cuota.getMontoMora() != null)
-                        totalMora += cuota.getMontoMora();
                 }
             }
+            Utils.print(prestamista.getIdPrestamista() + "", prestamista.getPrestamista().getNombresApellidos());
+            Utils.print("totalMora", totalMora);
+            Utils.print("totalInteres", totalInteres);
+            Utils.print("totalPrestado", totalPrestado);
 
             // 5.- Rentabilidad
             // rentabilidad = totalInteresMora / totalPrestado;
             if (totalPrestado > 0) {
-                rentabilidad = (totalMora + totalInteres) / totalPrestado;
+                rentabilidad = ((totalMora + totalInteres) / totalPrestado) * 100;
             } else {
                 // o cualquier otro valor predeterminado que desees en caso de totalPrestado
                 // igual a cero
                 rentabilidad = 0.0;
             }
+            Utils.print("rentabilidad", rentabilidad);
 
             // Agregamos el rendimiento del prestamista
             RendimientoDTO rendimientoDTO = new RendimientoDTO(idJefePresmista, prestamista.getIdPrestamista(),
