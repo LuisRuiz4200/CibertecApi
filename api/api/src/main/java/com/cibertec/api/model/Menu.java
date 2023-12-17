@@ -12,7 +12,7 @@ import lombok.Data;
 import lombok.ToString;
 
 @Entity
-@Table(name="tb_menu")
+@Table(name = "tb_menu")
 @Data
 public class Menu {
 	@Id
@@ -21,11 +21,10 @@ public class Menu {
 	private String descripcion;
 	private String ruta;
 	private boolean activo;
-	
+
 	@JsonIgnore
 	@OneToMany(mappedBy = "menu")
 	@ToString.Exclude
 	private List<RolMenu> listaRolMenu;
 
-	
 }

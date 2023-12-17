@@ -11,7 +11,7 @@ import com.cibertec.api.repository.BancoRepository;
 import com.cibertec.api.service.BancoService;
 
 @Service
-public class BancoServiceImpl implements BancoService{
+public class BancoServiceImpl implements BancoService {
     @Autowired
     private BancoRepository repository;
 

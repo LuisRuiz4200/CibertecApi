@@ -14,7 +14,7 @@ public class TipoComprobanteServiceImpl implements TipoComprobanteService {
 
 	@Autowired
 	private TipoComprobanteRepository tipoComprobanteRepository;
-	
+
 	@Override
 	public TipoComprobante guardar(TipoComprobante model) {
 		// TODO Auto-generated method stub
@@ -23,14 +23,12 @@ public class TipoComprobanteServiceImpl implements TipoComprobanteService {
 
 	@Override
 	public List<TipoComprobante> listar() {
-		// TODO Auto-generated method stub
 		return tipoComprobanteRepository.findAll();
 	}
 
 	@Override
 	public void eliminar(int id) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -41,7 +39,6 @@ public class TipoComprobanteServiceImpl implements TipoComprobanteService {
 
 	@Override
 	public TipoComprobante buscarPorId(int id) {
-		// TODO Auto-generated method stub
 		return tipoComprobanteRepository.findById(id).get();
 	}
 

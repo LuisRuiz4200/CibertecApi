@@ -30,12 +30,12 @@
 							<a class="nav-link" th:text="${bean.descripcion}" th:href="${bean.ruta}"></a>
 						</li>
 					</ul>
-				<div class="navbar-nav ml-auto">
-					<span class="nav-item nav-link"></span>
-					<form method="post" th:action="@{/cerrarSession}">
-						<input type="submit" class="btn btn-success" value="Cerrar sesion">
-					</form>
-				</div>
+					<div class="navbar-nav ml-auto">
+						<span class="nav-item nav-link"></span>
+						<form method="post" th:action="@{/cerrarSession}">
+							<input type="submit" class="btn btn-success" value="Cerrar sesion">
+						</form>
+					</div>
 			</nav>
 		</div>
 	</div>

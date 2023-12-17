@@ -6,12 +6,9 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
-import org.apache.tomcat.util.json.JSONParser;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,16 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cibertec.api.model.Comprobante;
 import com.cibertec.api.model.ComprobanteDetalle;
 import com.cibertec.api.model.CuotaPrestamo;
-import com.cibertec.api.model.Prestamo;
 import com.cibertec.api.modelDTO.ComprobanteDTO;
 import com.cibertec.api.modelDTO.ComprobanteDetalleDTO;
 import com.cibertec.api.reuzable.Utils;
 import com.cibertec.api.service.ComprobanteDetalleService;
 import com.cibertec.api.service.ComprobanteService;
 import com.cibertec.api.service.CuotaPrestamoService;
-import com.cibertec.api.service.PrestamoService;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 @RestController
 @RequestMapping("/api/comprobante")
@@ -112,6 +105,7 @@ public class ComprobanteApiController {
 					cuotaPrestamo.setEstado(Utils.PAGO_PARCIAL);
 				} else if (comprobanteDetalle.getMontoTotal() >= montoPendienteActual) {
 					cuotaPrestamo.setEstado(Utils.PAGO_PAGADO);
+					cuotaPrestamo.setMontoMora(montoMoraPagada);
 				} else {
 					cuotaPrestamo.setEstado(Utils.PAGO_PARCIAL);
 				}

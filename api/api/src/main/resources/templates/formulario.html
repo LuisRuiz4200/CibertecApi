@@ -17,8 +17,8 @@
 			<div class="col-lg-8 col-md-6 col-sm-6 container justify-content-center card">
 				<h1 class="text-center" th:text="${titulo}"></h1>
 				<div class="card-body">
-					
-					
+
+
 					<form id="guardarPrestamista" th:action="@{/registrar}" th:object="${prestamista}" method="post">
 						<!--OJO Debe estar los 2 le asignamos ID para mensaje de actualizar o registrar-->
 						<input type="hidden" th:field="*{idPrestamista}" th:value="${prestamista.idPrestamista}"
@@ -65,10 +65,10 @@
 							<small class="form-text text-danger" th:if="${#fields.hasErrors('prestamista.dni')}"
 								th:errors="*{prestamista.dni}"></small>
 						</div>
-						
+
 						<div class="box-footer d-flex gap-3">
 							<input type="submit" value="Guardar" class="btn btn-primary">
-							
+
 							<div class=" mt-auto fs-bold text-danger " th:text="${mensaje}"></div>
 						</div>
 					</form>
@@ -79,7 +79,7 @@
 
 	<!--<footer th:replace="static/footer.html"></footer>-->
 
-	
+
 
 </body>
 

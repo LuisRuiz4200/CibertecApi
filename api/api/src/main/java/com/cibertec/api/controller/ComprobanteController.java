@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,7 +19,6 @@ import com.cibertec.api.model.Comprobante;
 import com.cibertec.api.model.ComprobanteDetalle;
 import com.cibertec.api.model.CuotaPrestamo;
 import com.cibertec.api.model.CuotaPrestamoPK;
-import com.cibertec.api.model.Prestamista;
 import com.cibertec.api.model.Prestamo;
 import com.cibertec.api.model.Prestatario;
 import com.cibertec.api.model.TipoComprobante;
@@ -30,13 +28,10 @@ import com.cibertec.api.reuzable.Utils;
 import com.cibertec.api.service.ComprobanteDetalleService;
 import com.cibertec.api.service.ComprobanteService;
 import com.cibertec.api.service.CuotaPrestamoService;
-import com.cibertec.api.service.PrestamistaService;
 import com.cibertec.api.service.PrestamoService;
 import com.cibertec.api.service.PrestatarioService;
 import com.cibertec.api.service.TipoComprobanteService;
 import com.cibertec.api.service.TipoDocumentoService;
-import com.cibertec.api.serviceImpl.ComprobanteServiceImpl;
-import com.mashape.unirest.request.HttpRequest;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -61,11 +56,11 @@ public class ComprobanteController {
 	private CuotaPrestamoService cuotaPrestamoService;
 
 	@GetMapping("/listaCuotaPorPrestamo")
-	private String listarCuotaPorPrestamo(Model model,HttpSession session) {
+	private String listarCuotaPorPrestamo(Model model, HttpSession session) {
 
 		Usuario usuario = new Usuario();
 		List<Prestatario> listaPrestatario = new ArrayList<>();
-		
+
 		usuario = (Usuario) session.getAttribute("UserLogged");
 		Integer idPrestamista = usuario.getPersona().getIdPersona();
 
@@ -86,12 +81,11 @@ public class ComprobanteController {
 		List<CuotaPrestamo> listaCuotaPrestamoPendiente = new ArrayList<>();
 
 		try {
-			
 
 			comprobante.setRucEmisor("20759630049");
 			comprobante.setNomEmisor("ME PRESTA ONLINE SAC SAC");
 			comprobante.setCorrelativo(0);
-			
+
 			listaCuotaPrestamoPendiente = cuotaPrestamoService.listar().stream()
 					.filter(c -> c.getEstado().matches("(" + Utils.PAGO_PENDIENTE + ")||(" + Utils.PAGO_PARCIAL + ")"))
 					.toList();
@@ -134,7 +128,6 @@ public class ComprobanteController {
 		Integer diasMora = 0;
 		Double montoTotal = 0.00;
 		Double montoPagado = 0.00;
-		Double montoItem = 0.00;
 
 		try {
 
@@ -167,8 +160,8 @@ public class ComprobanteController {
 			diasMora = Integer
 					.parseInt(ChronoUnit.DAYS.between(fechaPago.toLocalDate(), fechaActual.toLocalDate()) + "");
 
-			montoMora = Utils.calcularMora(cuotaPrestamo.getMontoTotal(), diasMora, 0.8) ;
-			montoMora = montoMora<0?0.00:montoMora;
+			montoMora = Utils.calcularMora(cuotaPrestamo.getMontoTotal(), diasMora, 0.8);
+			montoMora = montoMora < 0 ? 0.00 : montoMora;
 			montoTotal = Utils.formatearDecimales((cuotaPrestamo.getMontoTotal() * 1) + montoMora, "0.00");
 			montoPagado = montoPagadoPorCuotaPrestamo(idPrestamo, idCuotaPrestamo);
 
@@ -191,7 +184,8 @@ public class ComprobanteController {
 			if (montoPagado > 0) {
 				comprobanteDetalle.setDescripcion(
 						"PAGO PARCIAL DE LA CUOTA NRO " + cuotaPrestamo.getCuotaPrestamoPk().getIdCuotaPrestamo());
-				comprobanteDetalle.setMontoItem(Utils.formatearDecimales(cuotaPrestamo.getMontoTotal() - montoPagado,"#.##"));
+				comprobanteDetalle
+						.setMontoItem(Utils.formatearDecimales(cuotaPrestamo.getMontoTotal() - montoPagado, "#.##"));
 				comprobanteDetalle.setMontoTotal(montoTotal - montoPagado);
 			}
 
@@ -239,7 +233,7 @@ public class ComprobanteController {
 	}
 
 	/*-----------------------------------*/
-	
+
 	public Double montoPagadoPorCuotaPrestamo(Integer idPrestamo, Integer idCuotaPrestamo) {
 
 		List<ComprobanteDetalle> listaComprobanteDetalles = new ArrayList<>();
@@ -250,11 +244,12 @@ public class ComprobanteController {
 		cuotaPrestamoPK.setIdCuotaPrestamo(idCuotaPrestamo);
 
 		listaComprobanteDetalles = comprobanteDetalleService.listar();
-		
+
 		for (ComprobanteDetalle comprobanteDetalle : listaComprobanteDetalles) {
 
 			if (comprobanteDetalle.getCuotaPrestamo().getCuotaPrestamoPk().getIdPrestamo() == idPrestamo) {
-				if (comprobanteDetalle.getCuotaPrestamo().getCuotaPrestamoPk().getIdCuotaPrestamo() == idCuotaPrestamo) {
+				if (comprobanteDetalle.getCuotaPrestamo().getCuotaPrestamoPk()
+						.getIdCuotaPrestamo() == idCuotaPrestamo) {
 
 					montoPagado += comprobanteDetalle.getMontoTotal();
 				}

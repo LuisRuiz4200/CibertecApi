@@ -14,11 +14,11 @@ function obtenerDni() {
 			.then(response => response.json())
 			.then(data => {
 				if (data.mensaje) {
-					
+
 					resolve(data.mensaje);
 				}
 			});
-	})
+	});
 }
 
 function validarDniExiste() {
@@ -36,7 +36,7 @@ function validarDniExiste() {
 					resolve(false);
 				}
 			});
-	})
+	});
 }
 
 function validarRucExiste() {
@@ -54,7 +54,7 @@ function validarRucExiste() {
 					resolve(false);
 				}
 			});
-	})
+	});
 }
 
 
@@ -122,7 +122,7 @@ function validarFormulario() {
 						toastr.success("dni permitido");
 					}
 
-					documentoExiste = dniExiste
+					documentoExiste = dniExiste;
 
 					if (!documentoExiste) {
 						Swal.fire({
@@ -137,9 +137,9 @@ function validarFormulario() {
 				});
 		} else {
 			// Mostrar SweetAlert para prestamista actualizado
-			
+
 			Promise.all([obtenerDni()]).then(([dniPersona]) => {
-				 
+
 				if (dniPersona === dni) {
 					Swal.fire({
 						title: '¡Formulario completado!',
@@ -157,7 +157,7 @@ function validarFormulario() {
 								toastr.success("dni permitido");
 							}
 
-							documentoExiste = dniExiste
+							documentoExiste = dniExiste;
 
 							if (!documentoExiste) {
 								Swal.fire({
@@ -172,7 +172,7 @@ function validarFormulario() {
 						});
 				}
 
-			})
+			});
 
 		}
 	}); //fin de form.addEventListener

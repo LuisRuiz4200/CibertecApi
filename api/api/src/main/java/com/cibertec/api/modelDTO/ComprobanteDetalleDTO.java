@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class ComprobanteDetalleDTO {
-	
+
 	@JsonIgnore
 	private int idComprobante;
 	private int idComprobanteDetalle;

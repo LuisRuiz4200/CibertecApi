@@ -11,4 +11,6 @@ import com.cibertec.api.model.SolicitudPrestamo;
 public interface SolicitudPrestamisteRepository extends JpaRepository<SolicitudPrestamo, Integer> {
 
 	public List<SolicitudPrestamo> findByPrestatarioIdPrestatario(int idPrestatario);
+
+	public List<SolicitudPrestamo> findByPrestatarioPrestamistaPrestatarioIdPrestamista(int idPrestamista);
 }

@@ -4,9 +4,7 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
@@ -16,7 +14,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
-import lombok.ToString;
 
 @Entity
 @Table(name = "tb_cuota_prestamo")
@@ -29,20 +26,25 @@ public class CuotaPrestamo {
 
 	private double monto;
 	private double interes;
+
 	@Column(name = "montototal")
 	private double montoTotal;
+
 	private Double montoMora;
-	@Column(name ="montoPendiente")
+
+	@Column(name = "montoPendiente")
 	private double montoPendiente;
+
 	@Column(name = "fechapago")
 	private Date fechaPago;
+
 	private String estado;
 	@ManyToOne
 	@JoinColumn(name = "idPrestamo", insertable = false, updatable = false)
-	//@JsonManagedReference
-	//@JsonIgnore
+	// @JsonManagedReference
+	// @JsonIgnore
 	private Prestamo prestamo;
-	
+
 	@OneToMany(mappedBy = "cuotaPrestamo")
 	@JsonIgnore
 	private List<ComprobanteDetalle> listaComprobanteDetalles = new ArrayList<>();

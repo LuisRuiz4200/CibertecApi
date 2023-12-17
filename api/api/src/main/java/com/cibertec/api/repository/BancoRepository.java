@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.cibertec.api.model.Banco;
 
 @Repository
-public interface BancoRepository extends JpaRepository<Banco, Integer>{
-    
+public interface BancoRepository extends JpaRepository<Banco, Integer> {
+
 }

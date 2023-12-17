@@ -22,94 +22,95 @@ import com.cibertec.api.service.PrestamistaService;
 public class PrestamistaApiController {
 
 	@Autowired
-	PrestamistaService prestamistaService ;
-	
+	PrestamistaService prestamistaService;
+
 	@GetMapping("/listar")
 	private ResponseEntity<List<Prestamista>> listar() {
-		List<Prestamista> response= prestamistaService.listarPrestamista();
+		List<Prestamista> response = prestamistaService.listarPrestamista();
 		return ResponseEntity.ok(response);
 	}
-	
+
 	@PostMapping("/registrar")
 	private String registrar(@RequestBody Prestamista model) {
-		
+
 		String response = "";
-		
+
 		try {
 			model = prestamistaService.guardarPrestamista(model);
 			response = "Se ha registrado el ID " + model.getIdPrestamista() + ".";
-		}catch(Exception ex){
+		} catch (Exception ex) {
 			response = ex.getMessage();
 		}
-		
+
 		return response;
 	}
-	
+
 	@PutMapping("/actualizar")
 	private Map<?, ?> actualizar(@RequestBody Prestamista model) {
-		
-		Map<String, Object> response = new HashMap<String,Object>();
-		
+
+		Map<String, Object> response = new HashMap<String, Object>();
+
 		try {
 			model = prestamistaService.guardarPrestamista(model);
-			response.put("mensaje", "Se ha actualizado el ID " + model.getIdPrestamista() + " y el ID persona " + model.getPrestamista().getIdPersona() + " / " + model.getPrestamista().getNombres());
-		}catch(Exception ex){
-			response.put("mensaje",ex.getMessage());
+			response.put("mensaje", "Se ha actualizado el ID " + model.getIdPrestamista() + " y el ID persona "
+					+ model.getPrestamista().getIdPersona() + " / " + model.getPrestamista().getNombres());
+		} catch (Exception ex) {
+			response.put("mensaje", ex.getMessage());
 		}
-		
+
 		return response;
 	}
-	
+
 	@GetMapping("/validarDniExiste/{dni}")
-	private Map<?,?> validarDniExiste(@PathVariable String dni){
-		
-		Map<String,Object> response = new HashMap<>();
-		
+	private Map<?, ?> validarDniExiste(@PathVariable String dni) {
+
+		Map<String, Object> response = new HashMap<>();
+
 		try {
-			
-			if (prestamistaService.buscarPorDniAndActivo( dni)!=null) {
+
+			if (prestamistaService.buscarPorDniAndActivo(dni) != null) {
 				response.put("mensaje", "El dni " + dni + " ya existe");
 			}
-		}catch(Exception ex) {
-			response.put("error", ex.getMessage() );
+		} catch (Exception ex) {
+			response.put("error", ex.getMessage());
 		}
-		
+
 		return response;
 	}
+
 	@GetMapping("/validarRucExiste/{ruc}")
-	private Map<?,?> validarRucExiste(@PathVariable String ruc){
-		
-		Map<String,Object> response = new HashMap<>();
-		
+	private Map<?, ?> validarRucExiste(@PathVariable String ruc) {
+
+		Map<String, Object> response = new HashMap<>();
+
 		try {
-			
-			if(prestamistaService.buscarPorRuc(ruc)!=null) {
+
+			if (prestamistaService.buscarPorRuc(ruc) != null) {
 				response.put("mensaje", "El ruc " + ruc + " ya existe");
 			}
-			
-		}catch(Exception ex) {
-			response.put("error", ex.getMessage() );
+
+		} catch (Exception ex) {
+			response.put("error", ex.getMessage());
 		}
-		
+
 		return response;
 	}
-	
+
 	@GetMapping("/obtenerDni/{id}")
-	private Map<?,?> obtenerDni(@PathVariable int id){
-		
-		Map<String,Object> response = new HashMap<>();
-		Prestamista prestamista = prestamistaService.getPrestamistaById( id).get(); 
+	private Map<?, ?> obtenerDni(@PathVariable int id) {
+
+		Map<String, Object> response = new HashMap<>();
+		Prestamista prestamista = prestamistaService.getPrestamistaById(id).get();
 		try {
-			
-			if (prestamista!=null) {
-				response.put("mensaje", prestamista.getPrestamista().getDni() );
+
+			if (prestamista != null) {
+				response.put("mensaje", prestamista.getPrestamista().getDni());
 			}
-		}catch(Exception ex) {
-			response.put("error", ex.getMessage() );
+		} catch (Exception ex) {
+			response.put("error", ex.getMessage());
 		}
-		
+
 		return response;
 	}
-	
-	
+
 }

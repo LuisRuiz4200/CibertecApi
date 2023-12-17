@@ -8,12 +8,12 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name="tb_tipo_comprobante")
+@Table(name = "tb_tipo_comprobante")
 @Data
 public class TipoComprobante {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idTipoComprobante;
 	private String descripcion;
-	
+
 }

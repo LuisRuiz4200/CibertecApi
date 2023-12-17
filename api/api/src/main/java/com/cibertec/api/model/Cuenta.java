@@ -24,8 +24,9 @@ import lombok.ToString;
 @NoArgsConstructor
 @Data
 public class Cuenta {
+
     @Id
-    @GeneratedValue(strategy =GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idCuenta;
 
     @ManyToOne
@@ -37,9 +38,9 @@ public class Cuenta {
     private Prestatario idPrestatarioCuenta;
 
     @OneToMany(mappedBy = "cuentaSolicitud")
-	@JsonIgnore
-	@ToString.Exclude
-	private List<SolicitudPrestamo> solicitudList;
+    @JsonIgnore
+    @ToString.Exclude
+    private List<SolicitudPrestamo> solicitudList;
 
     private String numero;
     private boolean activo;
@@ -48,5 +49,4 @@ public class Cuenta {
     private int usuarioRegistro;
     private int usuarioEdicion;
 
-    
 }

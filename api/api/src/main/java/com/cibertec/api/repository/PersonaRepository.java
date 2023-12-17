@@ -6,8 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.cibertec.api.model.Persona;
 
 @Repository
-public interface PersonaRepository extends JpaRepository<Persona,Integer> {
+public interface PersonaRepository extends JpaRepository<Persona, Integer> {
 
-	
-	
 }
