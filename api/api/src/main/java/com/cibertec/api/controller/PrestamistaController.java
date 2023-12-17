@@ -438,15 +438,14 @@ public class PrestamistaController {
 	}// fin de LookRendiByAdmin
 
 	// REPORTE EXCEL CONSTANTES
-	private static String[] HEADERs = { "Prestamista", "Prestado", "Pagado", "Pendiente", "Rentabilidad" };
+	private static String[] HEADERs = { "Prestamista", "Prestado","Interes","Pagado", "Pendiente", "Rentabilidad" };
 	private static String SHEET = "Listado";
 	private static String TITLE = "Listado de Prestamistas y Rendimiento Financiero  - Administrador";
-	private static int[] HEADER_WITH = { 20000, 10000, 6000, 10000, 6000 };
+	private static int[] HEADER_WITH = { 20000, 10000, 6000,6000 ,10000, 6000 };
 
 	// REPORTE EN EXCEL
-	@PostMapping("/reporteDocenteExcel")
+	@PostMapping("/reporteRendimientoExcel")
 	public void exportaExcel(
-			// Cambiar aqui
 			@RequestParam(name = "idJefePrestamista", required = false, defaultValue = "-1") int idJefePrestamista,
 			HttpServletRequest request,
 			HttpServletResponse response) {
