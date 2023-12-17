@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.cibertec.api.model.Comprobante;
 
 @Repository
-public interface ComprobanteRepository extends JpaRepository<Comprobante, Integer>{
+public interface ComprobanteRepository extends JpaRepository<Comprobante, Integer> {
 
-	
 }

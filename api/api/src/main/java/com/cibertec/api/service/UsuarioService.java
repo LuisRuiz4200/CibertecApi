@@ -13,17 +13,18 @@ import com.cibertec.api.repository.UsuarioRepository;
 
 @Service
 public class UsuarioService {
-	
+
 	@Autowired
 	UsuarioRepository repo;
-	//Creamos metodos para CRUD	
-	
+	// Creamos metodos para CRUD
+
 	public Usuario loginUsuario(String vLogin) {
 		return repo.iniciarSesion(vLogin);
 	}
-	public List<Menu> enlacesDelUsuario(int rol){
+
+	public List<Menu> enlacesDelUsuario(int rol) {
 		return repo.traerMenusDelUsuario(rol);
 	}
-	//Creamos metodos para CRUD	
-	
+	// Creamos metodos para CRUD
+
 }

@@ -22,12 +22,11 @@ public class ComprobanteDetalle {
 	@JoinColumn(name = "idComprobante", insertable = false, updatable = false)
 	@JsonIgnore
 	private Comprobante comprobante;
-	
 
 	@ManyToOne
 	@JoinColumns({
-		@JoinColumn(name="idPrestamo",referencedColumnName = "idPrestamo",nullable = true),
-		@JoinColumn(name="idCuotaPrestamo",referencedColumnName = "idCuotaPrestamo",nullable = true)
+			@JoinColumn(name = "idPrestamo", referencedColumnName = "idPrestamo", nullable = true),
+			@JoinColumn(name = "idCuotaPrestamo", referencedColumnName = "idCuotaPrestamo", nullable = true)
 	})
 	private CuotaPrestamo cuotaPrestamo = new CuotaPrestamo();
 

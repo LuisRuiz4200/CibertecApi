@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.cibertec.api.model.TipoDocumento;
 
 @Repository
-public interface TipoDocumentoRepository extends JpaRepository<TipoDocumento, Integer>{
+public interface TipoDocumentoRepository extends JpaRepository<TipoDocumento, Integer> {
 
 }

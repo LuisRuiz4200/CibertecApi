@@ -1,47 +1,58 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="ISO-8859-1">
-<title>Intranet</title>
 
-<div th:replace="~{static/head.html}"></div>
+<head>
+	<meta charset="ISO-8859-1">
+	<title>Intranet</title>
+
+	<div th:replace="~{static/head.html}"></div>
 
 </head>
-<body>
-<!--Agregamos un div con etiqueta de thymeleaf insert para llamar o consumir el fragment llamado cabecera
-a UITemplate que esta dentro de la carpeta plantilla de templates y que con :: accedemos a cabecera-->
-<!-- <div th:replace="~{static/navbar.html}"></div> -->
-<div th:insert="~{plantilla/UITemplate.html::cabecera}"></div>
 
-<div class="container-fluid mt-4">
-	<div class="row">
-		<div class="col-12 fs-4">
-			<table>
-				<tr>
-					<th class="col-4">BIENVENIDO </th>
-					<td th:text="${session.UserLogged.persona.nombres} + ' ' + ${session.UserLogged.persona.apellidos}"></td>
-				</tr>
-				<tr>
-					<th class="col-4">USUARIO </th>
-					<td th:text="${session.UserLogged.nombreUsuario}"></td>
-				</tr>
-				<tr>
-					<th class="col-4">ROL </th>
-					<td th:text="${session.UserLogged.rol.descripcion}"></td>
-				</tr>
-			</table>
+<body>
+	<!--Agregamos un div con etiqueta de thymeleaf insert para llamar o consumir el fragment llamado cabecera
+a UITemplate que esta dentro de la carpeta plantilla de templates y que con :: accedemos a cabecera-->
+	<!-- <div th:replace="~{static/navbar.html}"></div> -->
+	<div th:insert="~{plantilla/UITemplate.html::cabecera}"></div>
+
+	<div class="container-fluid mt-4">
+		<div class="row">
+			<div class="col-12 fs-4">
+				<table>
+					<tr>
+						<th class="col-4">BIENVENIDO </th>
+						<td
+							th:text="${session.UserLogged.persona.nombres} + ' ' + ${session.UserLogged.persona.apellidos}">
+						</td>
+					</tr>
+					<tr>
+						<th class="col-4">USUARIO </th>
+						<td th:text="${session.UserLogged.nombreUsuario}"></td>
+					</tr>
+					<tr>
+						<th class="col-4">ROL </th>
+						<td th:text="${session.UserLogged.rol.descripcion}"></td>
+					</tr>
+				</table>
+			</div>
 		</div>
 	</div>
-</div>
 
 
 
-	
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-<script   src="http://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		crossorigin="anonymous"></script>
+	<script src="http://code.jquery.com/jquery-3.3.1.min.js"
+		integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+		integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+		crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+		integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+		crossorigin="anonymous"></script>
 </body>
-</html>
 
+</html>

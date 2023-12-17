@@ -22,25 +22,28 @@ public class GrupoPrestamistaController {
 	private GrupoPrestamistaService grupoPrestamistaService;
 
 	// @GetMapping({"/listar", "", "/"})
-	public String listGrupo(Model model, HttpSession session){
+	public String listGrupo(Model model, HttpSession session) {
 		return "intranet";
 	}
 
-	public List<Prestamista> listGrupoByJefePrestamista(Prestamista jefePrestamista){
+	public List<Prestamista> listGrupoByJefePrestamista(Prestamista jefePrestamista) {
 		List<GrupoPrestamista> list = grupoPrestamistaService.listByJefe(jefePrestamista);
 
-		List<Prestamista> listPrestamistas = list.stream().map(GrupoPrestamista::getAsesorPrestamista).collect(Collectors.toList());
+		List<Prestamista> listPrestamistas = list.stream().map(GrupoPrestamista::getAsesorPrestamista)
+				.collect(Collectors.toList());
 		return listPrestamistas;
 	}
 
-	public List<Prestamista> listGrupoByJefePrestamistaAndActivo(Prestamista jefePrestamista){
+	public List<Prestamista> listGrupoByJefePrestamistaAndActivo(Prestamista jefePrestamista) {
 		List<GrupoPrestamista> list = grupoPrestamistaService.listByJefeAndActivo(jefePrestamista, true);
 
-		List<Prestamista> listPrestamistas = list.stream().map(GrupoPrestamista::getAsesorPrestamista).collect(Collectors.toList());
+		List<Prestamista> listPrestamistas = list.stream().map(GrupoPrestamista::getAsesorPrestamista)
+				.collect(Collectors.toList());
 		return listPrestamistas;
 	}
 
-	public GrupoPrestamista insertGrupoPrestamista(Prestamista jefePrestamista, Prestamista newPrestamista, Usuario usuario){
+	public GrupoPrestamista insertGrupoPrestamista(Prestamista jefePrestamista, Prestamista newPrestamista,
+			Usuario usuario) {
 		GrupoPrestamista grupo = new GrupoPrestamista();
 		grupo.setJefePrestamista(jefePrestamista);
 		grupo.setAsesorPrestamista(newPrestamista);
@@ -53,7 +56,8 @@ public class GrupoPrestamistaController {
 		return response;
 	}
 
-	public GrupoPrestamista deleteGrupoPrestamista(Prestamista jefePrestamista, Prestamista asesorPrestamista, Usuario usuario){
+	public GrupoPrestamista deleteGrupoPrestamista(Prestamista jefePrestamista, Prestamista asesorPrestamista,
+			Usuario usuario) {
 		GrupoPrestamista grupo = grupoPrestamistaService.getByJefeAndAsesor(jefePrestamista, asesorPrestamista);
 		return grupoPrestamistaService.delete(grupo);
 	}

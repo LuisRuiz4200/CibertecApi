@@ -7,9 +7,14 @@ import com.cibertec.api.model.Prestamista;
 
 public interface GrupoPrestamistaService {
     List<GrupoPrestamista> listByJefe(Prestamista jefePrestamista);
+
     List<GrupoPrestamista> listByJefeAndActivo(Prestamista jefePrestamista, boolean activo);
+
     GrupoPrestamista addOrUpdate(GrupoPrestamista grupoPrestamista);
+
     GrupoPrestamista delete(GrupoPrestamista grupoPrestamista);
+
     GrupoPrestamista getByJefeAndAsesor(Prestamista jefePrestamista, Prestamista asesorPrestamista);
-	List<GrupoPrestamista> listar();
+
+    List<GrupoPrestamista> listar();
 }

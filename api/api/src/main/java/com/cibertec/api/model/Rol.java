@@ -15,65 +15,55 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Entity
-@Table(name="tb_rol")
+@Table(name = "tb_rol")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Rol {
 	@Id
-	@GeneratedValue(strategy =GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int idRol;
 	private String descripcion;
-	
+
 	@JsonIgnore
-	@OneToMany(mappedBy="rol")
+	@OneToMany(mappedBy = "rol")
 	@ToString.Exclude
 	private List<Usuario> listaUsuarios;
-	
-	
+
 	@JsonIgnore
-	@OneToMany(mappedBy="rol")
+	@OneToMany(mappedBy = "rol")
 	@ToString.Exclude
 	private List<RolMenu> listaRolMenu;
-
 
 	public int getIdRol() {
 		return idRol;
 	}
 
-
 	public void setIdRol(int idRol) {
 		this.idRol = idRol;
 	}
-
 
 	public String getDescripcion() {
 		return descripcion;
 	}
 
-
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
 	}
-
 
 	public List<Usuario> getListaUsuarios() {
 		return listaUsuarios;
 	}
 
-
 	public void setListaUsuarios(List<Usuario> listaUsuarios) {
 		this.listaUsuarios = listaUsuarios;
 	}
-
 
 	public List<RolMenu> getListaRolMenu() {
 		return listaRolMenu;
 	}
 
-
 	public void setListaRolMenu(List<RolMenu> listaRolMenu) {
 		this.listaRolMenu = listaRolMenu;
 	}
-	
-	
+
 }

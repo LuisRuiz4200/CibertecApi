@@ -11,7 +11,7 @@ import com.cibertec.api.repository.GrupoPrestamistaRepository;
 import com.cibertec.api.service.GrupoPrestamistaService;
 
 @Service
-public class GrupoPrestamistaServiceImpl implements GrupoPrestamistaService{
+public class GrupoPrestamistaServiceImpl implements GrupoPrestamistaService {
 
     @Autowired
     private GrupoPrestamistaRepository repository;
@@ -41,10 +41,10 @@ public class GrupoPrestamistaServiceImpl implements GrupoPrestamistaService{
     public GrupoPrestamista getByJefeAndAsesor(Prestamista jefePrestamista, Prestamista asesorPrestamista) {
         return repository.findByJefePrestamistaAndAsesorPrestamista(jefePrestamista, asesorPrestamista);
     }
-    
+
     @Override
-    public List<GrupoPrestamista> listar(){
-    	return repository.findAll();
+    public List<GrupoPrestamista> listar() {
+        return repository.findAll();
     }
-    
+
 }

@@ -46,7 +46,7 @@ async function apiConsultaDocumentoIdentidad(tipoDocumento, numDocumento) {
 			}
 			if (data.nombres) {
 				toastr.warning(data.nombres);
-				nomReceptor.value = data.nombres + ' ' + data.apellidoPaterno + ' ' + data.apellidoMaterno
+				nomReceptor.value = data.nombres + ' ' + data.apellidoPaterno + ' ' + data.apellidoMaterno;
 				return;
 			}
 			if (!data.success) {
@@ -171,7 +171,7 @@ function cargarWebComprobante(idPrestamo, idCuota) {
 		btnCargarComprobante.hidden = true;
 	}
 
-	btnCargarComprobante.addEventListener('click', function(event) {
+	btnCargarComprobante.addEventListener('click', function (event) {
 
 		var url = new URL("http://localhost:9090/web/comprobante/registrar/prestamo");
 		url.searchParams.append("idPrestamo", idPrestamo);
@@ -275,7 +275,7 @@ async function listarCuotaPorPrestatario() {
 
 	}
 
-
+	/*
 	// Verificar si DataTable ya está inicializado
 	var existingDataTable = $('#tbCuotaPorPrestatario').DataTable();
 	if (existingDataTable) {
@@ -284,10 +284,11 @@ async function listarCuotaPorPrestatario() {
 
 	// Inicializar DataTable
 	$('#tbCuotaPorPrestatario').DataTable({
+		// Configuración de DataTable
 		language: {
 			url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/es-ES.json',
 		},
-	});
+	});*/
 }
 
 
@@ -296,7 +297,7 @@ function consultaDni() {
 	var numDocReceptor = document.getElementById("numDocReceptor");
 	var idTipoDocumento = document.getElementById("idTipoDocumento");
 
-	numDocReceptor.addEventListener('input', function(event) {
+	numDocReceptor.addEventListener('input', function (event) {
 
 
 
@@ -405,7 +406,7 @@ function guardarComprobante() {
 
 			location.href = "http://localhost:9090/web/comprobante/registrar";
 
-		}, 2000)
+		}, 2000);
 	}
 
 
@@ -437,7 +438,7 @@ function asignarSerie() {
 	numDocReceptor.disabled = true;
 	serie.disabled = true;
 
-	tipoComprobante.addEventListener('change', function(event) {
+	tipoComprobante.addEventListener('change', function (event) {
 		switch (tipoComprobante.value) {
 			case "1":
 				limpiarFormularioComprobante();
@@ -461,7 +462,7 @@ function asignarSerie() {
 				break;
 		}
 	});
-	tipoDocumento.addEventListener('change', function(event) {
+	tipoDocumento.addEventListener('change', function (event) {
 		switch (tipoDocumento.value) {
 			case "1":
 				lblTipoDocumento.innerHTML = 'RUC DEL RECEPTOR';
@@ -497,7 +498,7 @@ function limpiarModalItem() {
 }
 
 async function cargarCuotaPrestamoModal() {
-	var params = new URLSearchParams(location.search)
+	var params = new URLSearchParams(location.search);
 	var idPrestamo = params.get("idPrestamo");
 
 	let cuotaPrestamo;
@@ -516,7 +517,7 @@ async function cargarCuotaPrestamoModal() {
 	var idCuotaPrestamo = codItem.replace(/.*[^0-9]/, "");
 
 
-	modalCodItem.addEventListener('change', async function(event) {
+	modalCodItem.addEventListener('change', async function (event) {
 
 		limpiarModalItem();
 
@@ -539,7 +540,7 @@ async function cargarCuotaPrestamoModal() {
 
 	});
 
-	indicadorPagoParcial.addEventListener('change', async function(event) {
+	indicadorPagoParcial.addEventListener('change', async function (event) {
 
 		if (event.target.checked) {
 			modalDescripcion.value = "PAGO PARCIAL DE LA CUOTA NRO " + idCuotaPrestamo;
@@ -588,7 +589,7 @@ function agregarItem() {
 	btnEditarItemModal.hidden = true;
 
 	limpiarModalItem();
-	$("#modalNuevoItem").modal('show')
+	$("#modalNuevoItem").modal('show');
 
 }
 
@@ -596,7 +597,7 @@ async function editarItem(enlace) {
 
 	limpiarModalItem();
 
-	var params = new URLSearchParams(location.search)
+	var params = new URLSearchParams(location.search);
 	var idPrestamo = params.get("idPrestamo");
 
 	var modalCodItem = document.getElementById("idModalCodItem");
@@ -660,7 +661,7 @@ function guardarItem(crud) {
 
 	if (crud === 'editar') {
 
-		var nroFila = modalTituloItem.innerText.replace(/.*[^0-9]/, "")
+		var nroFila = modalTituloItem.innerText.replace(/.*[^0-9]/, "");
 
 		var fila = tbItem.rows[nroFila - 1];
 
@@ -714,8 +715,8 @@ function guardarItem(crud) {
 	celdaMontoItem.innerHTML = modalMontoItem.value;
 	celdaMontoMora.innerHTML = modalMontoMora.value;
 	celdaMontoTotal.innerHTML = montoTotal.toFixed(2);
-	var btnEditarHtml = "<a onclick='editarItem(this)' type='button' ><img src='https://cdn-icons-png.flaticon.com/512/6324/6324826.png' width='30px' height='30px'/></a>"
-	var btnEliminarHtml = "<a onclick='eliminarItem(this)' type='button' ><img src='https://cdn.icon-icons.com/icons2/1880/PNG/512/iconfinder-trash-4341321_120557.png' width='30px' height='30px'/></a>"
+	var btnEditarHtml = "<a onclick='editarItem(this)' type='button' ><img src='https://cdn-icons-png.flaticon.com/512/6324/6324826.png' width='30px' height='30px'/></a>";
+	var btnEliminarHtml = "<a onclick='eliminarItem(this)' type='button' ><img src='https://cdn.icon-icons.com/icons2/1880/PNG/512/iconfinder-trash-4341321_120557.png' width='30px' height='30px'/></a>";
 	celdaDetalle.innerHTML = btnEditarHtml + btnEliminarHtml;
 
 	modalCodItem.value = '';
@@ -757,7 +758,7 @@ function calcularMora(montoMensual, fechaVencimiento, tea) {
 	var respuesta = {
 		montoMora: montoMora.toFixed(2),
 		diasMora: diasMora
-	}
+	};
 
 	return respuesta;
 }

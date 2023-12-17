@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cibertec.api.controller.ComprobanteController;
 import com.cibertec.api.model.ComprobanteDetalle;
 import com.cibertec.api.model.CuotaPrestamo;
 import com.cibertec.api.model.CuotaPrestamoPK;
@@ -69,69 +68,76 @@ public class PrestamoApiController {
 
 		return listaCuotaPrestamos;
 	}
-	
+
 	@GetMapping("/buscar/cuotaPrestamo")
 	@ResponseBody
 	public HashMap<String, Object> buscarCuotaPrestamo(
-			@RequestParam(name="idPrestamo",required = false) Integer idPrestamo, 
-			@RequestParam(name="idCuotaPrestamo",required = false) Integer idCuotaPrestamo) {
-		
+			@RequestParam(name = "idPrestamo", required = false) Integer idPrestamo,
+			@RequestParam(name = "idCuotaPrestamo", required = false) Integer idCuotaPrestamo) {
+
 		HashMap<String, Object> respuesta = new HashMap<>();
 		HashMap<String, Object> resumen = new HashMap<>();
 		CuotaPrestamo cuotaPrestamo = new CuotaPrestamo();
 		Double montoPagado = 0.00;
-		
+		Double montoMora = 0.00;
+		Double montoPendientePago = 0.00;
+
 		try {
-			
+
 			CuotaPrestamoPK cuotaPrestamoPK = new CuotaPrestamoPK();
 			cuotaPrestamoPK.setIdPrestamo(idPrestamo);
 			cuotaPrestamoPK.setIdCuotaPrestamo(idCuotaPrestamo);
-			
+
 			cuotaPrestamo = cuotaPrestamoService.buscarPorIdCompuesto(cuotaPrestamoPK);
-			
+
 			montoPagado = montoPagadoPorCuotaPrestamo(idPrestamo, idCuotaPrestamo);
-			
+			montoMora = montoMoraPorCuotaPrestamo(idPrestamo, idCuotaPrestamo);
+			montoPendientePago = cuotaPrestamo.getMontoTotal() - montoPagado;
+			montoPendientePago = montoPendientePago < 0 ? montoPendientePago + montoMora : montoPendientePago;
+
 			resumen.put("montoPagado", montoPagado);
-			
+			resumen.put("montoMora", montoMora);
+			resumen.put("montoPendientePago", Utils.formatearDecimales((montoPendientePago * -1), "0.00"));
+
 			respuesta.put("cuotaPrestamo", cuotaPrestamo);
 			respuesta.put("resumen", resumen);
-			
-		}catch(Exception ex){
+
+		} catch (Exception ex) {
 			ex.printStackTrace();
-		};
-		
-		
+		}
+		;
+
 		return respuesta;
 	}
 
-	//Jeanpi
+	// Jeanpi
 	@GetMapping("/listar")
 	public HashMap<String, Object> listar(
-		@RequestParam(name = "idPrestamista", required = false, defaultValue = "0") int idPrestamista) {
+			@RequestParam(name = "idPrestamista", required = false, defaultValue = "0") int idPrestamista) {
 
 		List<Prestamo> listaPrestamo = new ArrayList<>();
 		HashMap<String, Object> res = new HashMap<>();
 		HashMap<String, Object> extraInfo = new HashMap<>();
 		HashMap<String, Object> resumen = new HashMap<>();
 		List<HashMap<String, Object>> prestamos = new ArrayList<>();
-		
+
 		try {
 			listaPrestamo = prestamoService.listar();
 			if (idPrestamista > 0) {
 				Prestamista asesorPrestamista = prestamistaService.listarPrestamistaPorId(idPrestamista);
 				listaPrestamo = asesorPrestamista.getPrestatariosList().stream()
-					.flatMap(prestatario -> prestatario.getListaSolicitudPrestamo().stream()
-							.filter(solicitud -> Utils.PRESTAMO_APROBADO.equalsIgnoreCase(solicitud.getEstado()))
-							.map(solicitud -> prestamoService.getBySolicitud(solicitud))
-							.filter(Objects::nonNull))
-					.collect(Collectors.toList());
+						.flatMap(prestatario -> prestatario.getListaSolicitudPrestamo().stream()
+								.filter(solicitud -> Utils.PRESTAMO_APROBADO.equalsIgnoreCase(solicitud.getEstado()))
+								.map(solicitud -> prestamoService.getBySolicitud(solicitud))
+								.filter(Objects::nonNull))
+						.collect(Collectors.toList());
 			}
 			int cuotaPorPagar = 0;
 			int cuotaPagadas = 0;
 			double montoPagado = 0;
 			double montoPorPagar = 0;
 
-			for (Prestamo prestamo : listaPrestamo) {	
+			for (Prestamo prestamo : listaPrestamo) {
 				cuotaPorPagar = prestamo.getListaCuotaPrestamo().stream().filter(
 						c -> c.getEstado().matches("(" + Utils.PAGO_PENDIENTE + ")||(" + Utils.PAGO_PARCIAL + ")"))
 						.toList().size();
@@ -140,7 +146,7 @@ public class PrestamoApiController {
 						.filter(c -> c.getEstado().matches("(" + Utils.PAGO_PAGADO + ")")).toList().size();
 				montoPagado = 0;
 				montoPorPagar = 0;
-				
+
 				for (CuotaPrestamo cuotaPrestamo : prestamo.getListaCuotaPrestamo()) {
 					if (cuotaPrestamo.getEstado()
 							.matches("(" + Utils.PAGO_PENDIENTE + ")||(" + Utils.PAGO_PARCIAL + ")")) {
@@ -149,29 +155,31 @@ public class PrestamoApiController {
 					if (cuotaPrestamo.getEstado()
 							.matches("(" + Utils.PAGO_PAGADO + ")")) {
 						montoPagado += cuotaPrestamo.getMontoTotal();
-					}	
+					}
 				}
 				extraInfo = new HashMap<>();
-				extraInfo.put("idPrestamo",prestamo.getIdPrestamo());
-				extraInfo.put("nomPrestatario",prestamo.getSolicitudPrestamo().getPrestatario().getPrestatario().getNombres());
-				extraInfo.put("apePrestatario",prestamo.getSolicitudPrestamo().getPrestatario().getPrestatario().getApellidos());
+				extraInfo.put("idPrestamo", prestamo.getIdPrestamo());
+				extraInfo.put("nomPrestatario",
+						prestamo.getSolicitudPrestamo().getPrestatario().getPrestatario().getNombres());
+				extraInfo.put("apePrestatario",
+						prestamo.getSolicitudPrestamo().getPrestatario().getPrestatario().getApellidos());
 				extraInfo.put("montoPrestado", prestamo.getMonto());
-				extraInfo.put("interesPagar", prestamo.getMonto()*prestamo.getTem());
-				extraInfo.put("montoTotal",prestamo.getMonto() * (prestamo.getTem() + 1));
-				extraInfo.put("cuotas",prestamo.getCuotas());
+				extraInfo.put("interesPagar", prestamo.getMonto() * prestamo.getTem());
+				extraInfo.put("montoTotal", prestamo.getMonto() * (prestamo.getTem() + 1));
+				extraInfo.put("cuotas", prestamo.getCuotas());
 				extraInfo.put("cuotaPorPagar", cuotaPorPagar);
 				extraInfo.put("cuotaPagadas", cuotaPagadas);
 				extraInfo.put("montoPorPagar", montoPorPagar);
 				extraInfo.put("montoPagado", montoPagado);
 				prestamos.add(extraInfo);
-			}	
-			
+			}
+
 			resumen.put("totalPorPagar", cuotaPorPagar);
 			resumen.put("totalPagadas", cuotaPagadas);
 			resumen.put("montoPorPagar", montoPorPagar);
 			resumen.put("montoPagado", montoPagado);
 			res.put("resumen", resumen);
-			res.put("prestamos", prestamos); 
+			res.put("prestamos", prestamos);
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -195,7 +203,7 @@ public class PrestamoApiController {
 		try {
 
 			Date fechaActual = new Date(new java.util.Date().getTime());
-			
+
 			prestamo.setActivo(true);
 			prestamo.setFechaRegistro(fechaActual);
 
@@ -219,7 +227,7 @@ public class PrestamoApiController {
 					cuotaPrestamo.setMontoTotal(montoTotal);
 					cuotaPrestamo.setMontoPendiente(montoTotal);
 					cuotaPrestamo.setEstado(Utils.PAGO_PENDIENTE);
-					
+
 					cuotaPrestamo = cuotaPrestamoService.guardar(cuotaPrestamo);
 
 					// Aumentar la fecha para el siguiente mes
@@ -231,7 +239,7 @@ public class PrestamoApiController {
 					cuotaPrestamo.setFechaPago(nuevaFecha);
 
 				}
-				
+
 				response.put("mensaje", "Prestamo generado");
 
 			} else {
@@ -244,7 +252,9 @@ public class PrestamoApiController {
 
 		return response;
 	}
-	
+
+	/*--------------------------------------*/
+
 	public Double montoPagadoPorCuotaPrestamo(Integer idPrestamo, Integer idCuotaPrestamo) {
 
 		List<ComprobanteDetalle> listaComprobanteDetalles = new ArrayList<>();
@@ -255,17 +265,42 @@ public class PrestamoApiController {
 		cuotaPrestamoPK.setIdCuotaPrestamo(idCuotaPrestamo);
 
 		listaComprobanteDetalles = comprobanteDetalleService.listar();
-		
+
 		for (ComprobanteDetalle comprobanteDetalle : listaComprobanteDetalles) {
 
 			if (comprobanteDetalle.getCuotaPrestamo().getCuotaPrestamoPk().getIdPrestamo() == idPrestamo) {
-				if (comprobanteDetalle.getCuotaPrestamo().getCuotaPrestamoPk().getIdCuotaPrestamo() == idCuotaPrestamo) {
+				if (comprobanteDetalle.getCuotaPrestamo().getCuotaPrestamoPk()
+						.getIdCuotaPrestamo() == idCuotaPrestamo) {
 
 					montoPagado += comprobanteDetalle.getMontoTotal();
 				}
 			}
 		}
 		return montoPagado;
+	}
+
+	public Double montoMoraPorCuotaPrestamo(Integer idPrestamo, Integer idCuotaPrestamo) {
+
+		List<ComprobanteDetalle> listaComprobanteDetalles = new ArrayList<>();
+		Double montoMora = 0.00;
+
+		CuotaPrestamoPK cuotaPrestamoPK = new CuotaPrestamoPK();
+		cuotaPrestamoPK.setIdPrestamo(idPrestamo);
+		cuotaPrestamoPK.setIdCuotaPrestamo(idCuotaPrestamo);
+
+		listaComprobanteDetalles = comprobanteDetalleService.listar();
+
+		for (ComprobanteDetalle comprobanteDetalle : listaComprobanteDetalles) {
+
+			if (comprobanteDetalle.getCuotaPrestamo().getCuotaPrestamoPk().getIdPrestamo() == idPrestamo) {
+				if (comprobanteDetalle.getCuotaPrestamo().getCuotaPrestamoPk()
+						.getIdCuotaPrestamo() == idCuotaPrestamo) {
+
+					montoMora += comprobanteDetalle.getMontoMora();
+				}
+			}
+		}
+		return montoMora;
 	}
 
 }
