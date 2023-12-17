@@ -16,40 +16,35 @@ import com.mashape.unirest.http.Unirest;
 @RequestMapping("/api/reuzable/")
 public class ReuzableApiController {
 
-
-	
 	@GetMapping("/consulta/{tipoDocumento}/{numDocumento}")
-public static String consultaDni(@PathVariable String tipoDocumento  , @PathVariable String numDocumento) {
-		
+	public static String consultaDni(@PathVariable String tipoDocumento, @PathVariable String numDocumento) {
+
 		String res = "";
-		
-		
+
 		String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImxyMjcwNzIwMDFAZ21haWwuY29tIn0.uSeFR7UMIxYmAzZmllUAVPBZHFiqghwmoMYoFTbhTIo";
-		
-		
+
 		try {
-			
+
 			Unirest.setTimeouts(0, 0);
-			HttpResponse<String> response = Unirest.get("https://dniruc.apisperu.com/api/v1/"+tipoDocumento+"/"+ numDocumento +"?token=" + token)
-			  .header("Content-Type", "application/json")
-			  .asString();
+			HttpResponse<String> response = Unirest
+					.get("https://dniruc.apisperu.com/api/v1/" + tipoDocumento + "/" + numDocumento + "?token=" + token)
+					.header("Content-Type", "application/json")
+					.asString();
 
 			Gson gson = new GsonBuilder().setPrettyPrinting().create();
-			
-			res =response.getBody();
-			
+
+			res = response.getBody();
+
 			JsonObject jsonObject = JsonParser.parseString(res).getAsJsonObject();
-			
+
 			res = gson.toJson(jsonObject);
-			
-			
-		}catch(Exception ex) {
+
+		} catch (Exception ex) {
 			res = ex.getMessage();
 		}
-		
 
 		System.out.println(res);
-		
+
 		return res;
 	}
 }

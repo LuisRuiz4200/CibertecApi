@@ -13,11 +13,15 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
 		integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
 		crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+		integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
 	<!-- Fin de Bootstrap -->
 	<!-- Estilo de la tabla -->
 	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.2/css/dataTables.bootstrap4.min.css">
 	<!-- Fin del estilo de tabla -->
-	<title>Rendimiento financiero por grupo</title>
+	<!--<title>Rendimiento financiero por grupo</title>-->
+	<title>Rendimiento Financiero</title>
 	<!-- Creamos style para css -->
 	<style type="text/css">
 		/*Aqui con este modal-header damos estilo al contenedor del titulo REGISTRAR DOCENTE */
@@ -89,8 +93,8 @@
 								<select class="form-select" id="idFiltroPrestamista" name="prestamista">
 									<option>[SELECCIONE]</option>
 									<option th:each="prestamistaJefe : ${listaPrestamistasJefe}"
-									th:value="${prestamistaJefe.prestamista.idPersona}"
-									th:text="${prestamistaJefe.prestamista.nombresApellidos}"></option>
+										th:value="${prestamistaJefe.prestamista.idPersona}"
+										th:text="${prestamistaJefe.prestamista.nombresApellidos}"></option>
 								</select>
 							</div>
 						</div>
@@ -113,7 +117,7 @@
 
 						<div class="col-lg-1">
 							<div class="form-group">
-								<input id="rentabilidad" class="form-control" type="text" placeholder="Ingresar monto"
+								<input id="rentabilidad" class="form-control" type="text" placeholder="0.00%"
 									style="margin-bottom: 29px;" readonly>
 							</div>
 						</div>
@@ -123,17 +127,43 @@
 
 
 				<!--BOTON ROJO > -->
-				<div class="col-md-2">
+				<!--	<div class="col-md-2">
 					<div class="form-group">
 
 						<button type="submit" class="btn btn-success w-100" id="btnFiltrar"
 							style="margin-left: 120px; margin-bottom:30px">Filtrar</button>
 					</div>
-				</div>
+				</div> -->
 			</div> <!--FIN Contenedor 10 + 1 del boton para que este a costado-->
 		</form>
-
 		<!-- FIN DEL FORMULARIO -->
+		<!--<div class="row align-items-center" style="width: 100%;">
+				<div class="col-md-4">
+					<div class="form-group">
+
+						<button type="submit" class="btn btn-success" id="btnFiltrar"
+							style="margin-left: 1222px; margin-bottom:5px">Filtrar</button>
+							<button type="submit" id="btnFiltrar" style="margin-left: 1235px; margin-bottom: 5px; border: none;" onclick="alert('El botón funciona')">
+							    <img src="/img/excel.png" style="width: 30px; height: 30px; margin-right: 5px">
+							</button>
+
+					</div>
+				</div>
+		</div>-->
+
+		<!--PARA EXCEL BOTON-->
+
+		<!--	<div class="row align-items-center" style="width: 100%;">
+			<div class="col-md-12">-->
+		<!--<div class="form-group"> Float right para la derecha de md-12 de tamaño
+					<button type="submit" id="btnFiltrar" class="float-right" style="margin-bottom: 5px; border: none;"
+						onclick="alert('El botón funciona')">
+						<img src="/img/excel.png" style="width: 30px; height: 30px; margin-right: 5px">
+					</button>
+				</div>
+			</div>
+		</div>-->
+
 
 		<!-- INICIO DE DIV PARA SEPARACIÓN MT-4 -->
 		<!-- ESPACIADO  class mt-4 es margen superior de 4 para toda la tabla -->
@@ -148,15 +178,16 @@
 						<!-- Aqui se ponen el nombre de los encabezados de la tabla -->
 						<th class="text-center">Prestamista</th>
 						<th class="text-center">Prestado</th>
+						<th class="text-center">Interes</th>
 						<th class="text-center">Pagado</th>
 						<th class="text-center">Pendiente</th>
 						<th class="text-center">Rentabilidad</th>
 					</tr>
 				</thead>
 				<!-- Dentro del cuerpo creamos tr que es una fila y td es celda dentro de la fila -->
-				<tbody class="text-center">
+				<tbody id="tableRevisaByChiefBody" class="text-center">
 					<!--Inicio REGISTROS-->
-					<tr>
+					<!-- <tr>
 						<td>Juan Quispe</td>
 						<td>8000.20</td>
 						<td>1500</td>
@@ -176,63 +207,7 @@
 						<td>1700</td>
 						<td>1400</td>
 						<td>30%</td>
-					</tr>
-					<!--	<tr>
-                <td>Luci Perez</td>
-                <td>8000</td>
-                <td>1700</td>
-                <td>1400</td>
-                <td>30%</td>
-            		</tr>
-            		<tr>
-                <td>Luci Perez</td>
-                <td>8000</td>
-                <td>1700</td>
-                <td>1400</td>
-                <td>30%</td>
-            		</tr>
-            		<tr>
-                <td>Luci Perez</td>
-                <td>8000</td>
-                <td>1700</td>
-                <td>1400</td>
-                <td>30%</td>
-            		</tr>
-            		<tr>
-                <td>Luci Perez</td>
-                <td>8000</td>
-                <td>1700</td>
-                <td>1400</td>
-                <td>30%</td>
-            		</tr>
-            		<tr>
-                <td>Luci Perez</td>
-                <td>8000</td>
-                <td>1700</td>
-                <td>1400</td>
-                <td>30%</td>
-            		</tr>
-            		<tr>
-                <td>Luci Perez</td>
-                <td>8000</td>
-                <td>1700</td>
-                <td>1400</td>
-                <td>30%</td>
-            		</tr>
-            		<tr>
-                <td>Luci Perez</td>
-                <td>8000</td>
-                <td>1700</td>
-                <td>1400</td>
-                <td>30%</td>
-            		</tr>
-            		<tr>
-                <td>Luci Perez</td>
-                <td>8000</td>
-                <td>1700</td>
-                <td>1400</td>
-                <td>30%</td>
-            		</tr>-->
+					</tr> -->
 
 
 					<!-- Nueva fila -->
@@ -241,6 +216,8 @@
 						<td>Suma de Monto de todos los prestamos</td>
 						<!-- Suma de la columna Prestado -->
 						<td id="sumaPrestado"></td>
+						<!-- Suma de la columna Interes -->
+						<td id="sumaInteres"></td>
 						<!-- Suma de la columna Pagado -->
 						<td id="sumaPagado"></td>
 						<!-- Suma de la columna Pendiente -->
@@ -262,7 +239,7 @@
 	</br>
 	</br>
 
-	<div class="row">
+	<!--	<div class="row">
 		<div class="col-lg-6">
 			<div class="panel">
 				<div class="panel-header">
@@ -274,7 +251,7 @@
 				</div>
 			</div>
 		</div>
-		<!--OTRO GRAFICO-->
+		
 		<div class="col-lg-6">
 			<div class="panel">
 				<div class="panel-header">
@@ -290,8 +267,9 @@
 							<h3 class="text-center">Prestamista</h3>
 						</div>
 						<div class="col-auto m-auto">
-							<select id="cboPrestamistasPorPrestamistaJefe" class="form-select text-center" name="soloConductorEmpleado">
-								
+							<select id="cboPrestamistasPorPrestamistaJefe" class="form-select text-center"
+								name="soloConductorEmpleado">
+
 							</select>
 						</div>
 					</div>
@@ -305,7 +283,7 @@
 		</div>
 
 
-	</div> <!-- FIN DE ROW GRAFICOS-->
+	</div> < FIN DE ROW GRAFICOS-->
 
 	</br>
 	</br>
@@ -326,68 +304,259 @@
 	<!--DataTable -->
 	<script src="https://cdn.datatables.net/1.13.2/js/jquery.dataTables.min.js"></script>
 	<script src="https://cdn.datatables.net/1.13.2/js/dataTables.bootstrap4.min.js"></script>
-	<!-- PARA GRAFICO  -->
-	<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+	<!--UY-->
+	<script src="/js/dataTables.buttons.min.js"></script>
+	<script src="/js/jszip.min.js"></script>
+	<script src="/js/pdfmake.min.js"></script>
+	<script src="/js/vfs_fonts.js"></script>
+	<script src="/js/buttons.html5.min.js"></script>
+	<!---Estilos en excel-->
+	<script
+		src="https://cdn.jsdelivr.net/npm/datatables-buttons-excel-styles@1.1.1/js/buttons.html5.styles.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/datatables-buttons-excel-styles@1.1.1/js/buttons.html5.styles.templates.min.js"></script>
+	<!-- PARA GRAFICO -->
+	<!-- <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
 	<script src="https://cdn.amcharts.com/lib/5/percent.js"></script>
 	<script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
 	<script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
 	<script src="https://cdn.amcharts.com/lib/5/radar.js"></script>
 
 	<script src="/js/grafico/charts.js"></script>
-	<script src="/js/grafico/charts3.js"></script>
+	<script src="/js/grafico/charts3.js"></script> -->
 	<!-- FIN PARA GRAFICO  -->
 
 	<script>
-		$(document).ready(function () {
-			$('#tableRevisaByChief').DataTable();
-		});
+		//$(document).ready(function () {
+		//	$('#tableRevisaByChief').DataTable();
+		// });
+
+		/*$(document).ready(function () {
+					$('#tableRevisaByChief').DataTable({
+						//dom: 'Bfrtip', // Uncomment this line to enable DataTables buttons
+						dom: 'Blfrtip',
+						buttons: [
+							{
+								extend: 'excelHtml5',
+								text: '<i class="demo-pli-file-html"></i>',
+								titleAttr: 'Exportar a Excel',
+								className: 'btn btn-success'
+							}
+							// Uncomment the following lines if you want to include other buttons
+							// 'copyHtml5',
+							// 'csvHtml5',
+							// 'pdfHtml5'
+						]
+					});
+				});*/
+
+
 
 	</script>
 
 	<script>
-		// Calcular los valores dinámicamente
-		var sumaPrestado = 0;
-		var sumaPagado = 0;
-		var sumaPendiente = 0;
-		var sumaRentabilidad = 0;
-		var numFilas = 0;
 
-		// Recorrer las filas de la tabla y sumar los valores
-		$("#tableRevisaByChief tbody tr:not(#totalRow)").each(function () {
-			var prestado = parseFloat($(this).find("td:eq(1)").text().replace(",", ""));
-			var pagado = parseFloat($(this).find("td:eq(2)").text().replace(",", ""));
-			var pendiente = parseFloat($(this).find("td:eq(3)").text().replace(",", ""));
-			var rentabilidad = parseFloat($(this).find("td:eq(4)").text().replace("%", ""));
+		const selectJefePrestamista = document.getElementById('idFiltroPrestamista');
 
-			sumaPrestado += prestado;
-			sumaPagado += pagado;
-			sumaPendiente += pendiente;
-			sumaRentabilidad += rentabilidad;
-			numFilas++;
+		let dataTableInitialized = false;
+
+		selectJefePrestamista.addEventListener("change", async () => {
+			//cojo el selectJefePrestamista
+			const id = selectJefePrestamista.value;
+
+			try {
+				// Destruir la instancia existente de DataTable, si existe
+				if (dataTableInitialized) {
+					$('#tableRevisaByChief').DataTable().destroy();
+					dataTableInitialized = false;
+				}
+
+				//De aca trae id para rendimientoApiController
+				const response = await fetch(`http://localhost:9090/api/redimiento/redimientoByJefe?id=${id}`);
+				const data = await response.json();
+
+				const tableBody = document.getElementById("tableRevisaByChiefBody");
+				tableBody.innerHTML = "";
+
+				// Acumuladores para el total
+				let sumaPrestado = 0,
+					sumaInteres = 0,
+					sumaPagado = 0,
+					sumaPendiente = 0,
+					sumaRentabilidad = 0;
+
+				// Por cada item de la data, crear una fila y agregarla a la tabla
+				// Además ir sumando los valores
+				for (const item of data) {
+					const row = createRow(item);
+					tableBody.appendChild(row);
+
+					sumaPrestado += item.totalPrestado;
+					sumaInteres += item.totalInteres;
+					sumaPagado += item.totalPagado;
+					sumaPendiente += item.totalPendiente;
+					sumaRentabilidad += item.rentabilidad;
+				}
+
+				// Crear la fila de totales
+				const totalRow = createRow({
+					nombrePrestamista: "Suma de totales",
+					totalPrestado: sumaPrestado,
+					totalInteres: sumaInteres,
+					totalPagado: sumaPagado,
+					totalPendiente: sumaPendiente,
+					rentabilidad: sumaRentabilidad / data.length,
+				});
+
+				// Pintar la fila de totales
+				Array.from(totalRow.children).forEach((cell) => {
+					cell.style.backgroundColor = "#007bffc2";
+				});
+
+				// Agregar la fila de totales a la tabla
+				tableBody.appendChild(totalRow);
+
+				// Inicializar el DataTable
+				/*	$(document).ready(function () {
+						$('#tableRevisaByChief').DataTable();
+						
+					});
+					*/
+
+
+				//FUNCIONAL
+				//$(document).ready(function () {
+				$('#tableRevisaByChief').DataTable({
+					//dom: 'Bfrtip', // Uncomment this line to enable DataTables buttons
+					dom: 'Blfrtip',
+					buttons: [
+
+
+						{
+							extend: 'excelHtml5',
+							title: 'Rentabilidad Por Prestamista',
+							text: '<i class="fas fa-file-excel"></i>',
+							titleAttr: 'Exportar a Excel',
+							className: 'btn btn-success',
+							excelStyles: {
+								template: 'blue_medium'
+
+							}
+						},
+						{
+							extend: 'pdfHtml5',
+							title: 'Rentabilidad Por Prestamista',
+							text: '<i class="fas fa-file-pdf"></i>',
+							titleAttr: 'Exportar a PDF',
+							className: 'btn btn-danger'
+
+						}
+
+						// Uncomment the following lines if you want to include other buttons
+						// 'copyHtml5',
+						// 'csvHtml5',
+						// 'pdfHtml5'
+					]
+				});
+				dataTableInitialized = true;
+				//});
+
+
+
+
+
+
+
+
+				// Actualizar el valor de la rentabilidad del grupo
+				const inputRetabilidad = document.getElementById("rentabilidad");
+				inputRetabilidad.value = `${(sumaRentabilidad / data.length).toFixed(2)} %`;
+
+			} catch (error) {
+				console.error("Error al obtener los datos:", error);
+			}
 		});
 
-		// Calcular el promedio de la rentabilidad
-		var promedioRentabilidad = sumaRentabilidad / numFilas;
+		function createRow(data) {
+			const row = document.createElement('tr');
 
-		// Actualizar los valores en los TD correspondientes
-		$("#sumaPrestado").text(sumaPrestado);
-		$("#sumaPagado").text(sumaPagado);
-		$("#sumaPendiente").text(sumaPendiente);
-		$("#promedioRentabilidad").text(promedioRentabilidad.toFixed(2) + "%");
+			const columns = [
+				"nombrePrestamista",
+				"totalPrestado",
+				"totalInteres",
+				"totalPagado",
+				"totalPendiente",
+				"rentabilidad",
+			];
 
+			for (const column of columns) {
+				const cell = document.createElement('td');
+				let cellValue;
 
-		if (numFilas > 0) {
+				if (column === "nombrePrestamista") {
+					cellValue = data[column];
+				} else if (column === "rentabilidad") {
+					cellValue = `${data[column].toFixed(2)} %`;
+				} else {
+					cellValue = `S/ ${data[column].toFixed(2)}`;
+				}
+
+				cell.textContent = cellValue;
+				row.appendChild(cell);
+			}
+
+			return row;
+		}
+
+		function calcularTotales() {
+			// Recorrer las filas de la tabla y sumar los valores
+			$("#tableRevisaByChief tbody tr:not(#totalRow)").each(function () {
+				var prestado = parseFloat($(this).find("td:eq(1)").text().replace(",", ""));
+				var interes = parseFloat($(this).find("td:eq(2)").text().replace(",", ""));
+				var pagado = parseFloat($(this).find("td:eq(3)").text().replace(",", ""));
+				var pendiente = parseFloat($(this).find("td:eq(4)").text().replace(",", ""));
+				var rentabilidad = parseFloat($(this).find("td:eq(5)").text().replace("%", "").trim());
+
+				sumaPrestado += prestado;
+				sumaInteres += interes;
+				sumaPagado += pagado;
+				sumaPendiente += pendiente;
+				sumaRentabilidad += rentabilidad;
+				numFilas++;
+			});
+
 			// Calcular el promedio de la rentabilidad
 			var promedioRentabilidad = sumaRentabilidad / numFilas;
 
-			// Actualizar el valor en el input
-			$("#rentabilidad").val(promedioRentabilidad.toFixed(2) + "%");
-		} else {
-			// Si no hay filas, establecer el valor predeterminado en 0.0
-			$("#rentabilidad").val("0.0%");
+			// Actualizar los valores en los TD correspondientes
+			$("#sumaPrestado").text(sumaPrestado);
+			$("#sumaInteres").text(sumaInteres);
+			$("#sumaPagado").text(sumaPagado);
+			$("#sumaPendiente").text(sumaPendiente);
+			$("#promedioRentabilidad").text(promedioRentabilidad.toFixed(2) + "%");
+
+
+			if (numFilas > 0) {
+				// Calcular el promedio de la rentabilidad
+				var promedioRentabilidad = sumaRentabilidad / numFilas;
+
+				// Actualizar el valor en el input
+				$("#rentabilidad").val(promedioRentabilidad.toFixed(2) + "%");
+			} else {
+				// Si no hay filas, establecer el valor predeterminado en 0.0
+				$("#rentabilidad").val("0.0%");
+			}
 		}
 
 	</script>
+
+	<script>
+
+
+
+	</script>
+
+
 </body>
 
 </html>

@@ -45,13 +45,13 @@ function validarFiltrosBusquedaSolicitud() {
 
 
 
-	formularioListaSolicitud.addEventListener('submit', function(event) {
+	formularioListaSolicitud.addEventListener('submit', function (event) {
 
 		var fechaDesde = document.getElementById("idFechaDesde").value;
 		var fechaHasta = document.getElementById("idFechaHasta").value;
 		var prestatario = document.getElementById("idFiltroPrestatario").value;
 
-		
+
 		if (prestatario > 0) {
 			if (!fechaDesde || !fechaHasta) {
 				toastr.warning("Debe incluir un rango de fechas");

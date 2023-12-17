@@ -12,5 +12,5 @@ import com.cibertec.api.model.ComprobanteDetallePK;
 public interface ComprobanteDetalleRepository extends JpaRepository<ComprobanteDetalle, ComprobanteDetallePK> {
 
 	public List<ComprobanteDetalle> findByComprobanteDetallePKIdComprobante(int idComprobante);
-	
+
 }

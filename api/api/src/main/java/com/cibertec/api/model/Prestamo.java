@@ -8,12 +8,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,7 +24,7 @@ import jakarta.persistence.TemporalType;
 import lombok.Data;
 
 @Entity
-@Table(name="tb_prestamo")
+@Table(name = "tb_prestamo")
 @Data
 public class Prestamo {
 	@Id
@@ -34,9 +32,9 @@ public class Prestamo {
 	private int idPrestamo;
 
 	@ManyToOne
-	@JoinColumn(name="idSolicitudPrestamo")
+	@JoinColumn(name = "idSolicitudPrestamo")
 	@JsonProperty("solicitudPrestamo")
-	private SolicitudPrestamo solicitudPrestamo ;
+	private SolicitudPrestamo solicitudPrestamo;
 
 	private double monto;
 	private int cuotas;
@@ -46,16 +44,16 @@ public class Prestamo {
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern = "yyy-MM-dd hh:mm:ss")
 	private Date fechaRegistro;
-	
+
 	private boolean activo;
-	
-	@OneToMany(mappedBy = "prestamo",cascade = CascadeType.PERSIST)
+
+	@OneToMany(mappedBy = "prestamo", cascade = CascadeType.PERSIST)
 	@JsonBackReference
-	//@JsonManagedReference
+	// @JsonManagedReference
 	private List<CuotaPrestamo> listaCuotaPrestamo = new ArrayList<>();
 
 	@OneToMany(mappedBy = "prestamo")
 	@JsonIgnore
 	private List<Comprobante> listaComprobantes = new ArrayList<>();
-	
+
 }

@@ -3,11 +3,23 @@ package com.cibertec.api.controller;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.apachecommons.CommonsLog;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +32,7 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.cibertec.api.model.GrupoPrestamista;
+import com.cibertec.api.UtilExcel.UtilExcel;
 import com.cibertec.api.model.Persona;
 import com.cibertec.api.model.Prestamista;
 import com.cibertec.api.model.Prestatario;
@@ -27,6 +40,7 @@ import com.cibertec.api.model.Rol;
 import com.cibertec.api.model.SolicitudDto;
 import com.cibertec.api.model.SolicitudPrestamo;
 import com.cibertec.api.model.Usuario;
+import com.cibertec.api.reuzable.Utils;
 import com.cibertec.api.service.GrupoPrestamistaService;
 import com.cibertec.api.service.PrestamistaService;
 import com.cibertec.api.service.PrestatarioService;
@@ -206,13 +220,13 @@ public class PrestamistaController {
 
 	// Metodo para actualizar
 	@GetMapping("/actualizar/{id}")
-	public String editarPrestamista(@PathVariable(name = "id") int id, Model model, RedirectAttributes flash, HttpSession session) {
-		
-		
+	public String editarPrestamista(@PathVariable(name = "id") int id, Model model, RedirectAttributes flash,
+			HttpSession session) {
+
 		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
 		if (userLogged == null)
 			return "redirect:/login";
-		
+
 		// creamos objeto presta inicializado en null
 		Prestamista presta = null;
 		// Valida que el id sea mayor a 0
@@ -257,7 +271,7 @@ public class PrestamistaController {
 			Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
 			if (userLogged == null)
 				return "redirect:/login";
-			
+
 			int rolIngreso = userLogged.getRol().getIdRol();
 
 			// Como admin - Elimino a un Jefe
@@ -299,7 +313,7 @@ public class PrestamistaController {
 		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
 		if (userLogged == null)
 			return "redirect:/login";
-		
+
 		Prestamista prestamista = service.listarPrestamistaPorId(userLogged.getPersona().getIdPersona());
 		List<Prestatario> PrestatariosList = new ArrayList<>();
 
@@ -346,12 +360,11 @@ public class PrestamistaController {
 			@RequestParam("fechaDesde") String fechaDesde,
 			@RequestParam("fechaHasta") String fechaHasta,
 			Model model, HttpSession session) throws ParseException {
-		
-		
+
 		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
 		if (userLogged == null)
 			return "redirect:/login";
-		
+
 		List<SolicitudPrestamo> listaSolicitudes = new ArrayList<SolicitudPrestamo>();
 		if (idPrestamista == -1) {
 
@@ -381,20 +394,18 @@ public class PrestamistaController {
 
 	@GetMapping("/revisarEstadoPrestamoByJefePrestamista")
 	private String listarPrestamoRevisarByBoss(Model model, HttpSession session) {
-		
+
 		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
-		
+
 		if (userLogged == null)
 			return "redirect:/login";
-		
-
 
 		return "ChiefRevisaPrestamo";
 	}
 
 	// ----------------
 
-	// ------------
+	// ------------ ADMIN REVISA RENDIMIENTO
 
 	@GetMapping("/revisarRendimientoByAdmin")
 	private String LookRendiByAdmin(Model model, HttpSession session) {
@@ -402,15 +413,133 @@ public class PrestamistaController {
 		Usuario userLogged = (Usuario) session.getAttribute("UserLogged");
 		if (userLogged == null)
 			return "redirect:/login";
-		
 
 		List<Prestamista> listaPrestamistasJefe = new ArrayList<>();
-		listaPrestamistasJefe = grupoPrestamistaService.listar().stream().map(c->c.getJefePrestamista()).distinct().toList();
-		
-		model.addAttribute("listaPrestamistasJefe",listaPrestamistasJefe);
-		
+
+		Rol rolJefes = new Rol();
+		rolJefes.setIdRol(Utils.ROL_JEFE_PRESTAMISTA);
+		List<Usuario> users = userService.getUsuarioByRol(rolJefes);
+
+		listaPrestamistasJefe = users.stream()
+				.map(usuario -> service.getByIdPrestamistaActivo(usuario.getPersona().getIdPersona()))
+				.collect(Collectors.toList());
+
+		if (listaPrestamistasJefe != null) {
+			listaPrestamistasJefe = listaPrestamistasJefe.stream().filter(Objects::nonNull)
+					.collect(Collectors.toList());
+		}
+		// listaPrestamistasJefe = grupoPrestamistaService.listar().stream().map(c ->
+		// c.getJefePrestamista()).distinct()
+		// .toList();
+
+		model.addAttribute("listaPrestamistasJefe", listaPrestamistasJefe);
+
 		return "AdminRevisaRendimiento";
-	}
+	}// fin de LookRendiByAdmin
+
+	// REPORTE EXCEL CONSTANTES
+	private static String[] HEADERs = { "Prestamista", "Prestado","Interes","Pagado", "Pendiente", "Rentabilidad" };
+	private static String SHEET = "Listado";
+	private static String TITLE = "Listado de Prestamistas y Rendimiento Financiero  - Administrador";
+	private static int[] HEADER_WITH = { 20000, 10000, 6000,6000 ,10000, 6000 };
+
+	// REPORTE EN EXCEL
+	@PostMapping("/reporteRendimientoExcel")
+	public void exportaExcel(
+			@RequestParam(name = "idJefePrestamista", required = false, defaultValue = "-1") int idJefePrestamista,
+			HttpServletRequest request,
+			HttpServletResponse response) {
+
+		Workbook excel = null;
+		try {
+			// Se crear el Excel
+			excel = new XSSFWorkbook();
+
+			// Se crear la hoja del Excel
+			Sheet hoja = excel.createSheet(SHEET);
+
+			hoja.addMergedRegion(new CellRangeAddress(0, 0, 0, HEADER_WITH.length - 1));
+
+			// Se establece el ancho de las columnas
+			for (int i = 0; i < HEADER_WITH.length; i++) {
+				hoja.setColumnWidth(i, HEADER_WITH[i]);
+			}
+
+			CellStyle estiloHeadCentrado = UtilExcel.setEstiloHeadCentrado(excel);
+			CellStyle estiloHeadIzquierda = UtilExcel.setEstiloHeadIzquierda(excel);
+			CellStyle estiloNormalCentrado = UtilExcel.setEstiloNormalCentrado(excel);
+			CellStyle estiloNormalIzquierda = UtilExcel.setEstiloNormalIzquierdo(excel);
+
+			// Fila 0
+			Row fila1 = hoja.createRow(0);
+			Cell celAuxs = fila1.createCell(0);
+			celAuxs.setCellStyle(estiloHeadIzquierda);
+			celAuxs.setCellValue(TITLE);
+
+			// Fila 1
+			Row fila2 = hoja.createRow(1);
+			Cell celAuxs2 = fila2.createCell(0);
+			celAuxs2.setCellValue("");
+
+			// Fila 2
+			Row fila3 = hoja.createRow(2);
+			for (int i = 0; i < HEADERs.length; i++) {
+				Cell celda1 = fila3.createCell(i);
+				celda1.setCellStyle(estiloHeadCentrado);
+				celda1.setCellValue(HEADERs[i]);
+			}
+
+			// Listado declarado
+			List<Prestamista> lista = new ArrayList<>();
+			// coge el idJefePrestamista de parametro, lo almacena en jefePrestamista
+			Prestamista jefePrestamista = service.getPrestamistaById(idJefePrestamista).orElse(null);
+			// listado de prestamista por jefe y que esten activos
+			List<Prestamista> lstSalida = grupoController.listGrupoByJefePrestamistaAndActivo(jefePrestamista);
+
+			// Fila 3....n
+			int rowIdx = 3;
+			for (Prestamista obj : lstSalida) {
+				Row row = hoja.createRow(rowIdx++);
+
+				Cell cel0 = row.createCell(0);
+				cel0.setCellValue(obj.getPrestamista().getNombresApellidos()); // Nombres y apellidos
+				cel0.setCellStyle(estiloNormalCentrado);
+
+				Cell cel1 = row.createCell(1);
+				cel1.setCellValue(obj.getPrestamista().getNombresApellidos());// Prestado
+				cel1.setCellStyle(estiloNormalIzquierda);
+
+				Cell cel2 = row.createCell(2);
+				cel2.setCellValue(obj.getPrestamista().getNombresApellidos());// Pagado
+				cel2.setCellStyle(estiloNormalCentrado);
+
+				Cell cel3 = row.createCell(3);
+				cel3.setCellValue(obj.getPrestamista().getNombresApellidos()); // Pendiente
+				cel3.setCellStyle(estiloNormalCentrado);
+
+				Cell cel4 = row.createCell(4);
+				cel4.setCellValue(obj.getPrestamista().getNombresApellidos()); // Rentabilidad
+				cel4.setCellStyle(estiloNormalIzquierda);
+
+			}
+
+			response.setContentType("application/vnd.ms-excel");
+			response.addHeader("Content-disposition", "attachment; filename=ReporteRendimientoPrestamista.xlsx");
+
+			OutputStream outStream = response.getOutputStream();
+			excel.write(outStream);
+			outStream.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (excel != null)
+					excel.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}// fin de exportaExcel
 
 	// ----------------
 

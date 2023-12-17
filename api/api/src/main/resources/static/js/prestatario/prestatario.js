@@ -18,7 +18,7 @@ function obtenerDni() {
 					resolve(data.mensaje);
 				}
 			});
-	})
+	});
 }
 
 
@@ -38,7 +38,7 @@ function validarDniExiste() {
 					resolve(false);
 				}
 			});
-	})
+	});
 }
 
 function validarRucExiste() {
@@ -56,7 +56,7 @@ function validarRucExiste() {
 					resolve(false);
 				}
 			});
-	})
+	});
 }
 
 function validarFormulario() {
@@ -123,7 +123,7 @@ function validarFormulario() {
 						toastr.success("dni permitido");
 					}
 
-					documentoExiste = dniExiste
+					documentoExiste = dniExiste;
 
 					if (!documentoExiste) {
 						Swal.fire({
@@ -158,7 +158,7 @@ function validarFormulario() {
 								toastr.success("dni permitido");
 							}
 
-							documentoExiste = dniExiste
+							documentoExiste = dniExiste;
 
 							if (!documentoExiste) {
 								Swal.fire({
@@ -173,7 +173,7 @@ function validarFormulario() {
 						});
 				}
 
-			})
+			});
 
 		}
 	}); //fin de form.addEventListener

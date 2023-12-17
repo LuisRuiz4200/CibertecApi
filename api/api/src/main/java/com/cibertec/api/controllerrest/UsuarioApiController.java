@@ -37,7 +37,7 @@ public class UsuarioApiController {
 		}
 		return response;
 	}
-	
+
 	@GetMapping("/obtenerUsuario/{idUsuario}")
 	@ResponseBody
 	private Map<?, ?> obtenerUsuario(@PathVariable int idUsuario) {
@@ -47,8 +47,8 @@ public class UsuarioApiController {
 		try {
 			Usuario usuario = uService.listarUsuarioPorId(idUsuario);
 			if (usuario != null) {
-				response.put("nombreUsuario", usuario.getNombreUsuario() );
-				response.put("claveUsuario", usuario.getClaveUsuario() );
+				response.put("nombreUsuario", usuario.getNombreUsuario());
+				response.put("claveUsuario", usuario.getClaveUsuario());
 			}
 
 		} catch (Exception ex) {

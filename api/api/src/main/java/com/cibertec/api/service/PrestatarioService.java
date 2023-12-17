@@ -6,25 +6,26 @@ import java.util.Optional;
 import com.cibertec.api.model.Prestamista;
 import com.cibertec.api.model.Prestatario;
 
-
 public interface PrestatarioService {
 
-	//Creamos metodos para CRUD	
-	
+	// Creamos metodos para CRUD
+
 	public List<Prestatario> listarPrestatario();
-			
+
 	public Prestatario listarPrestatarioPorId(int id);
-			
+
 	public Prestatario guardarPrestatario(Prestatario prestatario);
-	
+
 	public void eliminarPrestatario(int id);
-    List<Prestatario> listByPrestamistaAndActivo(Prestamista Prestamista, boolean activo);
+
+	List<Prestatario> listByPrestamistaAndActivo(Prestamista Prestamista, boolean activo);
+
 	Optional<Prestatario> getPrestatarioById(int id);
 
 	Prestatario buscarPorDni(String dni);
 
 	Prestatario buscarPorRuc(String ruc);
 
-	Prestatario buscarPorDniOPorRuc(String dni, String ruc);	
-	
+	Prestatario buscarPorDniOPorRuc(String dni, String ruc);
+
 }

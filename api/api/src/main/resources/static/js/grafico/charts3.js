@@ -7,7 +7,7 @@ async function cargarPrestamistasAgente() {
 
 	var cboPrestamistasJefe = document.getElementById("idFiltroPrestamista");
 	var root = am5.Root.new("chartdiv3");
-	cboPrestamistasJefe.addEventListener('change', async function() {
+	cboPrestamistasJefe.addEventListener('change', async function () {
 		graficos(root);
 	});
 
@@ -22,7 +22,7 @@ async function dashboard(idJefePrestamista) {
 		.then(data => {
 			console.log(data.mensaje);
 			return data;
-		})
+		});
 
 }
 
@@ -49,7 +49,7 @@ function cargarCboPrestamistasPorPrestamistaJefe(listaPrestamistas) {
 
 function graficos(root) {
 
-	am5.ready(async function() {
+	am5.ready(async function () {
 
 		var cboPrestamistasJefe = document.getElementById("idFiltroPrestamista");
 		var cboPrestamistas = document.getElementById("cboPrestamistasPorPrestamistaJefe");
@@ -113,7 +113,7 @@ function graficos(root) {
 			pinRadius: am5.percent(20),
 			radius: am5.percent(100),
 			bottomWidth: 40
-		})
+		});
 
 		var bullet = axisDataItem.set("bullet", am5xy.AxisBullet.new(root, {
 			sprite: clockHand
@@ -130,20 +130,20 @@ function graficos(root) {
 		}));
 
 		axisDataItem.set("value", 0); //de Value 0 cambiara al to 349 de la linea 250
-		bullet.get("sprite").on("rotation", function() {
+		bullet.get("sprite").on("rotation", function () {
 			var value = axisDataItem.get("value");
 			var text = Math.round(axisDataItem.get("value")).toString();
 			var fill = am5.color(0x000000);
-			xAxis.axisRanges.each(function(axisRange) {
+			xAxis.axisRanges.each(function (axisRange) {
 				if (value >= axisRange.get("value") && value <= axisRange.get("endValue")) {
 					fill = axisRange.get("axisFill").get("fill");
 				}
-			})
+			});
 
 			label.set("text", Math.round(value).toString());
 
-			clockHand.pin.animate({ key: "fill", to: fill, duration: 500, easing: am5.ease.out(am5.ease.cubic) })
-			clockHand.hand.animate({ key: "fill", to: fill, duration: 500, easing: am5.ease.out(am5.ease.cubic) })
+			clockHand.pin.animate({ key: "fill", to: fill, duration: 500, easing: am5.ease.out(am5.ease.cubic) });
+			clockHand.hand.animate({ key: "fill", to: fill, duration: 500, easing: am5.ease.out(am5.ease.cubic) });
 		});
 
 		var montoTotalPrestado = 0;
@@ -164,11 +164,11 @@ function graficos(root) {
 				if (prestamista.idPrestamista === parseInt(cboPrestamistas.value)) {
 					montoTotalPrestado = prestamista.resumen.montoTotalPrestado;
 
-					console.log(prestamista.nombreApellido)
+					console.log(prestamista.nombreApellido);
 				}
 			}
 
-			console.log(montoTotalPrestado)
+			console.log(montoTotalPrestado);
 
 			axisDataItem.animate({
 				key: "value",
@@ -178,7 +178,7 @@ function graficos(root) {
 				easing: am5.ease.out(am5.ease.cubic)
 			});
 
-		})
+		});
 
 		chart.bulletsContainer.set("mask", undefined);
 
@@ -222,7 +222,7 @@ function graficos(root) {
 			highScore: 10000
 		}];
 
-		am5.array.each(bandsData, function(data) {
+		am5.array.each(bandsData, function (data) {
 			var axisRange = xAxis.createAxisRange(xAxis.makeDataItem({}));
 
 			axisRange.setAll({

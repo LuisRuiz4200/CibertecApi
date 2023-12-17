@@ -13,29 +13,29 @@ import jakarta.persistence.Table;
 import lombok.ToString;
 
 @Entity
-@Table(name="tb_usuario")
+@Table(name = "tb_usuario")
 @ToString
 public class Usuario {
-	
+
 	@Id
-	@GeneratedValue(strategy =GenerationType.IDENTITY)
-	@Column(name="idUsuario")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "idUsuario")
 	private int idUsuario;
 
 	private String nombreUsuario;
 	private String claveUsuario;
-	
+
 	@ManyToOne
-	@JoinColumn(name="idRol")
+	@JoinColumn(name = "idRol")
 	private Rol rol;
-	
+
 	@ManyToOne
-	@JoinColumn(name="idPersona")
+	@JoinColumn(name = "idPersona")
 	private Persona persona;
-	
+
 	private Date fechaRegistro;
 	private Date fechaEdicion;
-	
+
 	private boolean activo;
 
 	public int getIdUsuario() {
@@ -102,5 +102,4 @@ public class Usuario {
 		this.activo = activo;
 	}
 
-	
 }

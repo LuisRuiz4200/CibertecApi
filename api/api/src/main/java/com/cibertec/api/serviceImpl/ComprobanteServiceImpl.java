@@ -10,26 +10,23 @@ import com.cibertec.api.repository.ComprobanteRepository;
 import com.cibertec.api.service.ComprobanteService;
 
 @Service
-public class ComprobanteServiceImpl implements ComprobanteService{
+public class ComprobanteServiceImpl implements ComprobanteService {
 
 	@Autowired
 	private ComprobanteRepository comprobanteRepository;
-	
+
 	@Override
 	public Comprobante guardar(Comprobante model) {
-		// TODO Auto-generated method stub
 		return comprobanteRepository.save(model);
 	}
 
 	@Override
 	public List<Comprobante> listar() {
-		// TODO Auto-generated method stub
 		return comprobanteRepository.findAll();
 	}
 
 	@Override
 	public void eliminar(int id) {
-		// TODO Auto-generated method stub
 		comprobanteRepository.deleteById(id);
 	}
 
@@ -41,7 +38,6 @@ public class ComprobanteServiceImpl implements ComprobanteService{
 
 	@Override
 	public Comprobante buscarPorId(int id) {
-		// TODO Auto-generated method stub
 		return comprobanteRepository.findById(id).get();
 	}
 
