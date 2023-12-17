@@ -52,12 +52,23 @@ function graficos(root) {
 	am5.ready(async function () {
 
 		var cboPrestamistasJefe = document.getElementById("idFiltroPrestamista");
+
+		if (cboPrestamistasJefe.value == "-1") {
+			return;
+		}
+
 		var cboPrestamistas = document.getElementById("cboPrestamistasPorPrestamistaJefe");
+
+		if (cboPrestamistas.value == "-1") {
+			return;
+		}
 
 		cboPrestamistas.innerHTML = '';
 
 		var apiDashboard = '';
 		apiDashboard = await dashboard(cboPrestamistasJefe.value);
+
+
 
 		cargarCboPrestamistasPorPrestamistaJefe(apiDashboard.detalle.prestamistas);
 
