@@ -470,7 +470,7 @@
 
 				// Actualizar el valor de la rentabilidad del grupo
 				const inputRetabilidad = document.getElementById("rentabilidad");
-				inputRetabilidad.value = `${(sumaRentabilidad / data.length * 100).toFixed(2)} %`;
+				inputRetabilidad.value = `${(sumaRentabilidad / data.length).toFixed(2)} %`;
 
 			} catch (error) {
 				console.error("Error al obtener los datos:", error);
