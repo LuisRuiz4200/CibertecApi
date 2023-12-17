@@ -22,7 +22,7 @@ import lombok.ToString;
 @Data
 public class Banco {
     @Id
-    @GeneratedValue(strategy =GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idBanco;
     private String descripcion;
 

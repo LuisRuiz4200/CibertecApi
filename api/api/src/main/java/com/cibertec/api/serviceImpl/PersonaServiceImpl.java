@@ -16,14 +16,14 @@ import lombok.NoArgsConstructor;
 @Service
 @AllArgsConstructor
 @NoArgsConstructor
-public class PersonaServiceImpl implements PersonaService{
-	
+public class PersonaServiceImpl implements PersonaService {
+
 	@Autowired
 	private PersonaRepository repo;
-	//Listado normal
+
+	// Listado normal
 	@Override
 	public List<Persona> listarPersona() {
-		
 		return repo.findAll();
 	}
 
@@ -32,13 +32,11 @@ public class PersonaServiceImpl implements PersonaService{
 		return repo.findById(id);
 	}
 
-	//Listado de manera logica
+	// Listado de manera logica
 	/*
 	 * @Override public List<PersonaM> listarPersona() { return
 	 * repo.findAll().stream() .filter(persona -> !persona.isActivo())
 	 * .collect(Collectors.toList()); }
 	 */
-	
-	 
-	
+
 }

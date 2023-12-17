@@ -23,8 +23,8 @@ public class ComprobanteDTO {
 	private String serieRef;
 	private int correlativoRef;
 	private Date fechaRegistro;
-	private String estado ;
-	
+	private String estado;
+
 	private List<ComprobanteDetalleDTO> listaComprobanteDetalle;
-	
+
 }

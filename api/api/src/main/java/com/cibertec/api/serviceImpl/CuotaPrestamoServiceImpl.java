@@ -12,13 +12,13 @@ import com.cibertec.api.repository.PrestamistaRepository;
 import com.cibertec.api.service.CuotaPrestamoService;
 
 @Service
-public class CuotaPrestamoServiceImpl implements CuotaPrestamoService{
+public class CuotaPrestamoServiceImpl implements CuotaPrestamoService {
 
 	@Autowired
 	CuotaPrestamoRepository cuotaPrestamoRepository;
 	@Autowired
 	PrestamistaRepository prestamistaRepository;
-	
+
 	@Override
 	public CuotaPrestamo guardar(CuotaPrestamo model) {
 		return cuotaPrestamoRepository.save(model);
@@ -32,32 +32,26 @@ public class CuotaPrestamoServiceImpl implements CuotaPrestamoService{
 	@Override
 	public void eliminar(int id) {
 		// TODO Auto-generated method stub
-		
 	}
-	
+
 	@Override
 	public void eliminarCuota(CuotaPrestamoPK cuotaPrestamoPK) {
 		cuotaPrestamoRepository.deleteByCuotaPrestamoPk(cuotaPrestamoPK);
 	}
-	
 
 	@Override
 	public List<CuotaPrestamo> listarPorId(int id) {
 		return cuotaPrestamoRepository.findByCuotaPrestamoPkIdPrestamo(id);
 	}
-	
 
 	@Override
 	public CuotaPrestamo buscarPorId(int id) {
 		return null;
 	}
+
 	@Override
 	public CuotaPrestamo buscarPorIdCompuesto(CuotaPrestamoPK cuotaPrestamoPK) {
-		
 		return cuotaPrestamoRepository.findById(cuotaPrestamoPK).get();
 	}
-	
-	
-	
-	
+
 }

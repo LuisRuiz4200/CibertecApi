@@ -1,16 +1,6 @@
 package com.cibertec.api.reuzable;
 
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
-import com.cibertec.api.model.Comprobante;
-import com.cibertec.api.model.ComprobanteDetalle;
-import com.cibertec.api.model.CuotaPrestamoPK;
-import com.cibertec.api.service.ComprobanteDetalleService;
-import com.cibertec.api.serviceImpl.ComprobanteDetalleServiceImpl;
-import com.cibertec.api.serviceImpl.ComprobanteServiceImpl;
 
 public class Utils {
 
@@ -33,10 +23,23 @@ public class Utils {
 	}
 
 	public static Double formatearDecimales(Double valor, String decimalRegex) {
+		// Convert the Double to a formatted string with two decimal places
+		String formattedString = new DecimalFormat(decimalRegex).format(valor);
 
-		Double respuesta = Double.parseDouble(new DecimalFormat(decimalRegex).format(valor));
+		// Replace commas with dots for proper parsing
+		formattedString = formattedString.replace(',', '.');
 
-		return respuesta;
+		// Parse the cleaned string to a Double
+		try {
+			return Double.parseDouble(formattedString);
+		} catch (NumberFormatException e) {
+			// Handle the exception or rethrow it as needed
+			throw new NumberFormatException("Invalid number format: " + formattedString);
+		}
+
+		// Double respuesta = Double.parseDouble(new
+		// DecimalFormat(decimalRegex).format(valor));
+		// return respuesta;
 	}
 
 	public static Double calcularMora(Double montoMensual, Integer dias, Double tea) {

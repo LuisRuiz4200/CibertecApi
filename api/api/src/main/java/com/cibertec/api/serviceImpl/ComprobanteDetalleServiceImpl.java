@@ -1,11 +1,7 @@
 package com.cibertec.api.serviceImpl;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
-import org.hibernate.sql.ast.tree.expression.Collation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,19 +14,16 @@ public class ComprobanteDetalleServiceImpl implements ComprobanteDetalleService 
 
 	@Autowired
 	private ComprobanteDetalleRepository comprobanteDetalleRepository;
-	
+
 	@Override
 	public ComprobanteDetalle guardar(ComprobanteDetalle model) {
-		// TODO Auto-generated method stub
 		return comprobanteDetalleRepository.save(model);
 	}
 
 	@Override
 	public List<ComprobanteDetalle> listar() {
-		// TODO Auto-generated method stub
-		
 		return comprobanteDetalleRepository.findAll();
-		
+
 	}
 
 	@Override
@@ -40,7 +33,6 @@ public class ComprobanteDetalleServiceImpl implements ComprobanteDetalleService 
 
 	@Override
 	public List<ComprobanteDetalle> listarPorId(int id) {
-		// TODO Auto-generated method stub
 		return comprobanteDetalleRepository.findByComprobanteDetallePKIdComprobante(id);
 	}
 
@@ -49,6 +41,5 @@ public class ComprobanteDetalleServiceImpl implements ComprobanteDetalleService 
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
 
 }

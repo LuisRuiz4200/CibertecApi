@@ -18,7 +18,7 @@ function cargarCuotas() {
 	montoInteresTotal = montoInteresTotal.substring(3);
 
 	var montoMensual = monto / cuotas;
-	var montoInteresMensual = montoInteresTotal / cuotas
+	var montoInteresMensual = montoInteresTotal / cuotas;
 
 	var montoCuota = montoMensual + montoInteresMensual;
 
@@ -56,7 +56,7 @@ async function formularioPrestamo() {
 
 	var btnPrestamo = document.getElementById("btnPrestamo");
 
-	btnPrestamo.addEventListener('click', function(event) {
+	btnPrestamo.addEventListener('click', function (event) {
 
 		limpiarCuotas();
 
@@ -75,7 +75,7 @@ async function formularioPrestamo() {
 				montoPrestamo.value = data.monto;
 				cuotaPrestamo.value = data.cuotas;
 				cargarCuotas();
-				$("#modalPrestamo").modal('show')
+				$("#modalPrestamo").modal('show');
 			});
 	});
 
@@ -114,7 +114,7 @@ function guardarPrestamo() {
 			if (result.mensaje) {
 				toastr.success(result.mensaje);
 				/*esto validar y quitarlo*/
-				formularioSolicitud.addEventListener('submit', function(event) {
+				formularioSolicitud.addEventListener('submit', function (event) {
 					event.defaultPrevented();
 				});
 

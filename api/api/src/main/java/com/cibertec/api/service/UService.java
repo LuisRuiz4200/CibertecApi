@@ -6,13 +6,13 @@ import com.cibertec.api.model.Rol;
 import com.cibertec.api.model.Usuario;
 
 public interface UService {
-	
-	//Creamos metodos para CRUD	
-	
+
+	// Creamos metodos para CRUD
+
 	public List<Usuario> listarUsuario();
-		
+
 	public Usuario listarUsuarioPorId(int id);
-		
+
 	public void guardarUsuario(Usuario usuario);
 
 	public void eliminarUsuario(int id);
@@ -20,7 +20,7 @@ public interface UService {
 	List<Usuario> getUsuarioByRol(Rol rol);
 
 	Usuario buscarPorNombreUsuario(String nombreUsuario);
-	
+
 	public Usuario findByNombreUsuarioAndActivo(String nombreUsuario, boolean activo);
 
 	public Usuario findByPersonaIdPersona(int idPersona);

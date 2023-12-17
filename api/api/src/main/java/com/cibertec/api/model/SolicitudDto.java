@@ -17,11 +17,11 @@ public class SolicitudDto {
     private Prestamista prestamista;
     private Cuenta cuentaSolicitud;
     private double monto;
-	private double interes;
-	private int cuotas;
-	private String motivo;
-	private String cuentaBancaria;
+    private double interes;
+    private int cuotas;
+    private String motivo;
+    private String cuentaBancaria;
     private Date fechaRegistro;
     private String estado;
-	private boolean activo;
+    private boolean activo;
 }

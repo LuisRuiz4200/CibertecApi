@@ -21,18 +21,18 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PrestamistaServiceImpl implements PrestamistaService {
-	
+
 	@Autowired
 	private PrestamistaRepository repo;
 	@Autowired
 	private UsuarioRepository usuarioRepository;
-	//private PersonaRepository personaRepo;
-	
+	// private PersonaRepository personaRepo;
+
 	@Override
 	public List<Prestamista> listarPrestamista() {
 		return repo.findAll().stream()
-	    .filter(prestamista -> prestamista.isActivo() && prestamista.getPrestamista().isActivo())
-		.collect(Collectors.toList());
+				.filter(prestamista -> prestamista.isActivo() && prestamista.getPrestamista().isActivo())
+				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -58,33 +58,34 @@ public class PrestamistaServiceImpl implements PrestamistaService {
 		 * RuntimeException("El prestamista ya existe en la base de datos"); }
 		 */
 		return repo.save(prestamista);
-		
-		//esto con la finalidad para poder actualizar da error de esto
-				//detached entity passed to persist: com.cibertec.api.model.PersonaM
-		
-		//repo.save(prestamista);
-		
+
+		// esto con la finalidad para poder actualizar da error de esto
+		// detached entity passed to persist: com.cibertec.api.model.PersonaM
+
+		// repo.save(prestamista);
+
 	}
-	//Eliminacion fisica
+
+	// Eliminacion fisica
 	/*
 	 * @Override public void eliminarPrestamista(int id) { //.deleteById(id);
 	 * //eliminamos por ID o COD usamos este repo.deleteById(id); }
 	 */
-	//----------------------Eliminacion Logica
+	// ----------------------Eliminacion Logica
 	@Override
 	@Transactional
 	public void eliminarPrestamista(int id) {
-	    Prestamista prestamista = repo.findById(id).orElse(null);
-	    if (prestamista != null) {
-	        prestamista.getPrestamista().setActivo(false);
-	        //al  campo prestamista de tipo PrestamistaM lo cambia a true osea de eliminado
-	        prestamista.setActivo(false);
-	        repo.save(prestamista);
-	        
-	        Usuario usuario = usuarioRepository.findByPersonaIdPersona(prestamista.getIdPrestamista());
+		Prestamista prestamista = repo.findById(id).orElse(null);
+		if (prestamista != null) {
+			prestamista.getPrestamista().setActivo(false);
+			// al campo prestamista de tipo PrestamistaM lo cambia a true osea de eliminado
+			prestamista.setActivo(false);
+			repo.save(prestamista);
+
+			Usuario usuario = usuarioRepository.findByPersonaIdPersona(prestamista.getIdPrestamista());
 			usuario.setActivo(false);
 			usuarioRepository.save(usuario);
-	    }
+		}
 	}
 
 	@Override
@@ -101,13 +102,15 @@ public class PrestamistaServiceImpl implements PrestamistaService {
 	public Prestamista buscarPorDni(String dni) {
 		return repo.findByPrestamistaDni(dni);
 	}
+
 	@Override
 	public Prestamista buscarPorRuc(String ruc) {
 		return repo.findByPrestamistaRuc(ruc);
 	}
+
 	@Override
-	public Prestamista buscarPorDniOPorRuc(String dni,String ruc) {
-		return repo.findByPrestamistaDniOrPrestamistaRuc(dni,ruc);
+	public Prestamista buscarPorDniOPorRuc(String dni, String ruc) {
+		return repo.findByPrestamistaDniOrPrestamistaRuc(dni, ruc);
 	}
 
 	@Override
