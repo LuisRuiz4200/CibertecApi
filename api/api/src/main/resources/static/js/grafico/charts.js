@@ -117,6 +117,12 @@ am5.ready(async function() {
 		var jsonPrestamistas = await apiDashboard(cboPrestamistasJefe.value);
 		var dataGrafico = [];
 
+
+		if (jsonPrestamistas.mensaje == 'No value present') {
+			return;
+		}
+
+
 		for (const prestamista of jsonPrestamistas.detalle.prestamistas) {
 			dataGrafico.push({
 				category: prestamista.nombreApellido,
@@ -128,19 +134,8 @@ am5.ready(async function() {
 
 
 		series.data.setAll(dataGrafico);
-		
-		var legend = chart.children.push(am5.Legend.new(root, {
-			centerX: am5.percent(50),
-			x: am5.percent(50),
-			marginTop: 15,
-			marginBottom: 15,
-		}));
-		legend.markerRectangles.template.adapters.add("fillGradient", function() {
-			return undefined;
-		});
-		legend.data.setAll(series.dataItems);
 
-		series.appear(1000, 100);
+
 	});
 
 
@@ -160,6 +155,17 @@ am5.ready(async function() {
 	}]);
 	*/
 
+	var legend = chart.children.push(am5.Legend.new(root, {
+		centerX: am5.percent(50),
+		x: am5.percent(50),
+		marginTop: 15,
+		marginBottom: 15,
+	}));
+	legend.markerRectangles.template.adapters.add("fillGradient", function() {
+		return undefined;
+	});
+	legend.data.setAll(series.dataItems);
 
+	series.appear(1000, 100);
 
 }); // end am5.ready()
