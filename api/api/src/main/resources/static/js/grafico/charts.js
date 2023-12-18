@@ -1,4 +1,21 @@
-am5.ready(function () {
+
+async function apiDashboard(idJefePrestamista) {
+  var url = new URL("http://localhost:9090/api/dashboard/rentabilidad?timestamp=" + new Date().getTime());
+  url.searchParams.append("idJefePrestamista", idJefePrestamista);
+
+  return fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data.mensaje);
+      return data;
+    });
+
+}
+
+
+
+
+am5.ready(async function () {
 
   // Create root element
   // https://www.amcharts.com/docs/v5/getting-started/#Root_element
@@ -23,11 +40,11 @@ am5.ready(function () {
   /*
   var bg = root.container.set("background", am5.Rectangle.new(root, {
     fillPattern: am5.GrainPattern.new(root, {
-      density: 0.1,
-      maxOpacity: 0.2
+    density: 0.1,
+    maxOpacity: 0.2
     })
   }))
-  
+    
   */
 
   // Create series
@@ -91,7 +108,30 @@ am5.ready(function () {
   });
 
   // Set data
-  // https://www.amcharts.com/docs/v5/charts/percent-charts/pie-chart/#Setting_data
+
+
+  var cboPrestamistasJefe = document.getElementById("idFiltroPrestamista");
+
+  cboPrestamistasJefe.addEventListener('change', async function () {
+
+    var jsonPrestamistas = await apiDashboard(cboPrestamistasJefe.value);
+    var dataGrafico = [];
+
+    for (const prestamista of jsonPrestamistas.detalle.prestamistas) {
+      dataGrafico.push({
+        category: prestamista.nombreApellido,
+        value: prestamista.resumen.montoTotalPrestado
+      });
+
+
+    }
+
+
+    series.data.setAll(dataGrafico);
+  });
+
+
+  /*
   series.data.setAll([{
     category: "Lithuania",
     value: 500
@@ -102,9 +142,10 @@ am5.ready(function () {
     category: "Ireland",
     value: 200
   }, {
-    category: "Germany",
-    value: 100
+    category: "luis",
+    value: 500
   }]);
+  */
 
   var legend = chart.children.push(am5.Legend.new(root, {
     centerX: am5.percent(50),

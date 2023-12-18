@@ -56,20 +56,20 @@ public class DashBoardApiController {
 		Double promMontoTotalPrestadoPorPrestamista = 0.00;
 
 		try {
-			
-			Thread hilo1 = new Thread(()->{
+
+			Thread hilo1 = new Thread(() -> {
 				listaGrupoPrestamistas.addAll(grupoPrestamistaService.listar());
 			});
-			Thread hilo2 = new Thread(()->{
+			Thread hilo2 = new Thread(() -> {
 				listaPrestamosPorPrestamista.addAll(prestamoService.listar());
 			});
-			
+
 			hilo1.start();
 			hilo2.start();
-			
+
 			hilo1.join();
 			hilo2.join();
-					
+
 			prestamistaJefe = listaGrupoPrestamistas.stream()
 					.filter(c -> c.getJefePrestamista().getIdPrestamista() == idJefePrestamista)
 					.map(c -> c.getJefePrestamista())
@@ -95,14 +95,14 @@ public class DashBoardApiController {
 				mapPrestamista.put("nombreApellido", objPrestamistaAsesor.getPrestamista().getNombresApellidos());
 				mapPrestamista.put("docIdentidad", objPrestamistaAsesor.getPrestamista().getDni());
 				mapPrestamista.put("email", objPrestamistaAsesor.getPrestamista().getEmail());
-				
-				
-				/*lista de los prestamos por prestamista asesor*/
-				
-				/*las estadistas de los prestamos*/
+
+				/* lista de los prestamos por prestamista asesor */
+
+				/* las estadistas de los prestamos */
 				DoubleSummaryStatistics estadistica = listaPrestamosPorPrestamista.stream()
-						.filter(c->c.getSolicitudPrestamo().getPrestatario().getPrestamistaPrestatario().getPrestamista().getIdPersona()== idPrestamistaAsesor)
-						.mapToDouble(c->c.getMonto())
+						.filter(c -> c.getSolicitudPrestamo().getPrestatario().getPrestamistaPrestatario()
+								.getPrestamista().getIdPersona() == idPrestamistaAsesor)
+						.mapToDouble(c -> c.getMonto())
 						.summaryStatistics();
 
 				totalPrestamos = (int) estadistica.getCount();

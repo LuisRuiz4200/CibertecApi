@@ -24,6 +24,10 @@
 	<title>Rendimiento Financiero</title>
 	<!-- Creamos style para css -->
 	<style type="text/css">
+		body {
+			margin: 0 0 5rem 0;
+		}
+
 		/*Aqui con este modal-header damos estilo al contenedor del titulo REGISTRAR DOCENTE */
 		.modal-header {
 			color: #fff;
@@ -91,7 +95,7 @@
 							<div class="form-group">
 								<!-- Para despegable con bootstrap con SELECT y asignamos id =idSexo -->
 								<select class="form-select" id="idFiltroPrestamista" name="prestamista">
-									<option>[SELECCIONE]</option>
+									<option value="-1">[SELECCIONE]</option>
 									<option th:each="prestamistaJefe : ${listaPrestamistasJefe}"
 										th:value="${prestamistaJefe.prestamista.idPersona}"
 										th:text="${prestamistaJefe.prestamista.nombresApellidos}"></option>
@@ -239,7 +243,7 @@
 	</br>
 	</br>
 
-	<!--	<div class="row">
+	<div class="row">
 		<div class="col-lg-6">
 			<div class="panel">
 				<div class="panel-header">
@@ -251,7 +255,7 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<div class="col-lg-6">
 			<div class="panel">
 				<div class="panel-header">
@@ -283,7 +287,8 @@
 		</div>
 
 
-	</div> < FIN DE ROW GRAFICOS-->
+	</div>
+	<!-- FIN DE ROW GRAFICOS-->
 
 	</br>
 	</br>
@@ -316,14 +321,14 @@
 	<script
 		src="https://cdn.jsdelivr.net/npm/datatables-buttons-excel-styles@1.1.1/js/buttons.html5.styles.templates.min.js"></script>
 	<!-- PARA GRAFICO -->
-	<!-- <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+	<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
 	<script src="https://cdn.amcharts.com/lib/5/percent.js"></script>
 	<script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
 	<script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
 	<script src="https://cdn.amcharts.com/lib/5/radar.js"></script>
 
 	<script src="/js/grafico/charts.js"></script>
-	<script src="/js/grafico/charts3.js"></script> -->
+	<script src="/js/grafico/charts3.js"></script>
 	<!-- FIN PARA GRAFICO  -->
 
 	<script>
@@ -363,6 +368,9 @@
 		selectJefePrestamista.addEventListener("change", async () => {
 			//cojo el selectJefePrestamista
 			const id = selectJefePrestamista.value;
+			if (id == -1) {
+				return;
+			}
 
 			try {
 				// Destruir la instancia existente de DataTable, si existe
